@@ -1,13 +1,12 @@
 package se.flashcards;
 
-import com.actionbarsherlock.app.SherlockListActivity;
 
 import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
-public class FlashcardsActivity extends SherlockListActivity {
+public class FlashcardsActivity extends ListActivity {
 
 	static final String[] STUFF = new String[] { "Hipster", "Hopster", "Hapster" };
 	
