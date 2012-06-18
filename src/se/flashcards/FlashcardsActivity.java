@@ -13,6 +13,7 @@ public class FlashcardsActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
+        setTheme(R.style.Theme_Sherlock);
         setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, STUFF));
     }
 }
