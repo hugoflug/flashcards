@@ -13,6 +13,7 @@ import com.actionbarsherlock.view.MenuItem;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,20 +26,19 @@ public class FlashcardsActivity extends SherlockListActivity {
 	
 	private static final int DIALOG_MAKE_NEW = 0;
 
-	private ArrayAdapter<String> stuff;
+	private List<String> cardLists;
+	private ArrayAdapter<String> cardListsAdapter;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
-        
-        stuff = new ArrayAdapter<String>(this, R.layout.list_item, new ArrayList<String>());
         setTheme(R.style.Theme_Sherlock);
         
-        setListAdapter(stuff);
+        cardLists = new ArrayList<String>();
+        cardListsAdapter = new ArrayAdapter<String>(this, R.layout.list_item, cardLists);
+        setListAdapter(cardListsAdapter);
         
-        stuff.add("Hipster");
-        stuff.add("Hopster");
-        stuff.add("Hapster");
+        cardListsAdapter.add("hipster"); 
         
         ActionBar bar = getSupportActionBar();
         bar.setTitle("RAYBAN");
@@ -52,7 +52,6 @@ public class FlashcardsActivity extends SherlockListActivity {
         return true;
     }
     
-    @SuppressWarnings("deprecation")
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) {
@@ -64,20 +63,9 @@ public class FlashcardsActivity extends SherlockListActivity {
     }
     
     public void onListItemClick(ListView listView, View view, int position, long id) {
-    	switch (position) {
-    		case 0:
-    			Toast toast = Toast.makeText(getBaseContext(), "Hip!", Toast.LENGTH_SHORT);
-    			toast.show();
-    			break;
-    		case 1:
-    			Toast toast2 = Toast.makeText(getBaseContext(), "Hup!", Toast.LENGTH_SHORT);
-    			toast2.show();
-    			break;
-    		case 2:
-    			Toast toast3 = Toast.makeText(getBaseContext(), "Hap!", Toast.LENGTH_SHORT);
-    			toast3.show();
-    			break;
-    	}
+    	Intent intent = new Intent(this, CardsListActivity.class);
+    	intent.putExtra("temp", cardLists.get(position));
+    	startActivity(intent);
     }
     
     protected Dialog onCreateDialog(int id) {
@@ -93,12 +81,13 @@ public class FlashcardsActivity extends SherlockListActivity {
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                         	String text = textView.getText().toString();
-                        	stuff.add(text);
+                        	textView.setText("");
+                        	cardLists.add(text);
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-
+                        	textView.setText("");
                         }
                     })
                     .create();
