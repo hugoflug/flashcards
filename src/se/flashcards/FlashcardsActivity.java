@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -82,7 +83,7 @@ public class FlashcardsActivity extends SherlockListActivity {
                         public void onClick(DialogInterface dialog, int whichButton) {
                         	String text = textView.getText().toString();
                         	textView.setText("");
-                        	cardLists.add(text);
+                        	cardListsAdapter.add(text);
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
