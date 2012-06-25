@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_save"
+    <item android:id="@+id/menu_make_new"
           android:icon="@drawable/android:ic_input_add"
           android:title="@string/menu_save"
           android:showAsAction="ifRoom|withText" />

@@ -56,7 +56,7 @@ public class FlashcardsActivity extends SherlockListActivity {
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) {
-    		case R.id.menu_save:
+    		case R.id.menu_make_new:
     			showDialog(DIALOG_MAKE_NEW);
     			break;
     	}
