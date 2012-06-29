@@ -1,0 +1,10 @@
+-> Save state
+-> New drawables
+-> Pick an answer to each question and it appears in the drawer
+-> Ability to take a photo directly from inside the app
+-> Change Gallery to HorizontalScrollView?? or ViewPager??
+	-> Better behaviour of scrolling through Q:s
+	-> Choose part of image to view??
+-> Ability to add text as question/answer
+-> Ability to remove Q/A
+-> Shouldn't be able to change Q while the A drawer is up

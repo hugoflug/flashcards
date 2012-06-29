@@ -27,6 +27,8 @@ public class CardsListActivity extends SherlockActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
+
+        setTheme(R.style.Theme_Sherlock);
         
         setContentView(R.layout.cards_list);
         setTheme(R.style.Theme_Sherlock);
