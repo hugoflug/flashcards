@@ -26,6 +26,8 @@ import android.widget.Toast;
 public class FlashcardsActivity extends SherlockListActivity {
 	
 	private static final int DIALOG_MAKE_NEW = 0;
+	
+	public static final String CARD_LIST_NAME = "cardlistname";
 
 	private List<String> cardLists;
 	private ArrayAdapter<String> cardListsAdapter;
@@ -65,7 +67,7 @@ public class FlashcardsActivity extends SherlockListActivity {
     
     public void onListItemClick(ListView listView, View view, int position, long id) {
     	Intent intent = new Intent(this, CardsListActivity.class);
-    	intent.putExtra("temp", cardLists.get(position));
+    	intent.putExtra(CARD_LIST_NAME, cardLists.get(position));
     	startActivity(intent);
     }
     
@@ -82,8 +84,10 @@ public class FlashcardsActivity extends SherlockListActivity {
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                         	String text = textView.getText().toString();
+                        	if (!text.equals("")) {
+                        		cardListsAdapter.add(text);
+                        	}
                         	textView.setText("");
-                        	cardListsAdapter.add(text);
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -96,4 +100,9 @@ public class FlashcardsActivity extends SherlockListActivity {
     			return null;
     	}
     }
+    
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
 }
