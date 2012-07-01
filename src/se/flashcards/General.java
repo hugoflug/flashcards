@@ -34,9 +34,6 @@ public class General {
 	    final int height = options.outHeight;
 	    final int width = options.outWidth;
 	    int inSampleSize = 1;
-	    
-	    Log.v("Flashcards", "w " + width);
-	    Log.v("Flashcards", "h " + height);
 	
 	    if (height > reqHeight || width > reqWidth) {
 	        if (width > height) {

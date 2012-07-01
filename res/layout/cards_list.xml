@@ -8,11 +8,11 @@
 	    android:id="@+id/gallerylayout"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent">
-	    <Gallery
-	        android:id="@+id/gallery1"
+	    <android.support.v4.view.ViewPager
+	        android:id="@+id/viewpager"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content" >
-	    </Gallery>
+	    </android.support.v4.view.ViewPager>
 	    <SlidingDrawer xmlns:android="http://schemas.android.com/apk/res/android" 
 		    android:id="@+id/drawer"
 		    android:layout_width="fill_parent" 
@@ -21,8 +21,9 @@
 		    android:content="@+id/content">  
 	   
 		    <ImageView android:id="@id/handle"
-		        android:layout_width="wrap_content" 
+		        android:layout_width="fill_parent" 
 		        android:layout_height="wrap_content"
+		        android:scaleType="fitXY"
 		        android:src="@drawable/ic_launcher">
 		    </ImageView>  
 		    <ImageView android:id="@id/content"

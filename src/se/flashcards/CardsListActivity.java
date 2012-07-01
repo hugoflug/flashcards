@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Gallery;
@@ -20,8 +21,9 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class CardsListActivity extends SherlockActivity {
 	private static final int SELECT_IMAGE = 0;
-	private ScaledImageAdapter imageAdapter;
-	private Gallery gallery;
+	private ScaledImagePagerAdapter imageAdapter;
+	private ViewPager viewPager;
+	
 	private String name;
 	
     @Override
@@ -36,13 +38,13 @@ public class CardsListActivity extends SherlockActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         
-        gallery = (Gallery) findViewById(R.id.gallery1);
         Intent intent = getIntent();
         name = intent.getStringExtra(FlashcardsActivity.CARD_LIST_NAME);
         actionBar.setTitle(name);
         
-        imageAdapter = new ScaledImageAdapter(this, 600, 1000); //temp
-        gallery.setAdapter(imageAdapter);
+        imageAdapter = new ScaledImagePagerAdapter(this, 600, 1000);
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPager.setAdapter(imageAdapter);
     }
     
     @Override
@@ -61,6 +63,7 @@ public class CardsListActivity extends SherlockActivity {
     	    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); 
     	    	startActivity(intent);
+    	    	finish(); //??
     			break;
     		case R.id.menu_make_new:
     			Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
