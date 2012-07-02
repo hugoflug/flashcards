@@ -4,14 +4,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Gallery;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -20,9 +24,14 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 public class CardsListActivity extends SherlockActivity {
-	private static final int SELECT_IMAGE = 0;
-	private ScaledImagePagerAdapter imageAdapter;
+	private static final int SELECT_QUESTION_IMAGE = 0;
+	private static final int SELECT_ANSWER_IMAGE = 1;
+	private CardPagerAdapter cardAdapter;
+	private List<Card> cardList;
 	private ViewPager viewPager;
+	private ImageView answerImage;
+	private BitmapDownsampler downSampler;
+	private Bitmap tempQuestionImage;
 	
 	private String name;
 	
@@ -42,9 +51,22 @@ public class CardsListActivity extends SherlockActivity {
         name = intent.getStringExtra(FlashcardsActivity.CARD_LIST_NAME);
         actionBar.setTitle(name);
         
-        imageAdapter = new ScaledImagePagerAdapter(this, 600, 1000);
+        downSampler = new BitmapDownsampler(this, 600, 1000); //600, 1000
+        
+        answerImage = (ImageView)findViewById(R.id.content);
+        
+        cardList = new ArrayList<Card>();
+        cardAdapter = new CardPagerAdapter(this, cardList);
+
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPager.setAdapter(imageAdapter);
+        viewPager.setAdapter(cardAdapter);    
+        
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+			@Override
+			public void onPageSelected(int position) {
+				answerImage.setImageBitmap(cardList.get(position).getAnswer());
+			}
+        });
     }
     
     @Override
@@ -69,7 +91,8 @@ public class CardsListActivity extends SherlockActivity {
     			Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
     						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
     			pickImageIntent.setType("image/*"); //necessary??
-    			startActivityForResult(pickImageIntent, SELECT_IMAGE);
+    			startActivityForResult(pickImageIntent, SELECT_ANSWER_IMAGE);	//temp
+    			startActivityForResult(pickImageIntent, SELECT_QUESTION_IMAGE);
     			break;
     	}
         return true;
@@ -78,19 +101,34 @@ public class CardsListActivity extends SherlockActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) { 
 	    super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-	    switch (requestCode) {
-	    	case SELECT_IMAGE:
-	    		if (resultCode == RESULT_OK) {
+		if (resultCode == RESULT_OK) {
+		    switch (requestCode) {
+		    	case SELECT_QUESTION_IMAGE:
 	    			Uri image = imageReturnedIntent.getData();
 	    			try {
-						imageAdapter.addUri(image);
+	    				Bitmap bmp = downSampler.decode(image);
+	    				tempQuestionImage = bmp;
+	//	    			cardList.add(new Card(bmp, bmp));
+	//	    			cardAdapter.notifyDataSetChanged();
 					} catch (IOException e) {
 						//TODO: write error message to user
 						Log.v("Flashcards", "File could not be opened");
 					}
-	    		}
-	    	break;
-	    }
+		    	break;
+		    	case SELECT_ANSWER_IMAGE:
+	    			image = imageReturnedIntent.getData();
+	    			try {
+	    				Bitmap bmp = downSampler.decode(image);
+	    				cardList.add(new Card(tempQuestionImage, bmp));
+	    				cardAdapter.notifyDataSetChanged();
+	    				answerImage.setImageBitmap(bmp);
+					} catch (IOException e) {
+						//TODO: write error message to user
+						Log.v("Flashcards", "File could not be opened");
+					}
+		    	break;
+		    }
+		}
 	}
 	
 	@Override
