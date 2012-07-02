@@ -27,7 +27,8 @@ public class ScaledImagePagerAdapter extends PagerAdapter {
     }
 	
     private Bitmap loadBitmap(Uri uri) throws IOException {
-		return General.decodeSampledBitmapFromUri(context, uri, width, height);
+    	BitmapDownsampler downSampler = new BitmapDownsampler(context, width, height);
+		return downSampler.decode(uri);
     }
     
     public void addUri(Uri uri) throws IOException {
@@ -47,11 +48,9 @@ public class ScaledImagePagerAdapter extends PagerAdapter {
 	
 	@Override
 	public Object instantiateItem(ViewGroup collection, int position) {
-		
 		ImageView i = new ImageView(context);
 		i.setImageBitmap(images.get(position));
-   //     i.setLayoutParams(new ViewGroup.LayoutParams(width, height)); //necessary??
-        i.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        i.setScaleType(ImageView.ScaleType.FIT_START);
 		collection.addView(i);
 		
 		return i;
