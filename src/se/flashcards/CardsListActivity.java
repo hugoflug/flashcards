@@ -56,6 +56,7 @@ public class CardsListActivity extends SherlockActivity {
         
         answerImage = (ImageView)findViewById(R.id.content);
         drawer = (WrappingSlidingDrawer)findViewById(R.id.drawer);
+        drawer.lock();
         
         cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
@@ -125,6 +126,7 @@ public class CardsListActivity extends SherlockActivity {
 	    				cardList.add(new Card(tempQuestionImage, bmp));
 	    				cardAdapter.notifyDataSetChanged();
 	    				answerImage.setImageBitmap(bmp);
+	    				drawer.unlock();
 					} catch (IOException e) {
 						//TODO: write error message to user
 						Log.v("Flashcards", "File could not be opened");
