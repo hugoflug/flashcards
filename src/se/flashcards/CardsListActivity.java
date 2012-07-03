@@ -32,6 +32,7 @@ public class CardsListActivity extends SherlockActivity {
 	private ImageView answerImage;
 	private BitmapDownsampler downSampler;
 	private Bitmap tempQuestionImage;
+	private WrappingSlidingDrawer drawer;
 	
 	private String name;
 	
@@ -54,6 +55,7 @@ public class CardsListActivity extends SherlockActivity {
         downSampler = new BitmapDownsampler(this, 600, 1000); //600, 1000
         
         answerImage = (ImageView)findViewById(R.id.content);
+        drawer = (WrappingSlidingDrawer)findViewById(R.id.drawer);
         
         cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
@@ -64,6 +66,7 @@ public class CardsListActivity extends SherlockActivity {
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
+				drawer.close();
 				answerImage.setImageBitmap(cardList.get(position).getAnswer());
 			}
         });
