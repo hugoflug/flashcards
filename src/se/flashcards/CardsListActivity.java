@@ -32,15 +32,15 @@ public class CardsListActivity extends SherlockActivity {
 	private ImageView answerImage;
 	private BitmapDownsampler downSampler;
 	private Bitmap tempQuestionImage;
+	private Uri tempQuestionUri;
 	private WrappingSlidingDrawer drawer;
 	
 	private String name;
+	private InfoSaver infoSaver;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
-
-        setTheme(R.style.Theme_Sherlock);
         
         setContentView(R.layout.cards_list);
         setTheme(R.style.Theme_Sherlock);
@@ -58,7 +58,14 @@ public class CardsListActivity extends SherlockActivity {
         drawer = (WrappingSlidingDrawer)findViewById(R.id.drawer);
         drawer.lock();
         
-        cardList = new ArrayList<Card>();
+        infoSaver = InfoSaver.getInfoSaver(this);
+        try {
+			cardList = infoSaver.getCards(name, downSampler);
+		} catch (IOException e) {
+			Log.v("flashcards", "Error loading info.");
+		}
+        
+  //      cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
@@ -112,6 +119,7 @@ public class CardsListActivity extends SherlockActivity {
 	    			try {
 	    				Bitmap bmp = downSampler.decode(image);
 	    				tempQuestionImage = bmp;
+	    				tempQuestionUri = image;
 	//	    			cardList.add(new Card(bmp, bmp));
 	//	    			cardAdapter.notifyDataSetChanged();
 					} catch (IOException e) {
@@ -123,7 +131,7 @@ public class CardsListActivity extends SherlockActivity {
 	    			image = imageReturnedIntent.getData();
 	    			try {
 	    				Bitmap bmp = downSampler.decode(image);
-	    				cardList.add(new Card(tempQuestionImage, bmp));
+	    				cardList.add(new Card(tempQuestionUri, tempQuestionImage, image, bmp));
 	    				cardAdapter.notifyDataSetChanged();
 	    				answerImage.setImageBitmap(bmp);
 	    				drawer.unlock();
@@ -139,6 +147,7 @@ public class CardsListActivity extends SherlockActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		infoSaver.saveCards(name, cardList);
 	}
 
 }

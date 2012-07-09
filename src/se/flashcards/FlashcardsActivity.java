@@ -41,17 +41,18 @@ public class FlashcardsActivity extends SherlockListActivity {
 
 	private List<String> cardLists;
 	private ArrayAdapter<String> cardListsAdapter;
+	private InfoSaver infoSaver;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
         setTheme(R.style.Theme_Sherlock);
         
-        cardLists = new ArrayList<String>();
+        infoSaver = InfoSaver.getInfoSaver(this);
+        
+        cardLists = infoSaver.getCardLists();
         cardListsAdapter = new ArrayAdapter<String>(this, R.layout.list_item, cardLists);
         setListAdapter(cardListsAdapter);
-        
-        cardListsAdapter.add("hipster"); 
         
         ActionBar bar = getSupportActionBar();
         bar.setTitle("RAYBAN");
@@ -64,15 +65,18 @@ public class FlashcardsActivity extends SherlockListActivity {
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
 				switch (item.getItemId()) {
-	            case R.id.menu_delete:
-//	                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();
-//	                for (int i = 0; i < checkedItems.size(); i++) {
-//	                }
-	                mode.finish(); // Action picked, so close the CAB
-	                return true;
-	            default:
-	                return false;
-	        }
+		            case R.id.menu_delete:
+		                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();             
+		                int removed = 0;
+		                for (int i = 0; i < checkedItems.size(); i++) {
+		                	cardListsAdapter.remove(cardListsAdapter.getItem(i - removed));
+		                	removed++;
+		                }
+		                mode.finish();
+		                return true;
+		            default:
+		                return false;
+				}
 			}
 
 			@Override
@@ -190,5 +194,6 @@ public class FlashcardsActivity extends SherlockListActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		infoSaver.saveCardLists(cardLists);
 	}
 }
