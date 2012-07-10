@@ -65,6 +65,10 @@ public class CardsListActivity extends SherlockActivity {
 			Log.v("flashcards", "Error loading info.");
 		}
         
+        if (cardList.size() > 0) {
+			drawer.unlock();
+        }
+        
   //      cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
 
