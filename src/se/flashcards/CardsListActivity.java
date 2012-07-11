@@ -59,18 +59,25 @@ public class CardsListActivity extends SherlockActivity {
         drawer.lock();
         
         infoSaver = InfoSaver.getInfoSaver(this);
-        try {
-			cardList = infoSaver.getCards(name, downSampler);
-		} catch (IOException e) {
-			Log.v("flashcards", "Error loading info.");
-		}
+
+//		cardList = infoSaver.getCards(name, downSampler); //old
         
-        if (cardList.size() > 0) {
-			drawer.unlock();
-        }
-        
-  //      cardList = new ArrayList<Card>();
+        //new
+    	cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
+    	LoadCardsTask loadCards = new LoadCardsTask(this, name, downSampler) {
+    		@Override
+    		protected void onProgressUpdate (Card... values) {
+    			 cardList.add(values[0]);
+    			 cardAdapter.notifyDataSetChanged();
+    			 drawer.unlock();
+    		}
+    	};
+    	loadCards.execute();
+        
+//        if (cardList.size() > 0) {
+//			drawer.unlock();
+//        }
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         viewPager.setAdapter(cardAdapter);    
