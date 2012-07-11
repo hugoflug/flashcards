@@ -2,11 +2,13 @@ package se.flashcards;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.util.Log;
 
 public class InfoSaver 
 {
@@ -50,19 +52,75 @@ public class InfoSaver
 			edit.putString("cardlist_" + listName + "_a_" + nr, a);
 			nr++;
 		}
-		edit.putInt("cardlist_" + listName + "_length", nr);
 		edit.commit();
+	}
+	
+	public static class CardLoaderIterator implements Iterator<Card>, Iterable<Card> {
+		private int pos;
+		private BitmapDownsampler sampler;
+		private String listName;
+		private SharedPreferences prefs;
+		
+		private boolean gotNext;
+		private String nextQ;
+		
+		public CardLoaderIterator(String listName, BitmapDownsampler sampler, SharedPreferences prefs) {
+			this.sampler = sampler;
+			this.listName = listName;
+			this.prefs = prefs;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			if (!gotNext) {
+				nextQ = prefs.getString("cardlist_" + listName + "_q_" + pos, "");
+			}
+			return !nextQ.equals("");
+		}
+
+		@Override
+		public Card next() {
+			Uri q = null;
+			if (gotNext) {
+				q = Uri.parse(nextQ);
+			} else {
+				q = Uri.parse(prefs.getString("cardlist_" + listName + "_q_" + pos, ""));
+			}
+			Uri a = Uri.parse(prefs.getString("cardlist_" + listName + "_a_" + pos, ""));
+			Card card = null;
+			try {
+				card = new Card(q, sampler.decode(q), a, sampler.decode(a));
+			} catch (IOException e) {
+				Log.v("flashcards", "Couldn't load bitmap");
+			}
+			pos++;
+			gotNext = false;
+			return card;
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Iterator<Card> iterator() {
+			return this;
+		}	
+	}
+	
+	public CardLoaderIterator getCardLoaderIterator(String listName, BitmapDownsampler sampler) {
+		return new CardLoaderIterator(listName, sampler, prefs);
 	}
 	
 	public List<Card> getCards(String listName, BitmapDownsampler sampler) throws IOException {
 		List<Card> cardList = new ArrayList<Card>();
-		int cardAmnt = prefs.getInt("cardlist_" + listName + "_length", 0);
-		for (int i = 0; i < cardAmnt; i++) {
-			Uri q = Uri.parse(prefs.getString("cardlist_" + listName + "_q_" + i, ""));
-			Uri a = Uri.parse(prefs.getString("cardlist_" + listName + "_a_" + i, ""));
-			Card card = new Card(q, sampler.decode(q), a, sampler.decode(a));
+		CardLoaderIterator it = getCardLoaderIterator(listName, sampler);
+		
+		for (Card card : it) {
 			cardList.add(card);
 		}
+		
 		return cardList;
 	}
 }
