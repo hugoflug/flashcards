@@ -57,7 +57,8 @@ public class FlashcardsActivity extends SherlockListActivity {
         ActionBar bar = getSupportActionBar();
         bar.setTitle("RAYBAN");
         bar.setSubtitle("Only $999");
-        
+
+        //
         //3.0+ ONLY code!!!
         final ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL); //_MODAL

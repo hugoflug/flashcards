@@ -3,7 +3,7 @@ package se.flashcards;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
-//
+
 public class Card {
 	private Bitmap question;
 	private Bitmap answer;

@@ -69,7 +69,7 @@ public class CardsListActivity extends SherlockActivity {
     		@Override
     		protected void onProgressUpdate (Card... values) {
     			 cardList.add(values[0]);
-    			 cardAdapter.notifyDataSetChanged();
+    			 cardAdapter.notifyDataSetChanged ();
     			 drawer.unlock();
     		}
     	};
