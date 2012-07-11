@@ -69,8 +69,9 @@ public class FlashcardsActivity extends SherlockListActivity {
 		            case R.id.menu_delete:
 		                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();             
 		                int removed = 0;
+		                //FELFELFELFELFEL
 		                for (int i = 0; i < checkedItems.size(); i++) {
-		                	cardListsAdapter.remove(cardListsAdapter.getItem(i - removed));
+		                	cardListsAdapter.remove(cardListsAdapter.getItem(checkedItems.keyAt(i) - removed));
 		                	removed++;
 		                }
 		                mode.finish();
@@ -102,7 +103,7 @@ public class FlashcardsActivity extends SherlockListActivity {
 			public void onItemCheckedStateChanged(ActionMode mode, int pos, long id, boolean checked) {
 				//temp
 				Toast toast = Toast.makeText(FlashcardsActivity.this, "" + listView.getCheckedItemCount(), Toast.LENGTH_SHORT);
-				toast.show();
+				toast.show();	
 			}
         });
        
