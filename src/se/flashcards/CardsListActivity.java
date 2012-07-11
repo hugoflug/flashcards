@@ -1,15 +1,20 @@
 package se.flashcards;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -26,13 +31,16 @@ import com.actionbarsherlock.view.MenuItem;
 public class CardsListActivity extends SherlockActivity {
 	private static final int SELECT_QUESTION_IMAGE = 0;
 	private static final int SELECT_ANSWER_IMAGE = 1;
+	private static final int TAKE_QUESTION_PHOTO = 2;
+	private static final int TAKE_ANSWER_PHOTO = 3;
 	private CardPagerAdapter cardAdapter;
 	private List<Card> cardList;
 	private ViewPager viewPager;
 	private ImageView answerImage;
 	private BitmapDownsampler downSampler;
-	private Bitmap tempQuestionImage;
 	private Uri tempQuestionUri;
+	private Uri tempNewPhotoQuestionUri;
+	private Uri tempNewPhotoAnswerUri;
 	private WrappingSlidingDrawer drawer;
 	
 	private String name;
@@ -59,18 +67,22 @@ public class CardsListActivity extends SherlockActivity {
         drawer.lock();
         
         infoSaver = InfoSaver.getInfoSaver(this);
-
-//		cardList = infoSaver.getCards(name, downSampler); //old
         
         //new
     	cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
     	LoadCardsTask loadCards = new LoadCardsTask(this, name, downSampler) {
+    		private boolean answerImageSet = false;
+    		
     		@Override
     		protected void onProgressUpdate (Card... values) {
     			 cardList.add(values[0]);
     			 cardAdapter.notifyDataSetChanged();
-    			 answerImage.setImageBitmap(values[0].getAnswer());
+    			 
+    			 if (!answerImageSet) {
+    				 answerImage.setImageBitmap(values[0].getAnswer());
+    				 answerImageSet = true;
+    			 }
     			 drawer.unlock();
     		}
     	};
@@ -91,7 +103,7 @@ public class CardsListActivity extends SherlockActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.layout.actionbar_menu, menu);
+        inflater.inflate(R.layout.cardslist_actionbar_menu, menu);
         return true;
     }
     
@@ -105,44 +117,50 @@ public class CardsListActivity extends SherlockActivity {
     	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); 
     	    	startActivity(intent);
     	    	finish(); //??
-    			break;
+    		break;
     		case R.id.menu_make_new:
     			Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
     						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
     			pickImageIntent.setType("image/*"); //necessary??
     			startActivityForResult(pickImageIntent, SELECT_ANSWER_IMAGE);	//temp
     			startActivityForResult(pickImageIntent, SELECT_QUESTION_IMAGE);
-    			break;
+    		break;
+    		case R.id.menu_take_photo:
+    			Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    			tempNewPhotoQuestionUri = createNewImageUri("q");
+    			tempNewPhotoAnswerUri = createNewImageUri("a");
+    			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempNewPhotoAnswerUri);
+    		    startActivityForResult(takePictureIntent, TAKE_ANSWER_PHOTO);	//temp
+    			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempNewPhotoQuestionUri);
+    		    startActivityForResult(takePictureIntent, TAKE_QUESTION_PHOTO);
+    		break;
     	}
         return true;
     }
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) { 
-	    super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) { 
+	    super.onActivityResult(requestCode, resultCode, intent);
 		if (resultCode == RESULT_OK) {
 		    switch (requestCode) {
 		    	case SELECT_QUESTION_IMAGE:
-	    			Uri image = imageReturnedIntent.getData();
+	    			tempQuestionUri = intent.getData();
+		    	break;
+		    	case SELECT_ANSWER_IMAGE:
+	    			Uri answer = intent.getData();
 	    			try {
-	    				Bitmap bmp = downSampler.decode(image);
-	    				tempQuestionImage = bmp;
-	    				tempQuestionUri = image;
-	//	    			cardList.add(new Card(bmp, bmp));
-	//	    			cardAdapter.notifyDataSetChanged();
+	    				addCard(tempQuestionUri, answer);
 					} catch (IOException e) {
 						//TODO: write error message to user
 						Log.v("Flashcards", "File could not be opened");
 					}
 		    	break;
-		    	case SELECT_ANSWER_IMAGE:
-	    			image = imageReturnedIntent.getData();
+		    	case TAKE_QUESTION_PHOTO:
+
+		    	break;
+		    	case TAKE_ANSWER_PHOTO:
 	    			try {
-	    				Bitmap bmp = downSampler.decode(image);
-	    				cardList.add(new Card(tempQuestionUri, tempQuestionImage, image, bmp));
-	    				cardAdapter.notifyDataSetChanged();
-	    				answerImage.setImageBitmap(bmp);
-	    				drawer.unlock();
+	    				addCard(tempNewPhotoQuestionUri, tempNewPhotoAnswerUri); //TEMP
 					} catch (IOException e) {
 						//TODO: write error message to user
 						Log.v("Flashcards", "File could not be opened");
@@ -150,6 +168,26 @@ public class CardsListActivity extends SherlockActivity {
 		    	break;
 		    }
 		}
+	}
+	
+	private void addCard(Uri question, Uri answer) throws IOException {
+		Bitmap questionBmp = downSampler.decode(question);
+		Bitmap answerBmp = downSampler.decode(answer);
+		
+		cardList.add(new Card(question, questionBmp, answer, answerBmp));
+		cardAdapter.notifyDataSetChanged();
+		answerImage.setImageBitmap(answerBmp);
+		drawer.unlock();
+	}
+	
+	private Uri createNewImageUri(String addition) {
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		String imageFileName = timeStamp + "_" + addition + ".jpg";
+		File file = new File(
+			    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), 
+			    imageFileName
+			);	
+		return Uri.fromFile(file);
 	}
 	
 	@Override
