@@ -69,15 +69,12 @@ public class CardsListActivity extends SherlockActivity {
     		@Override
     		protected void onProgressUpdate (Card... values) {
     			 cardList.add(values[0]);
-    			 cardAdapter.notifyDataSetChanged ();
+    			 cardAdapter.notifyDataSetChanged();
+    			 answerImage.setImageBitmap(values[0].getAnswer());
     			 drawer.unlock();
     		}
     	};
     	loadCards.execute();
-        
-//        if (cardList.size() > 0) {
-//			drawer.unlock();
-//        }
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         viewPager.setAdapter(cardAdapter);    
