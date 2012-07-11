@@ -69,7 +69,6 @@ public class FlashcardsActivity extends SherlockListActivity {
 		            case R.id.menu_delete:
 		                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();             
 		                int removed = 0;
-		                //FELFELFELFELFEL
 		                for (int i = 0; i < checkedItems.size(); i++) {
 		                	cardListsAdapter.remove(cardListsAdapter.getItem(checkedItems.keyAt(i) - removed));
 		                	removed++;
