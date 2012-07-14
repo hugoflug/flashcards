@@ -13,7 +13,7 @@ public class CardContent {
 	private Context c;
 	private boolean isBitmap;
 	
-	public CardContent(Context c, String string) {
+	public CardContent(String string) {
 		this.string = string;
 		this.c = c;
 		isBitmap = false;
@@ -25,18 +25,19 @@ public class CardContent {
 		isBitmap = true;
 	}
 	
-	public void save() {
-		
+	public Uri getUri() {
+		return bitmapUri;
 	}
 	
-	public void load() {
-		
+	public Bitmap getBitmap() {
+		return bitmap;
 	}
 	
-	public View getView() {
-		ImageView i = new ImageView(c);
-		i.setImageBitmap(bitmap);
-        i.setScaleType(ImageView.ScaleType.FIT_START);
-        return i;
+	public String getString() {
+		return string;
+	}
+	
+	public boolean isBitmap() {
+		return isBitmap;
 	}
 }

@@ -36,7 +36,7 @@ public class CardsListActivity extends SherlockActivity {
 	private CardPagerAdapter cardAdapter;
 	private List<Card> cardList;
 	private ViewPager viewPager;
-	private ImageView answerImage;
+	private CardContentView answerView;
 	private BitmapDownsampler downSampler;
 	private Uri tempQuestionUri;
 	private Uri tempNewPhotoQuestionUri;
@@ -62,7 +62,7 @@ public class CardsListActivity extends SherlockActivity {
         
         downSampler = new BitmapDownsampler(this, 600, 1000); //600, 1000
         
-        answerImage = (ImageView)findViewById(R.id.content);
+        answerView = (CardContentView)findViewById(R.id.content);
         drawer = (WrappingSlidingDrawer)findViewById(R.id.drawer);
         drawer.lock();
         
@@ -80,10 +80,7 @@ public class CardsListActivity extends SherlockActivity {
     			 cardAdapter.notifyDataSetChanged();
     			 
     			 if (!answerImageSet) {
-    				 //prototype
-    				 //answerView.removeViews();
-    				 //answerView.addView(values[0].getAnswerView());
-    				 answerImage.setImageBitmap(values[0].getAnswer());
+    				 answerView.setCardContent(values[0].getAnswer());
     				 answerImageSet = true;
     			 }
     			 drawer.unlock();
@@ -101,7 +98,7 @@ public class CardsListActivity extends SherlockActivity {
 				//prototype
 				//answerView.removeViews();
 				//answerView.addView(cardList.get(position).getAnswerView());
-				answerImage.setImageBitmap(cardList.get(position).getAnswer());
+				answerView.setCardContent(cardList.get(position).getAnswer());
 			}
         });
     }
@@ -198,9 +195,11 @@ public class CardsListActivity extends SherlockActivity {
 		//cardList.add(new Card(new CardContent(this, question, questionBmp), new CardContent(this, answer, answerBmp)));
 		//answerView.removeViews();
 		//answerView.addView(answerBmp);
-		cardList.add(new Card(question, questionBmp, answer, answerBmp));
+		CardContent answerContent = new CardContent(answerBmp, answer);
+		CardContent questionContent = new CardContent(questionBmp, question);
+		cardList.add(new Card(questionContent, answerContent));
 		cardAdapter.notifyDataSetChanged();
-		answerImage.setImageBitmap(answerBmp);
+		answerView.setCardContent(answerContent);
 		drawer.unlock();
 	}
 	

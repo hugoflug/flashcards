@@ -58,8 +58,9 @@ public class InfoSaver
 		SharedPreferences.Editor edit = prefs.edit();
 		int nr = 0;
 		for (Card card : cards) {
-			String a = card.getAnswerUri().toString();
-			String q = card.getQuestionUri().toString();
+			//TEMP, should be able to save Strings effortlessly as well
+			String a = card.getAnswer().getUri().toString();
+			String q = card.getQuestion().getUri().toString();
 			edit.putString("cardlist_" + listName + "_q_" + nr, q);
 			edit.putString("cardlist_" + listName + "_a_" + nr, a);
 			nr++;
@@ -101,7 +102,10 @@ public class InfoSaver
 			Uri a = Uri.parse(prefs.getString("cardlist_" + listName + "_a_" + pos, ""));
 			Card card = null;
 			try {
-				card = new Card(q, sampler.decode(q), a, sampler.decode(a));
+				//TEMP, should be able to load Strings effortlessly as well
+				CardContent question = new CardContent(sampler.decode(q), q);
+				CardContent answer = new CardContent(sampler.decode(a), a);
+				card = new Card(question, answer);
 			} catch (IOException e) {
 				Log.v("flashcards", "Couldn't load bitmap");
 			}
