@@ -39,6 +39,18 @@ public class InfoSaver
 		for (int i = 0; i < cardListsAmnt; i++) {
 			cardLists.add(prefs.getString("cardlist_" + i, "katja le hipster"));
 		}
+		
+		//to be implemented when actual deletion is implemented
+//		int i = 0;
+//		while (true) {
+//			String str = prefs.getString("cardlist_" + i, "");
+//			if (str.equals("")) {
+//				break;
+//			}
+//			cardLists.add(str);
+//			i++;
+//		}
+		
 		return cardLists;
 	}
 

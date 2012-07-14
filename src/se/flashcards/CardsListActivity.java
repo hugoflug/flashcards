@@ -121,16 +121,26 @@ public class CardsListActivity extends SherlockActivity {
     		case R.id.menu_make_new:
     			Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
     						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    			
+    			//TEMP
+//				non-standard!!!
+//    			pickImageIntent.putExtra("crop", "true"); 
+//    			pickImageIntent.putExtra("outputX", 200);
+//    			pickImageIntent.putExtra("outputY", 200);
+//    			pickImageIntent.putExtra("aspectX", 1);
+//    			pickImageIntent.putExtra("aspectY", 1);
+//    			pickImageIntent.putExtra("scale", true);
+//    			pickImageIntent.putExtra("return-data", true);
+    			
     			pickImageIntent.setType("image/*"); //necessary??
-    			startActivityForResult(pickImageIntent, SELECT_ANSWER_IMAGE);	//temp
     			startActivityForResult(pickImageIntent, SELECT_QUESTION_IMAGE);
     		break;
-    		case R.id.menu_take_photo:
+    		case R.id.menu_take_photo:    			
     			Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     			tempNewPhotoQuestionUri = createNewImageUri("q");
-    			tempNewPhotoAnswerUri = createNewImageUri("a");
-    			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempNewPhotoAnswerUri);
-    		    startActivityForResult(takePictureIntent, TAKE_ANSWER_PHOTO);	//temp
+//    			tempNewPhotoAnswerUri = createNewImageUri("a");
+//    			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempNewPhotoAnswerUri);
+//    		    startActivityForResult(takePictureIntent, TAKE_ANSWER_PHOTO);	//temp
     			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempNewPhotoQuestionUri);
     		    startActivityForResult(takePictureIntent, TAKE_QUESTION_PHOTO);
     		break;
@@ -145,6 +155,10 @@ public class CardsListActivity extends SherlockActivity {
 		    switch (requestCode) {
 		    	case SELECT_QUESTION_IMAGE:
 	    			tempQuestionUri = intent.getData();
+	    			
+	    			Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
+    						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+	    			startActivityForResult(pickImageIntent, SELECT_ANSWER_IMAGE);
 		    	break;
 		    	case SELECT_ANSWER_IMAGE:
 	    			Uri answer = intent.getData();
@@ -156,7 +170,10 @@ public class CardsListActivity extends SherlockActivity {
 					}
 		    	break;
 		    	case TAKE_QUESTION_PHOTO:
-
+		    		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	    			tempNewPhotoAnswerUri = createNewImageUri("a");
+	    			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempNewPhotoAnswerUri);
+	    		    startActivityForResult(takePictureIntent, TAKE_ANSWER_PHOTO);	//temp
 		    	break;
 		    	case TAKE_ANSWER_PHOTO:
 	    			try {
