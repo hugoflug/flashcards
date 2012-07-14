@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="match_parent"
+	    android:layout_height="0px"
+	    android:layout_weight="1"
+	    android:orientation="vertical">
+	    <se.flashcards.CardContentView
+	        android:id="@+id/question_content"
+	        android:layout_width="match_parent"
+	        android:layout_height="0px"
+	        android:layout_weight="1">
+	    </se.flashcards.CardContentView>
+	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    	android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_weight="0"
+	    	android:orientation="horizontal" >
+	    	<ImageButton
+	    	    android:id="@+id/pick_q_image_button"
+	    	    android:layout_width="0px"
+	    	    android:layout_height="wrap_content" 
+	    	    android:layout_weight="1"
+	    	    android:src="@drawable/android:ic_menu_gallery"
+	    	    android:onClick="pickQuestionImage" >
+	    	</ImageButton>
+	    	<ImageButton
+	    	    android:id="@+id/pick_q_text_button"
+	    	    android:layout_width="0px"
+	    	    android:layout_height="wrap_content" 
+	    	    android:layout_weight="1"
+	    	    android:src="@drawable/android:ic_menu_gallery" 
+	    	    android:onClick="pickQuestionText" >
+	    	</ImageButton>
+	    	<ImageButton
+	    	    android:id="@+id/take_q_image_button"
+	    	    android:layout_width="0px"
+	    	    android:layout_height="wrap_content" 
+	    	    android:layout_weight="1"
+	    	    android:src="@drawable/android:ic_menu_camera" 
+	    	    android:onClick="takeQuestionImage" >
+	    	</ImageButton>
+	    </LinearLayout>
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="match_parent"
+	    android:layout_height="0px"
+	    android:layout_weight="1"
+	    android:orientation="vertical">
+	    <se.flashcards.CardContentView
+	        android:id="@+id/answer_content"
+	        android:layout_width="match_parent"
+	        android:layout_height="0px"
+	        android:layout_weight="1">
+	    </se.flashcards.CardContentView>
+	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    	android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_weight="0"
+	    	android:orientation="horizontal" >
+	    	<ImageButton
+	    	    android:id="@+id/pick_a_image_button"
+	    	    android:layout_width="0px"
+	    	    android:layout_height="wrap_content" 
+	    	    android:layout_weight="1"
+	    	    android:src="@drawable/android:ic_menu_gallery"
+	    	    android:onClick="pickAnswerImage" >
+	    	</ImageButton>
+	    	<ImageButton
+	    	    android:id="@+id/pick_a_text_button"
+	    	    android:layout_width="0px"
+	    	    android:layout_height="wrap_content" 
+	    	    android:layout_weight="1"
+	    	    android:src="@drawable/android:ic_menu_gallery"
+	    	    android:onClick="pickAnswerText" >
+	    	</ImageButton>
+	    	<ImageButton
+	    	    android:id="@+id/take_a_image_button"
+	    	    android:layout_width="0px"
+	    	    android:layout_height="wrap_content" 
+	    	    android:layout_weight="1"
+	    	    android:src="@drawable/android:ic_menu_camera" 
+	    	    android:onClick="takeAnswerImage" >
+	    	</ImageButton>
+	    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

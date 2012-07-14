@@ -100,9 +100,7 @@ public class FlashcardsActivity extends SherlockListActivity {
 
 			@Override
 			public void onItemCheckedStateChanged(ActionMode mode, int pos, long id, boolean checked) {
-				//temp
-				Toast toast = Toast.makeText(FlashcardsActivity.this, "" + listView.getCheckedItemCount(), Toast.LENGTH_SHORT);
-				toast.show();	
+
 			}
         });
        

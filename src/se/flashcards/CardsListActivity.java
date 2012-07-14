@@ -33,6 +33,7 @@ public class CardsListActivity extends SherlockActivity {
 	private static final int SELECT_ANSWER_IMAGE = 1;
 	private static final int TAKE_QUESTION_PHOTO = 2;
 	private static final int TAKE_ANSWER_PHOTO = 3;
+	
 	private CardPagerAdapter cardAdapter;
 	private List<Card> cardList;
 	private ViewPager viewPager;
@@ -42,7 +43,6 @@ public class CardsListActivity extends SherlockActivity {
 	private Uri tempNewPhotoQuestionUri;
 	private Uri tempNewPhotoAnswerUri;
 	private WrappingSlidingDrawer drawer;
-	
 	private String name;
 	private InfoSaver infoSaver;
 	
@@ -119,21 +119,14 @@ public class CardsListActivity extends SherlockActivity {
     	    	finish(); //??
     		break;
     		case R.id.menu_make_new:
-    			Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
-    						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    			Intent startNewIntent = new Intent(this, NewCardActivity.class);
+    			startActivity(startNewIntent);
     			
-    			//TEMP
-//				non-standard!!!
-//    			pickImageIntent.putExtra("crop", "true"); 
-//    			pickImageIntent.putExtra("outputX", 200);
-//    			pickImageIntent.putExtra("outputY", 200);
-//    			pickImageIntent.putExtra("aspectX", 1);
-//    			pickImageIntent.putExtra("aspectY", 1);
-//    			pickImageIntent.putExtra("scale", true);
-//    			pickImageIntent.putExtra("return-data", true);
-    			
-    			pickImageIntent.setType("image/*"); //necessary??
-    			startActivityForResult(pickImageIntent, SELECT_QUESTION_IMAGE);
+//    			Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
+//    						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//    			
+//    			pickImageIntent.setType("image/*"); //necessary??
+//    			startActivityForResult(pickImageIntent, SELECT_QUESTION_IMAGE);
     		break;
     		case R.id.menu_take_photo:    			
     			Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
