@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 
-public class InfoSaver 
+public class InfoSaver
 {
 	private SharedPreferences prefs;
 	
@@ -19,7 +19,7 @@ public class InfoSaver
 	}
 	
 	public InfoSaver(Context c, String name) {
-		prefs = c.getSharedPreferences(name, c.MODE_PRIVATE);
+		prefs = c.getSharedPreferences(name, Context.MODE_PRIVATE);
 	}
 	
 	public void saveCardLists(List<String> cardLists) {
