@@ -33,12 +33,6 @@
 		        android:scaleType="fitXY"
 		        android:background="#ff252525">
 		    </ImageView>  
-	<!--    <ImageView android:id="@id/content"
-		        android:layout_width="match_parent" 
-		        android:layout_height="wrap_content"
-		        android:scaleType="fitStart"
-		        android:background="#ff808080">
-		    </ImageView>  -->
 		    <se.flashcards.CardContentView
 		        android:id="@id/content"
 		        android:layout_width="match_parent" 

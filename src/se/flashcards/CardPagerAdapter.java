@@ -39,8 +39,8 @@ public class CardPagerAdapter extends PagerAdapter {
 //		collection.addView(i);
 		
 		CardContentView i = new CardContentView(context);
+		i.setScaleType(ImageView.ScaleType.FIT_START);
 		i.setCardContent(cards.get(position).getQuestion());
-		//i.setScaleType(ImageView.ScaleType.FIT_START);
 		collection.addView(i);
 		
 		return i;

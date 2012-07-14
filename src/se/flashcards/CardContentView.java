@@ -5,10 +5,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 public class CardContentView extends FrameLayout {
 	private Context context;
+	private ScaleType bitmapScaleType;
 	
 	
 	public CardContentView(Context context) {
@@ -31,13 +33,20 @@ public class CardContentView extends FrameLayout {
 		if (content.isBitmap()) {
 			ImageView i = new ImageView(context);
 			i.setImageBitmap(content.getBitmap());
-	//      i.setScaleType(ImageView.ScaleType.FIT_START);
+			
+			if (bitmapScaleType != null) {
+				i.setScaleType(bitmapScaleType);
+			}
 			addView(i);
 		} else {
 			TextView t = new TextView(context);
 			t.setText(content.getString());
 			addView(t);
 		}
+	}
+
+	public void setScaleType(ScaleType scaleType) {
+		bitmapScaleType = scaleType;
 	}
 
 	
