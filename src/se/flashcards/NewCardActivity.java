@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -29,9 +31,14 @@ public class NewCardActivity extends SherlockActivity
 	private static final int SELECT_ANSWER_IMAGE = 1;
 	private static final int TAKE_QUESTION_PHOTO = 2;
 	private static final int TAKE_ANSWER_PHOTO = 3;
+	public static final String ANSWER_EXTRA = "answer";
+	public static final String QUESTION_EXTRA = "question";
 	
-	private CardContent question;
-	private CardContent answer;
+	
+	private CardContent question = null;
+	private CardContent answer = null;
+	
+	private Button confirmButton;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +51,8 @@ public class NewCardActivity extends SherlockActivity
     	
     	answerContentView.setCardContent(getDefaultAnswerContent());
     	questionContentView.setCardContent(getDefaultQuestionContent());
+  
+    	confirmButton = (Button)findViewById(R.id.confirm_button);
     	
         downSampler = new BitmapDownsampler(this, 600, 1000); //600, 1000
     }
@@ -126,6 +135,14 @@ public class NewCardActivity extends SherlockActivity
 	    startActivityForResult(takePictureIntent, TAKE_ANSWER_PHOTO);
     }
     
+	public void confirmCard(View view) {
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra(ANSWER_EXTRA, answer);
+		resultIntent.putExtra(QUESTION_EXTRA, question);
+		setResult(SherlockActivity.RESULT_OK, resultIntent);
+		finish();
+	}
+    
 	private Uri createNewImageUri(String addition) {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		String imageFileName = timeStamp + "_" + addition + ".jpg";
@@ -147,13 +164,21 @@ public class NewCardActivity extends SherlockActivity
 	private void setQuestion(CardContent q) {
 		question = q;
 		questionContentView.setCardContent(q);
+		
+		if (answer != null) {
+			confirmButton.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	private void setAnswer(CardContent a) {
 		answer = a;
 		answerContentView.setCardContent(a);
+		
+		if (question != null) {
+			confirmButton.setVisibility(View.VISIBLE);
+		}
 	}
-    
+	
     private CardContent getDefaultQuestionContent() {
     	return new CardContent("Pick a question");
     }

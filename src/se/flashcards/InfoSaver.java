@@ -111,7 +111,6 @@ public class InfoSaver
 				Uri q = Uri.parse(prefs.getString("cardlist_" + listName + "_q_" + pos, ""));
 				Uri a = Uri.parse(prefs.getString("cardlist_" + listName + "_a_" + pos, ""));
 				try {
-					//TEMP, should be able to load Strings effortlessly as well
 					CardContent question = new CardContent(sampler.decode(q), q);
 					CardContent answer = new CardContent(sampler.decode(a), a);
 					card = new Card(question, answer);

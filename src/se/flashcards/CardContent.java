@@ -1,21 +1,24 @@
 package se.flashcards;
 
+import java.io.IOException;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-public class CardContent {
+public class CardContent implements Parcelable {
 	private Bitmap bitmap;
 	private Uri bitmapUri;
 	private String string;
-	private Context c;
 	private boolean isBitmap;
 	
 	public CardContent(String string) {
 		this.string = string;
-		this.c = c;
 		isBitmap = false;
 	}
 	
@@ -39,5 +42,48 @@ public class CardContent {
 	
 	public boolean isBitmap() {
 		return isBitmap;
+	}
+	
+	public void reloadBitmap(BitmapDownsampler sampler) throws IOException {
+		bitmap = sampler.decode(bitmapUri);
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+	
+	
+	
+	public static final Parcelable.Creator<CardContent> CREATOR = new Parcelable.Creator<CardContent>() {
+		public CardContent createFromParcel(Parcel in) {
+		    return new CardContent(in);
+		}
+		
+		public CardContent[] newArray(int size) {
+		    return new CardContent[size];
+		}
+	};
+	
+	public CardContent(Parcel in) {
+		isBitmap = in.readInt() == 0; //== 0?
+		
+		if (isBitmap) {
+			bitmapUri = in.readParcelable(null);
+		} else {
+			string = in.readString();
+		}
+	}
+
+	@Override
+	public void writeToParcel(Parcel out, int flags) {
+		out.writeInt(isBitmap ? 0 : 1 );
+		
+		if (isBitmap) {
+			out.writeParcelable(bitmapUri, 0);
+		} else {
+			out.writeString(string);
+		}
+		
 	}
 }

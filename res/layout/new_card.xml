@@ -33,7 +33,7 @@
 	    	    android:layout_height="wrap_content" 
 	    	    android:layout_weight="1"
 	    	    android:src="@drawable/android:ic_menu_gallery" 
-	    	    android:onClick="pickQuestionText" >
+	    	    android:onClick="pickQuestionText">
 	    	</ImageButton>
 	    	<ImageButton
 	    	    android:id="@+id/take_q_image_button"
@@ -87,4 +87,12 @@
 	    	</ImageButton>
 	    </LinearLayout>
     </LinearLayout>
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="CONFIRM"
+	    android:onClick="confirmCard"
+	    android:visibility="gone" >     
+    </Button> 
 </LinearLayout>

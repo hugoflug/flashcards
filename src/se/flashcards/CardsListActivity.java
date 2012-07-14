@@ -33,6 +33,7 @@ public class CardsListActivity extends SherlockActivity {
 	private static final int SELECT_ANSWER_IMAGE = 1;
 	private static final int TAKE_QUESTION_PHOTO = 2;
 	private static final int TAKE_ANSWER_PHOTO = 3;
+	private static final int MAKE_NEW_CARD = 4;
 	
 	private CardPagerAdapter cardAdapter;
 	private List<Card> cardList;
@@ -120,25 +121,10 @@ public class CardsListActivity extends SherlockActivity {
     		break;
     		case R.id.menu_make_new:
     			Intent startNewIntent = new Intent(this, NewCardActivity.class);
-    			startActivity(startNewIntent);
-    			
-//    			Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
-//    						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//    			
-//    			pickImageIntent.setType("image/*"); //necessary??
-//    			startActivityForResult(pickImageIntent, SELECT_QUESTION_IMAGE);
-    		break;
-    		case R.id.menu_take_photo:    			
-    			Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    			tempNewPhotoQuestionUri = createNewImageUri("q");
-    			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempNewPhotoQuestionUri);
-    		    startActivityForResult(takePictureIntent, TAKE_QUESTION_PHOTO);
-    		break;
-    		case R.id.menu_new_text:
-				addCard(new CardContent("lulz"), new CardContent("dspf"));
+    			startActivityForResult(startNewIntent, MAKE_NEW_CARD);
     		break;
     	}
-        return true;
+    	return true;
     }
 	
 	@Override
@@ -146,39 +132,16 @@ public class CardsListActivity extends SherlockActivity {
 	    super.onActivityResult(requestCode, resultCode, intent);
 		if (resultCode == RESULT_OK) {
 		    switch (requestCode) {
-		    	case SELECT_QUESTION_IMAGE:
-	    			tempQuestionUri = intent.getData();
-	    	
-	    			Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
-    						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-	    			startActivityForResult(pickImageIntent, SELECT_ANSWER_IMAGE);
-		    	break;
-		    	case SELECT_ANSWER_IMAGE:
-	    			Uri answerUri = intent.getData();
-	    			try {
-	    				CardContent questionContent = new CardContent(downSampler.decode(tempQuestionUri), tempQuestionUri);
-	    				CardContent answerContent = new CardContent(downSampler.decode(answerUri), answerUri);
-	    				addCard(questionContent, answerContent);
+		    	case MAKE_NEW_CARD:
+		    		CardContent question = intent.getParcelableExtra(NewCardActivity.QUESTION_EXTRA);
+		    		CardContent answer = intent.getParcelableExtra(NewCardActivity.ANSWER_EXTRA);
+					try {
+						question.reloadBitmap(downSampler);
+			    		answer.reloadBitmap(downSampler);
 					} catch (IOException e) {
-						//TODO: write error message to user
-						Log.v("Flashcards", "File could not be opened");
+						Log.v("flashcards", "Couldn't load image.");
 					}
-		    	break;
-		    	case TAKE_QUESTION_PHOTO:
-		    		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-	    			tempNewPhotoAnswerUri = createNewImageUri("a");
-	    			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempNewPhotoAnswerUri);
-	    		    startActivityForResult(takePictureIntent, TAKE_ANSWER_PHOTO);	//temp
-		    	break;
-		    	case TAKE_ANSWER_PHOTO:
-	    			try {
-	    				CardContent questionContent = new CardContent(downSampler.decode(tempNewPhotoQuestionUri), tempNewPhotoQuestionUri);
-	    				CardContent answerContent = new CardContent(downSampler.decode(tempNewPhotoAnswerUri), tempNewPhotoAnswerUri);
-	    				addCard(questionContent, answerContent); //TEMP
-					} catch (IOException e) {
-						//TODO: write error message to user
-						Log.v("Flashcards", "File could not be opened");
-					}
+		    		addCard(question, answer);
 		    	break;
 		    }
 		}
@@ -190,17 +153,6 @@ public class CardsListActivity extends SherlockActivity {
 		answerView.setCardContent(answer);
 		drawer.unlock();
 	}
-	
-	private Uri createNewImageUri(String addition) {
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		String imageFileName = timeStamp + "_" + addition + ".jpg";
-		File file = new File(
-			    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), 
-			    imageFileName
-			);	
-		return Uri.fromFile(file);
-	}
-	
 	@Override
 	protected void onPause() {
 		super.onPause();
