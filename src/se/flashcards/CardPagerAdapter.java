@@ -33,11 +33,6 @@ public class CardPagerAdapter extends PagerAdapter {
 	
 	@Override
 	public Object instantiateItem(ViewGroup collection, int position) {
-//		ImageView i = new ImageView(context);
-//		i.setImageBitmap(cards.get(position).getQuestion());
-//        i.setScaleType(ImageView.ScaleType.FIT_START);
-//		collection.addView(i);
-		
 		CardContentView i = new CardContentView(context);
 		i.setScaleType(ImageView.ScaleType.FIT_START);
 		i.setCardContent(cards.get(position).getQuestion());

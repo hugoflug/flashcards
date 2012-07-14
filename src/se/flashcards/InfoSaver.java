@@ -57,12 +57,26 @@ public class InfoSaver
 	public void saveCards(String listName, List<Card> cards) {
 		SharedPreferences.Editor edit = prefs.edit();
 		int nr = 0;
-		for (Card card : cards) {
-			//TEMP, should be able to save Strings effortlessly as well
-			String a = card.getAnswer().getUri().toString();
-			String q = card.getQuestion().getUri().toString();
-			edit.putString("cardlist_" + listName + "_q_" + nr, q);
-			edit.putString("cardlist_" + listName + "_a_" + nr, a);
+		for (Card card : cards) {			
+			//can probably be refactored nicer (DRY)
+			if (card.getAnswer().isBitmap()) {
+				String a = card.getAnswer().getUri().toString();
+				edit.putBoolean("cardlist_" + listName + "_a_" + nr + "_bmp", true);
+				edit.putString("cardlist_" + listName + "_a_" + nr, a);
+			} else {
+				String a = card.getAnswer().getString();
+				edit.putBoolean("cardlist_" + listName + "_a_" + nr + "_bmp", false);
+				edit.putString("cardlist_" + listName + "_a_" + nr, a);
+			}
+			if (card.getQuestion().isBitmap()) {
+				String q = card.getQuestion().getUri().toString();
+				edit.putBoolean("cardlist_" + listName + "_q_" + nr + "_bmp", true);
+				edit.putString("cardlist_" + listName + "_q_" + nr, q);
+			} else {
+				String q = card.getQuestion().getString();
+				edit.putBoolean("cardlist_" + listName + "_q_" + nr + "_bmp", false);
+				edit.putString("cardlist_" + listName + "_q_" + nr, q);
+			}	
 			nr++;
 		}
 		edit.commit();
@@ -85,29 +99,29 @@ public class InfoSaver
 		
 		@Override
 		public boolean hasNext() {
-			if (!gotNext) {
-				nextQ = prefs.getString("cardlist_" + listName + "_q_" + pos, "");
-			}
-			return !nextQ.equals("");
+			//TODO: optimize, no unnecessary calls to this
+			return !prefs.getString("cardlist_" + listName + "_q_" + pos, "").equals("");
 		}
 
 		@Override
 		public Card next() {
-			Uri q = null;
-			if (gotNext) {
-				q = Uri.parse(nextQ);
-			} else {
-				q = Uri.parse(prefs.getString("cardlist_" + listName + "_q_" + pos, ""));
-			}
-			Uri a = Uri.parse(prefs.getString("cardlist_" + listName + "_a_" + pos, ""));
 			Card card = null;
-			try {
-				//TEMP, should be able to load Strings effortlessly as well
-				CardContent question = new CardContent(sampler.decode(q), q);
-				CardContent answer = new CardContent(sampler.decode(a), a);
-				card = new Card(question, answer);
-			} catch (IOException e) {
-				Log.v("flashcards", "Couldn't load bitmap");
+			boolean isBitmap = prefs.getBoolean("cardlist_" + listName + "_q_" + pos + "_bmp", true);
+			if (isBitmap) {
+				Uri q = Uri.parse(prefs.getString("cardlist_" + listName + "_q_" + pos, ""));
+				Uri a = Uri.parse(prefs.getString("cardlist_" + listName + "_a_" + pos, ""));
+				try {
+					//TEMP, should be able to load Strings effortlessly as well
+					CardContent question = new CardContent(sampler.decode(q), q);
+					CardContent answer = new CardContent(sampler.decode(a), a);
+					card = new Card(question, answer);
+				} catch (IOException e) {
+					Log.v("flashcards", "Couldn't load bitmap");
+				}
+			} else {
+				String q = prefs.getString("cardlist_" + listName + "_q_" + pos, "");
+				String a = prefs.getString("cardlist_" + listName + "_a_" + pos, "");
+				card = new Card(new CardContent(q), new CardContent(a));
 			}
 			pos++;
 			gotNext = false;

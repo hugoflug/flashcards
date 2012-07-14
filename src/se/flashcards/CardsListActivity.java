@@ -95,9 +95,6 @@ public class CardsListActivity extends SherlockActivity {
 			@Override
 			public void onPageSelected(int position) {
 				drawer.close();
-				//prototype
-				//answerView.removeViews();
-				//answerView.addView(cardList.get(position).getAnswerView());
 				answerView.setCardContent(cardList.get(position).getAnswer());
 			}
         });
@@ -144,6 +141,9 @@ public class CardsListActivity extends SherlockActivity {
     			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempNewPhotoQuestionUri);
     		    startActivityForResult(takePictureIntent, TAKE_QUESTION_PHOTO);
     		break;
+    		case R.id.menu_new_text:
+				addCard(new CardContent("lulz"), new CardContent("dspf"));
+    		break;
     	}
         return true;
     }
@@ -155,15 +155,17 @@ public class CardsListActivity extends SherlockActivity {
 		    switch (requestCode) {
 		    	case SELECT_QUESTION_IMAGE:
 	    			tempQuestionUri = intent.getData();
-	    			
+	    	
 	    			Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
     						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 	    			startActivityForResult(pickImageIntent, SELECT_ANSWER_IMAGE);
 		    	break;
 		    	case SELECT_ANSWER_IMAGE:
-	    			Uri answer = intent.getData();
+	    			Uri answerUri = intent.getData();
 	    			try {
-	    				addCard(tempQuestionUri, answer);
+	    				CardContent questionContent = new CardContent(downSampler.decode(tempQuestionUri), tempQuestionUri);
+	    				CardContent answerContent = new CardContent(downSampler.decode(answerUri), answerUri);
+	    				addCard(questionContent, answerContent);
 					} catch (IOException e) {
 						//TODO: write error message to user
 						Log.v("Flashcards", "File could not be opened");
@@ -177,7 +179,9 @@ public class CardsListActivity extends SherlockActivity {
 		    	break;
 		    	case TAKE_ANSWER_PHOTO:
 	    			try {
-	    				addCard(tempNewPhotoQuestionUri, tempNewPhotoAnswerUri); //TEMP
+	    				CardContent questionContent = new CardContent(downSampler.decode(tempNewPhotoQuestionUri), tempNewPhotoQuestionUri);
+	    				CardContent answerContent = new CardContent(downSampler.decode(tempNewPhotoAnswerUri), tempNewPhotoAnswerUri);
+	    				addCard(questionContent, answerContent); //TEMP
 					} catch (IOException e) {
 						//TODO: write error message to user
 						Log.v("Flashcards", "File could not be opened");
@@ -187,19 +191,10 @@ public class CardsListActivity extends SherlockActivity {
 		}
 	}
 	
-	private void addCard(Uri question, Uri answer) throws IOException {
-		Bitmap questionBmp = downSampler.decode(question);
-		Bitmap answerBmp = downSampler.decode(answer);
-		
-		//prototype
-		//cardList.add(new Card(new CardContent(this, question, questionBmp), new CardContent(this, answer, answerBmp)));
-		//answerView.removeViews();
-		//answerView.addView(answerBmp);
-		CardContent answerContent = new CardContent(answerBmp, answer);
-		CardContent questionContent = new CardContent(questionBmp, question);
-		cardList.add(new Card(questionContent, answerContent));
+	private void addCard(CardContent question, CardContent answer) {
+		cardList.add(new Card(question, answer));
 		cardAdapter.notifyDataSetChanged();
-		answerView.setCardContent(answerContent);
+		answerView.setCardContent(answer);
 		drawer.unlock();
 	}
 	
