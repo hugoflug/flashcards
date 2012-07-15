@@ -66,7 +66,7 @@ public class CardContent implements Parcelable {
 	};
 	
 	public CardContent(Parcel in) {
-		isBitmap = in.readInt() == 0; //== 0?
+		isBitmap = in.readInt() == 1;
 		
 		if (isBitmap) {
 			bitmapUri = in.readParcelable(null);
@@ -77,7 +77,7 @@ public class CardContent implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
-		out.writeInt(isBitmap ? 0 : 1 );
+		out.writeInt(isBitmap ? 1 : 0 );
 		
 		if (isBitmap) {
 			out.writeParcelable(bitmapUri, 0);

@@ -8,18 +8,31 @@
 	    android:layout_height="0px"
 	    android:layout_weight="1"
 	    android:orientation="vertical">
-	    <se.flashcards.CardContentView
-	        android:id="@+id/question_content"
+	    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	        android:layout_width="match_parent"
 	        android:layout_height="0px"
 	        android:layout_weight="1">
-	    </se.flashcards.CardContentView>
+		    <se.flashcards.CardContentView
+		        android:id="@+id/question_content"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent">
+		    </se.flashcards.CardContentView>
+	    	<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+	    	    android:id="@+id/q_options"
+	    	    android:layout_width="wrap_content"
+	    	    android:layout_height="wrap_content"
+	    	    android:layout_gravity="bottom|right"
+	    	    android:src="@drawable/android:ic_menu_gallery"
+	    	    android:onClick="questionOptions" 
+	    	    android:visibility="gone">
+	    	</ImageButton>
+	    </FrameLayout>
 	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    	android:layout_width="match_parent"
 	    	android:layout_height="wrap_content"
 	    	android:layout_weight="0"
 	    	android:orientation="horizontal" >
-	    	<ImageButton
+	    	<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
 	    	    android:id="@+id/pick_q_image_button"
 	    	    android:layout_width="0px"
 	    	    android:layout_height="wrap_content" 
@@ -50,12 +63,25 @@
 	    android:layout_height="0px"
 	    android:layout_weight="1"
 	    android:orientation="vertical">
-	    <se.flashcards.CardContentView
-	        android:id="@+id/answer_content"
+	    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	        android:layout_width="match_parent"
 	        android:layout_height="0px"
 	        android:layout_weight="1">
-	    </se.flashcards.CardContentView>
+		    <se.flashcards.CardContentView
+		        android:id="@+id/answer_content"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent">
+		    </se.flashcards.CardContentView>
+	    	<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+	    	    android:id="@+id/a_options"
+	    	    android:layout_width="wrap_content"
+	    	    android:layout_height="wrap_content"
+	    	    android:layout_gravity="bottom|right"
+	    	    android:src="@drawable/android:ic_menu_gallery"
+	    	    android:onClick="answerOptions" 
+	    	    android:visibility="gone">
+	    	</ImageButton>
+	    </FrameLayout>
 	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    	android:layout_width="match_parent"
 	    	android:layout_height="wrap_content"

@@ -142,6 +142,24 @@ public class NewCardActivity extends SherlockActivity
 		setResult(SherlockActivity.RESULT_OK, resultIntent);
 		finish();
 	}
+	
+    public void answerOptions(View view) {
+		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_a_image_button);
+		ImageButton pickTextButton = (ImageButton)findViewById(R.id.pick_a_text_button);
+		ImageButton takeImageButton = (ImageButton)findViewById(R.id.take_a_image_button);
+		pickImageButton.setVisibility(View.VISIBLE);
+		pickTextButton.setVisibility(View.VISIBLE);
+		takeImageButton.setVisibility(View.VISIBLE);
+    }
+    
+    public void questionOptions(View view) {
+		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_q_image_button);
+		ImageButton pickTextButton = (ImageButton)findViewById(R.id.pick_q_text_button);
+		ImageButton takeImageButton = (ImageButton)findViewById(R.id.take_q_image_button);
+		pickImageButton.setVisibility(View.VISIBLE);
+		pickTextButton.setVisibility(View.VISIBLE);
+		takeImageButton.setVisibility(View.VISIBLE);
+    }
     
 	private Uri createNewImageUri(String addition) {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -168,6 +186,17 @@ public class NewCardActivity extends SherlockActivity
 		if (answer != null) {
 			confirmButton.setVisibility(View.VISIBLE);
 		}
+		
+		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_q_image_button);
+		ImageButton pickTextButton = (ImageButton)findViewById(R.id.pick_q_text_button);
+		ImageButton takeImageButton = (ImageButton)findViewById(R.id.take_q_image_button);
+		pickImageButton.setVisibility(View.GONE);
+		pickTextButton.setVisibility(View.GONE);
+		takeImageButton.setVisibility(View.GONE);
+		
+		ImageButton qOptionsButton = (ImageButton)findViewById(R.id.q_options);
+		qOptionsButton.setVisibility(View.VISIBLE);
+				
 	}
 	
 	private void setAnswer(CardContent a) {
@@ -177,6 +206,13 @@ public class NewCardActivity extends SherlockActivity
 		if (question != null) {
 			confirmButton.setVisibility(View.VISIBLE);
 		}
+		
+		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_a_image_button);
+		ImageButton pickTextButton = (ImageButton)findViewById(R.id.pick_a_text_button);
+		ImageButton takeImageButton = (ImageButton)findViewById(R.id.take_a_image_button);
+		pickImageButton.setVisibility(View.GONE);
+		pickTextButton.setVisibility(View.GONE);
+		takeImageButton.setVisibility(View.GONE);
 	}
 	
     private CardContent getDefaultQuestionContent() {
