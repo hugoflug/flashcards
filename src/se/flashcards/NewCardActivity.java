@@ -144,21 +144,23 @@ public class NewCardActivity extends SherlockActivity
 	}
 	
     public void answerOptions(View view) {
-		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_a_image_button);
-		ImageButton pickTextButton = (ImageButton)findViewById(R.id.pick_a_text_button);
-		ImageButton takeImageButton = (ImageButton)findViewById(R.id.take_a_image_button);
-		pickImageButton.setVisibility(View.VISIBLE);
-		pickTextButton.setVisibility(View.VISIBLE);
-		takeImageButton.setVisibility(View.VISIBLE);
+    	boolean isVisible = isAnswerButtonsVisible();
+    	
+    	if (isVisible) {
+    		setAnswerButtonsVisibility(View.GONE);
+    	} else {
+    		setAnswerButtonsVisibility(View.VISIBLE);
+    	}
     }
     
     public void questionOptions(View view) {
-		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_q_image_button);
-		ImageButton pickTextButton = (ImageButton)findViewById(R.id.pick_q_text_button);
-		ImageButton takeImageButton = (ImageButton)findViewById(R.id.take_q_image_button);
-		pickImageButton.setVisibility(View.VISIBLE);
-		pickTextButton.setVisibility(View.VISIBLE);
-		takeImageButton.setVisibility(View.VISIBLE);
+    	boolean isVisible = isQuestionButtonsVisible();
+    	
+    	if (isVisible) {
+    		setQuestionButtonsVisibility(View.GONE);
+    	} else {
+    		setQuestionButtonsVisibility(View.VISIBLE);
+    	}
     }
     
 	private Uri createNewImageUri(String addition) {
@@ -187,12 +189,7 @@ public class NewCardActivity extends SherlockActivity
 			confirmButton.setVisibility(View.VISIBLE);
 		}
 		
-		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_q_image_button);
-		ImageButton pickTextButton = (ImageButton)findViewById(R.id.pick_q_text_button);
-		ImageButton takeImageButton = (ImageButton)findViewById(R.id.take_q_image_button);
-		pickImageButton.setVisibility(View.GONE);
-		pickTextButton.setVisibility(View.GONE);
-		takeImageButton.setVisibility(View.GONE);
+		setQuestionButtonsVisibility(View.GONE);
 		
 		ImageButton qOptionsButton = (ImageButton)findViewById(R.id.q_options);
 		qOptionsButton.setVisibility(View.VISIBLE);
@@ -207,12 +204,38 @@ public class NewCardActivity extends SherlockActivity
 			confirmButton.setVisibility(View.VISIBLE);
 		}
 		
+		setAnswerButtonsVisibility(View.GONE);
+		
+		ImageButton aOptionsButton = (ImageButton)findViewById(R.id.a_options);
+		aOptionsButton.setVisibility(View.VISIBLE);
+	}
+	
+	private boolean isQuestionButtonsVisible() {
+		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_q_image_button);
+		return pickImageButton.getVisibility() == View.VISIBLE;
+	}
+	
+	private boolean isAnswerButtonsVisible() {
+		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_a_image_button);
+		return pickImageButton.getVisibility() == View.VISIBLE;
+	}
+	
+	private void setQuestionButtonsVisibility(int visibility) {
+		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_q_image_button);
+		ImageButton pickTextButton = (ImageButton)findViewById(R.id.pick_q_text_button);
+		ImageButton takeImageButton = (ImageButton)findViewById(R.id.take_q_image_button);
+		pickImageButton.setVisibility(visibility);
+		pickTextButton.setVisibility(visibility);
+		takeImageButton.setVisibility(visibility);
+	}
+	
+	private void setAnswerButtonsVisibility(int visibility) {
 		ImageButton pickImageButton = (ImageButton)findViewById(R.id.pick_a_image_button);
 		ImageButton pickTextButton = (ImageButton)findViewById(R.id.pick_a_text_button);
 		ImageButton takeImageButton = (ImageButton)findViewById(R.id.take_a_image_button);
-		pickImageButton.setVisibility(View.GONE);
-		pickTextButton.setVisibility(View.GONE);
-		takeImageButton.setVisibility(View.GONE);
+		pickImageButton.setVisibility(visibility);
+		pickTextButton.setVisibility(visibility);
+		takeImageButton.setVisibility(visibility);
 	}
 	
     private CardContent getDefaultQuestionContent() {
