@@ -54,7 +54,7 @@ public class NewCardActivity extends SherlockActivity
   
     	confirmButton = (Button)findViewById(R.id.confirm_button);
     	
-        downSampler = new BitmapDownsampler(this, 600, 1000); //600, 1000
+        downSampler = new BitmapDownsampler(this, 1000, 1000); //600, 1000
     }
     
 	@Override

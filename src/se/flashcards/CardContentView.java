@@ -33,6 +33,7 @@ public class CardContentView extends FrameLayout {
 		if (content.isBitmap()) {
 			ImageView i = new ImageView(context);
 			i.setImageBitmap(content.getBitmap());
+			i.setAdjustViewBounds(true);
 			
 			if (bitmapScaleType != null) {
 				i.setScaleType(bitmapScaleType);
@@ -41,6 +42,8 @@ public class CardContentView extends FrameLayout {
 		} else {
 			TextView t = new TextView(context);
 			t.setText(content.getString());
+			//test
+			t.setTextAppearance(context, android.R.style.TextAppearance_Large);
 			addView(t);
 		}
 	}

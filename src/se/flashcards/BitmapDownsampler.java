@@ -40,7 +40,7 @@ public class BitmapDownsampler
 	    final int currentHeight = options.outHeight;
 	    final int currentWidth = options.outWidth;
 	    int inSampleSize = 1;
-	
+	    
 	    if (currentHeight > height || currentWidth > width) {
 	        if (currentHeight > currentWidth) {
 	            inSampleSize = Math.round((float)currentHeight / (float)height);

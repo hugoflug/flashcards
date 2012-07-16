@@ -55,8 +55,6 @@ public class FlashcardsActivity extends SherlockListActivity {
         setListAdapter(cardListsAdapter);
         
         ActionBar bar = getSupportActionBar();
-        bar.setTitle("RAYBAN");
-        bar.setSubtitle("Only $999");
 
         //
         //3.0+ ONLY code!!!
