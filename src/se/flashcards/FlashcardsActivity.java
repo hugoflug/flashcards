@@ -24,6 +24,7 @@ import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.WindowManager.LayoutParams;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -53,9 +54,6 @@ public class FlashcardsActivity extends SherlockListActivity {
         cardLists = infoSaver.getCardLists();
         cardListsAdapter = new ArrayAdapter<String>(this, R.layout.list_item, cardLists);
         setListAdapter(cardListsAdapter);
-        
-        ActionBar bar = getSupportActionBar();
-
         //
         //3.0+ ONLY code!!!
         final ListView listView = getListView();
@@ -136,7 +134,8 @@ public class FlashcardsActivity extends SherlockListActivity {
     }
     
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) 
+    {
         com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.layout.actionbar_menu, menu);
         return true;
@@ -164,7 +163,8 @@ public class FlashcardsActivity extends SherlockListActivity {
                 LayoutInflater factory = LayoutInflater.from(this);
                 final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
                 final TextView textView = (TextView)textEntryView.findViewById(R.id.text);
-                return new AlertDialog.Builder(this)
+                textView.requestFocus();
+                Dialog dialog = new AlertDialog.Builder(this)
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .setTitle("Make new entry")
                     .setView(textEntryView)
@@ -183,6 +183,8 @@ public class FlashcardsActivity extends SherlockListActivity {
                         }
                     })
                     .create();
+                dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                return dialog;
     		default:
     			return null;
     	}

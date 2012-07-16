@@ -77,6 +77,7 @@ public class NewCardActivity extends SherlockActivity
 			    	} catch (IOException e) {
 						Log.v("flashcards", "Couldn't load image");
 			    	}
+			    break;
 		    	case SELECT_ANSWER_IMAGE:
 		    		Uri answerUri = intent.getData();
 					try {
@@ -130,7 +131,7 @@ public class NewCardActivity extends SherlockActivity
     
     public void takeAnswerImage(View view) {
     	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		newQuestionPhotoUri = createNewImageUri("a");
+		newAnswerPhotoUri = createNewImageUri("a");
 		takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, newAnswerPhotoUri);
 	    startActivityForResult(takePictureIntent, TAKE_ANSWER_PHOTO);
     }
