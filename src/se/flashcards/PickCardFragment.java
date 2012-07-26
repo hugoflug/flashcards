@@ -1,0 +1,197 @@
+package se.flashcards;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+
+public class PickCardFragment extends Fragment {
+	
+	//must be implemented by container Activity
+    public interface OnContentChangedListener {
+        public void onContentChanged(CardContent newContent);
+    }
+	
+	private CardContentView contentView;
+	private Uri newPhotoUri;
+	private BitmapDownsampler downSampler;
+	private CardContent cardContent;
+	private boolean contentIsDefault = true;
+	
+	private static final int SELECT_IMAGE = 0;
+	private static final int TAKE_PHOTO = 1;
+	
+	public static final String ANSWER_EXTRA = "answer";
+	public static final String QUESTION_EXTRA = "question";
+	
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            CharSequence defaultText = args.getCharSequence("default_text");
+            if (defaultText != null) {
+            	setContent(new CardContent(defaultText.toString()));
+            }
+        }
+        
+        downSampler = new BitmapDownsampler(getActivity(), 1000, 1000);
+    }
+    
+	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.pick_card_fragment_layout, container, false);
+    	contentView = (CardContentView)view.findViewById(R.id.content);
+    	
+    	
+    	ImageButton pickImageButton = (ImageButton)view.findViewById(R.id.pick_image_button);
+    	pickImageButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+		    	onPickImageClicked(v);
+			}
+    	});
+    	ImageButton makeTextButton = (ImageButton)view.findViewById(R.id.make_text_button);
+    	makeTextButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+		    	onMakeTextClicked(v);
+			}
+    	});   	
+    	ImageButton takeImageButton = (ImageButton)view.findViewById(R.id.take_image_button);
+    	takeImageButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+		    	onTakeImageClicked(v);
+			}
+    	});
+    	
+    	ImageButton optionsButton = (ImageButton)view.findViewById(R.id.options);
+    	optionsButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+		    	onOptionsClicked(v);
+			}
+    	});
+    	
+    	return view;
+	}
+    
+	@Override
+	public void onPause() {
+		super.onPause();
+	}
+	
+	public boolean isContentDefault() {
+		return contentIsDefault;
+	}
+	
+	public CardContent getCardContent() {
+		return cardContent;
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) { 
+	    super.onActivityResult(requestCode, resultCode, intent);
+		if (resultCode == Activity.RESULT_OK) {
+			switch (requestCode) {
+		    	case TAKE_PHOTO:
+					try {
+						CardContent content = new CardContent(downSampler.decode(newPhotoUri), newPhotoUri);
+						setContent(content);
+					} catch (IOException e) {
+						Log.v("flashcards", "Couldn't load image");
+					}
+		    	break;
+		    	case SELECT_IMAGE:
+		    		Uri uri = intent.getData();
+					try {
+						CardContent content = new CardContent(downSampler.decode(uri), uri);
+						setContent(content);
+					} catch (IOException e) {
+						Log.v("flashcards", "Couldn't load image");
+					}
+		    	break;
+			}
+		}
+	}
+	
+    public void onPickImageClicked(View view) {
+    	Intent pickImageIntent = new Intent(Intent.ACTION_PICK, 
+    			android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    	pickImageIntent.setType("image/*"); //necessary??
+    	startActivityForResult(pickImageIntent, SELECT_IMAGE);
+    }
+    
+    public void onMakeTextClicked(View view) {
+        
+    }
+    
+    public void onTakeImageClicked(View view) {
+    	Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		newPhotoUri = createNewImageUri();
+		takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, newPhotoUri);
+	    startActivityForResult(takePictureIntent, TAKE_PHOTO);
+    }
+	
+    public void onOptionsClicked(View view) {
+    	boolean isVisible = isButtonsVisible();
+    	
+    	if (isVisible) {
+    		setButtonsVisibility(View.GONE);
+    	} else {
+    		setButtonsVisibility(View.VISIBLE);
+    	}
+    }
+	
+	private void setContent(CardContent c) {
+		cardContent = c;
+		contentIsDefault = false;
+		contentView.setCardContent(c);
+		
+		setButtonsVisibility(View.GONE);
+		
+		ImageButton optionsButton = (ImageButton)getView().findViewById(R.id.options);
+		optionsButton.setVisibility(View.VISIBLE);	
+		
+		((OnContentChangedListener)getActivity()).onContentChanged(cardContent);
+	}
+	
+	private Uri createNewImageUri() {
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		String imageFileName = timeStamp + ".jpg";
+		File file = new File(
+			    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), 
+			    imageFileName
+			);	
+		return Uri.fromFile(file);
+	}
+	
+	private boolean isButtonsVisible() {
+		ImageButton pickImageButton = (ImageButton)getView().findViewById(R.id.pick_image_button);
+		return pickImageButton.getVisibility() == View.VISIBLE;
+	}
+	
+	private void setButtonsVisibility(int visibility) {
+		ImageButton pickImageButton = (ImageButton)getView().findViewById(R.id.pick_image_button);
+		ImageButton pickTextButton = (ImageButton)getView().findViewById(R.id.make_text_button);
+		ImageButton takeImageButton = (ImageButton)getView().findViewById(R.id.take_image_button);
+		pickImageButton.setVisibility(visibility);
+		pickTextButton.setVisibility(visibility);
+		takeImageButton.setVisibility(visibility);
+	}
+}
