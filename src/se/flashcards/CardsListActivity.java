@@ -29,20 +29,13 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 public class CardsListActivity extends SherlockActivity {
-	private static final int SELECT_QUESTION_IMAGE = 0;
-	private static final int SELECT_ANSWER_IMAGE = 1;
-	private static final int TAKE_QUESTION_PHOTO = 2;
-	private static final int TAKE_ANSWER_PHOTO = 3;
-	private static final int MAKE_NEW_CARD = 4;
+	private static final int MAKE_NEW_CARD = 1;
 	
 	private CardPagerAdapter cardAdapter;
 	private List<Card> cardList;
 	private ViewPager viewPager;
 	private CardContentView answerView;
 	private BitmapDownsampler downSampler;
-	private Uri tempQuestionUri;
-	private Uri tempNewPhotoQuestionUri;
-	private Uri tempNewPhotoAnswerUri;
 	private WrappingSlidingDrawer drawer;
 	private String name;
 	private InfoSaver infoSaver;
