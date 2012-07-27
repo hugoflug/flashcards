@@ -36,9 +36,12 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.new_card);
     	setTheme(R.style.Theme_Sherlock);
-    	
-    	answer = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.answer);
+ 
     	question = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.question);
+    	answer = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.answer);
+    	
+    	question.setDefaultContent(new CardContent("Pick a question"));
+    	answer.setDefaultContent(new CardContent("Pick an answer"));
     	
     	confirmButton = (Button)findViewById(R.id.confirm_button);
     }

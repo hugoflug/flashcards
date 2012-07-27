@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class PickCardFragment extends Fragment {
+public class PickCardFragment extends Fragment implements WriteTextDialogFragment.OnTextMadeListener {
 	
 	//must be implemented by container Activity
     public interface OnContentChangedListener {
@@ -42,15 +43,12 @@ public class PickCardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null) {
-            CharSequence defaultText = args.getCharSequence("default_text");
-            if (defaultText != null) {
-            	setContent(new CardContent(defaultText.toString()));
-            }
-        }
-        
         downSampler = new BitmapDownsampler(getActivity(), 1000, 1000);
+    }
+    
+    public void setDefaultContent(CardContent defaultContent) {
+    	cardContent = defaultContent;
+    	contentView.setCardContent(defaultContent);
     }
     
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -138,7 +136,13 @@ public class PickCardFragment extends Fragment {
     }
     
     public void onMakeTextClicked(View view) {
-        
+        DialogFragment dialogFragment = new WriteTextDialogFragment();
+        dialogFragment.setTargetFragment(this, 0);
+        dialogFragment.show(getFragmentManager(), "dialog");
+    }
+    
+    public void onTextMade(CharSequence text) {
+    	setContent(new CardContent(text.toString()));
     }
     
     public void onTakeImageClicked(View view) {

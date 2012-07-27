@@ -45,7 +45,9 @@ public class CardContent implements Parcelable {
 	}
 	
 	public void reloadBitmap(BitmapDownsampler sampler) throws IOException {
-		bitmap = sampler.decode(bitmapUri);
+		if (isBitmap) {
+			bitmap = sampler.decode(bitmapUri);
+		}
 	}
 
 	@Override

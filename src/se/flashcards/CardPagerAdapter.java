@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -35,6 +36,7 @@ public class CardPagerAdapter extends PagerAdapter {
 	public Object instantiateItem(ViewGroup collection, int position) {
 		CardContentView i = new CardContentView(context);
 		i.setScaleType(ImageView.ScaleType.FIT_START);
+		Log.v("flashcards", "card: " + cards.get(position));
 		i.setCardContent(cards.get(position).getQuestion());
 		collection.addView(i);
 		

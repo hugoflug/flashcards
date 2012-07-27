@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import se.flashcards.WriteTextDialogFragment.OnTextMadeListener;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
 //import com.actionbarsherlock.view.ActionMode;
@@ -18,6 +20,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -34,7 +37,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FlashcardsActivity extends SherlockListActivity {
+public class FlashcardsActivity extends SherlockListActivity implements OnTextMadeListener {
 	
 	private static final int DIALOG_MAKE_NEW = 0;
 	
@@ -145,6 +148,8 @@ public class FlashcardsActivity extends SherlockListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) {
     		case R.id.menu_make_new:
+    	//		DialogFragment dialogFragment = new WriteTextDialogFragment();
+    	//		dialogFragment.show(getFragmentManager(), "dialog");
     			showDialog(DIALOG_MAKE_NEW);
     			break;
     	}
@@ -194,5 +199,12 @@ public class FlashcardsActivity extends SherlockListActivity {
 	protected void onPause() {
 		super.onPause();
 		infoSaver.saveCardLists(cardLists);
+	}
+
+	@Override
+	public void onTextMade(CharSequence text) {
+		if (!text.toString().equals("")) {
+    		cardListsAdapter.add(text.toString());
+    	}
 	}
 }

@@ -42,7 +42,6 @@ public class CardContentView extends FrameLayout {
 		} else {
 			TextView t = new TextView(context);
 			t.setText(content.getString());
-			//test
 			t.setTextAppearance(context, android.R.style.TextAppearance_Large);
 			addView(t);
 		}
