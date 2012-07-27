@@ -33,6 +33,8 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
 	private BitmapDownsampler downSampler;
 	private CardContent cardContent;
 	private boolean contentIsDefault = true;
+	private String newTextTitle;
+	private String newTextHint;
 	
 	private static final int SELECT_IMAGE = 0;
 	private static final int TAKE_PHOTO = 1;
@@ -44,6 +46,8 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
         downSampler = new BitmapDownsampler(getActivity(), 1000, 1000);
+        newTextTitle = "Write new text";
+        newTextHint = "Text";
     }
     
     public void setDefaultContent(CardContent defaultContent) {
@@ -102,6 +106,14 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
 		return cardContent;
 	}
 	
+	public void setNewTextTitle(String title) {
+		newTextTitle = title;
+	}
+	
+	public void setNewTextHint(String hint) {
+		newTextHint = hint;
+	}
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) { 
 	    super.onActivityResult(requestCode, resultCode, intent);
@@ -136,7 +148,7 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
     }
     
     public void onMakeTextClicked(View view) {
-        DialogFragment dialogFragment = new WriteTextDialogFragment();
+        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance(newTextTitle, newTextHint);
         dialogFragment.setTargetFragment(this, 0);
         dialogFragment.show(getFragmentManager(), "dialog");
     }

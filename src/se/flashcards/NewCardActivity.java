@@ -43,6 +43,12 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     	question.setDefaultContent(new CardContent("Pick a question"));
     	answer.setDefaultContent(new CardContent("Pick an answer"));
     	
+    	question.setNewTextTitle("Write a new question");
+    	answer.setNewTextTitle("Write a new answer");
+    	
+    	question.setNewTextHint("Question");
+    	answer.setNewTextHint("Answer");
+    	
     	confirmButton = (Button)findViewById(R.id.confirm_button);
     }
 

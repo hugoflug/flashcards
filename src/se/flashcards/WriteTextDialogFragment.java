@@ -20,15 +20,29 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
 		public void onTextMade(CharSequence text);
 	}
 	
+	public static WriteTextDialogFragment newInstance(String title, String hint) {
+		WriteTextDialogFragment fragment = new WriteTextDialogFragment();
+		Bundle args = new Bundle();
+		args.putString("title", title);
+		args.putString("hint", hint);
+		fragment.setArguments(args);
+		return fragment;
+		
+	}
+	
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+		String title = getArguments().getString("title");
+		String hint = getArguments().getString("hint");
+		
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
         final TextView textView = (TextView)textEntryView.findViewById(R.id.text);
+        textView.setHint(hint);
         textView.requestFocus();
         Dialog dialog = new AlertDialog.Builder(getActivity())
             .setIconAttribute(android.R.attr.alertDialogIcon)
-            .setTitle("Make new entry")
+            .setTitle(title)
             .setView(textEntryView)
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
             	@Override
