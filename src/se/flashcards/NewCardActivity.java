@@ -16,10 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 public class NewCardActivity extends SherlockFragmentActivity implements PickCardFragment.OnContentChangedListener
 {
@@ -36,6 +38,9 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.new_card);
     	setTheme(R.style.Theme_Sherlock);
+    	
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setDisplayHomeAsUpEnabled(true);
  
     	question = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.question);
     	answer = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.answer);
@@ -51,6 +56,21 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     	
     	confirmButton = (Button)findViewById(R.id.confirm_button);
     }
+    
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()) {
+    		case android.R.id.home:
+    			//doesn't work as intended
+    	    	Intent intent = new Intent(this, CardsListActivity.class);
+    	    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+    	    	startActivity(intent);
+    	    	finish(); //??
+    		break;
+    	}
+    	return true;
+	}
 
 	@Override
 	public void onContentChanged(CardContent newContent) {
@@ -65,5 +85,10 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
 		resultIntent.putExtra(QUESTION_EXTRA, question.getCardContent());
 		setResult(SherlockActivity.RESULT_OK, resultIntent);
 		finish();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
 	}
 }

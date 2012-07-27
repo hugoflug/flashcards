@@ -58,28 +58,41 @@ public class InfoSaver
 		SharedPreferences.Editor edit = prefs.edit();
 		int nr = 0;
 		for (Card card : cards) {			
-			//can probably be refactored nicer (DRY)
-			if (card.getAnswer().isBitmap()) {
-				String a = card.getAnswer().getUri().toString();
-				edit.putBoolean("cardlist_" + listName + "_a_" + nr + "_bmp", true);
-				edit.putString("cardlist_" + listName + "_a_" + nr, a);
-			} else {
-				String a = card.getAnswer().getString();
-				edit.putBoolean("cardlist_" + listName + "_a_" + nr + "_bmp", false);
-				edit.putString("cardlist_" + listName + "_a_" + nr, a);
-			}
-			if (card.getQuestion().isBitmap()) {
-				String q = card.getQuestion().getUri().toString();
-				edit.putBoolean("cardlist_" + listName + "_q_" + nr + "_bmp", true);
-				edit.putString("cardlist_" + listName + "_q_" + nr, q);
-			} else {
-				String q = card.getQuestion().getString();
-				edit.putBoolean("cardlist_" + listName + "_q_" + nr + "_bmp", false);
-				edit.putString("cardlist_" + listName + "_q_" + nr, q);
-			}	
+			saveCardContent(edit, "cardlist_" + listName + "_q_" + nr, card.getQuestion());
+			saveCardContent(edit, "cardlist_" + listName + "_a_" + nr, card.getAnswer());	
 			nr++;
 		}
 		edit.commit();
+	
+	}
+	
+	public static void saveCardContent(SharedPreferences.Editor editor, String name, CardContent content) {
+		String toSave = "";
+		boolean isBmp = false;
+		if (content.isBitmap()) {
+			toSave = content.getUri().toString();
+			isBmp = true;
+		} else {
+			toSave = content.getString();
+			isBmp = false;
+		}
+		editor.putBoolean(name + "_bmp", isBmp);
+		editor.putString(name, toSave);
+	}
+	
+	public static CardContent loadCardContent(SharedPreferences prefs, String name, BitmapDownsampler downSampler) {
+		boolean isBitmap = prefs.getBoolean(name + "_bmp", true);
+		if (isBitmap) {
+			Uri q = Uri.parse(prefs.getString(name, ""));
+			try {
+				return new CardContent(downSampler.decode(q), q);
+			} catch (IOException e) {
+				Log.v("flashcards", "Couldn't load question bitmap");
+				return null;
+			}
+		} else {
+			return new CardContent(prefs.getString(name, ""));
+		}
 	}
 	
 	public static class CardLoaderIterator implements Iterator<Card>, Iterable<Card> {
@@ -105,32 +118,9 @@ public class InfoSaver
 
 		@Override
 		public Card next() {
-			CardContent question = null;
-			CardContent answer = null;
+			CardContent question = loadCardContent(prefs, "cardlist_" + listName + "_q_" + pos, sampler);
+			CardContent answer = loadCardContent(prefs, "cardlist_" + listName + "_a_" + pos, sampler);
 			
-			boolean isBitmap = prefs.getBoolean("cardlist_" + listName + "_q_" + pos + "_bmp", true);
-			if (isBitmap) {
-				Uri q = Uri.parse(prefs.getString("cardlist_" + listName + "_q_" + pos, ""));
-				try {
-					question = new CardContent(sampler.decode(q), q);
-				} catch (IOException e) {
-					Log.v("flashcards", "Couldn't load question bitmap");
-				}
-			} else {
-				question = new CardContent(prefs.getString("cardlist_" + listName + "_q_" + pos, ""));
-			}
-			
-			isBitmap = prefs.getBoolean("cardlist_" + listName + "_a_" + pos + "_bmp", true);
-			if (isBitmap) {
-				Uri a = Uri.parse(prefs.getString("cardlist_" + listName + "_a_" + pos, ""));
-				try {
-					answer = new CardContent(sampler.decode(a), a);
-				} catch (IOException e) {
-					Log.v("flashcards", "Couldn't load answer bitmap");
-				}
-			} else {
-				answer = new CardContent(prefs.getString("cardlist_" + listName + "_a_" + pos, ""));
-			}
 			pos++;
 			gotNext = false;
 			return new Card(question, answer);

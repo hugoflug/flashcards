@@ -3,6 +3,7 @@ package se.flashcards;
 import java.io.IOException;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Parcel;
@@ -86,6 +87,5 @@ public class CardContent implements Parcelable {
 		} else {
 			out.writeString(string);
 		}
-		
 	}
 }

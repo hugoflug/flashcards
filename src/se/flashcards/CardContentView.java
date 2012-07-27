@@ -2,10 +2,12 @@ package se.flashcards;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class CardContentView extends FrameLayout {
@@ -38,11 +40,15 @@ public class CardContentView extends FrameLayout {
 			if (bitmapScaleType != null) {
 				i.setScaleType(bitmapScaleType);
 			}
+			
 			addView(i);
 		} else {
 			TextView t = new TextView(context);
 			t.setText(content.getString());
 			t.setTextAppearance(context, android.R.style.TextAppearance_Large);
+			
+			t.setGravity(Gravity.CENTER);
+			
 			addView(t);
 		}
 	}
