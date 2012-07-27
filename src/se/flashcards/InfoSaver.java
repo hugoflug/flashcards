@@ -105,26 +105,35 @@ public class InfoSaver
 
 		@Override
 		public Card next() {
-			Card card = null;
+			CardContent question = null;
+			CardContent answer = null;
+			
 			boolean isBitmap = prefs.getBoolean("cardlist_" + listName + "_q_" + pos + "_bmp", true);
 			if (isBitmap) {
 				Uri q = Uri.parse(prefs.getString("cardlist_" + listName + "_q_" + pos, ""));
-				Uri a = Uri.parse(prefs.getString("cardlist_" + listName + "_a_" + pos, ""));
 				try {
-					CardContent question = new CardContent(sampler.decode(q), q);
-					CardContent answer = new CardContent(sampler.decode(a), a);
-					card = new Card(question, answer);
+					question = new CardContent(sampler.decode(q), q);
 				} catch (IOException e) {
-					Log.v("flashcards", "Couldn't load bitmap");
+					Log.v("flashcards", "Couldn't load question bitmap");
 				}
 			} else {
-				String q = prefs.getString("cardlist_" + listName + "_q_" + pos, "");
-				String a = prefs.getString("cardlist_" + listName + "_a_" + pos, "");
-				card = new Card(new CardContent(q), new CardContent(a));
+				question = new CardContent(prefs.getString("cardlist_" + listName + "_q_" + pos, ""));
+			}
+			
+			isBitmap = prefs.getBoolean("cardlist_" + listName + "_a_" + pos + "_bmp", true);
+			if (isBitmap) {
+				Uri a = Uri.parse(prefs.getString("cardlist_" + listName + "_a_" + pos, ""));
+				try {
+					answer = new CardContent(sampler.decode(a), a);
+				} catch (IOException e) {
+					Log.v("flashcards", "Couldn't load answer bitmap");
+				}
+			} else {
+				answer = new CardContent(prefs.getString("cardlist_" + listName + "_a_" + pos, ""));
 			}
 			pos++;
 			gotNext = false;
-			return card;
+			return new Card(question, answer);
 		}
 
 		@Override

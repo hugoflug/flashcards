@@ -36,7 +36,7 @@ public class CardPagerAdapter extends PagerAdapter {
 	public Object instantiateItem(ViewGroup collection, int position) {
 		CardContentView i = new CardContentView(context);
 		i.setScaleType(ImageView.ScaleType.FIT_START);
-		Log.v("flashcards", "card: " + cards.get(position));
+		Log.v("flashcards", "card: " + cards.get(position)); //card: null
 		i.setCardContent(cards.get(position).getQuestion());
 		collection.addView(i);
 		
