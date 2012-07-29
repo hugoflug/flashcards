@@ -107,13 +107,13 @@ public class CardsListActivity extends SherlockActivity {
     		case android.R.id.home:
     	    	Intent intent = new Intent(this, FlashcardsActivity.class);
     	    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    	    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); 
+    	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
     	    	startActivity(intent);
     	    	finish(); //??
     		break;
     		case R.id.menu_make_new:
     			Intent startNewIntent = new Intent(this, NewCardActivity.class);
+    			startNewIntent.putExtra("list_name", name);
     			startActivityForResult(startNewIntent, MAKE_NEW_CARD);
     		break;
     	}

@@ -32,6 +32,7 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
 	private PickCardFragment answer;
 	
 	private Button confirmButton;
+	private String listName;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,14 +40,27 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     	setContentView(R.layout.new_card);
     	setTheme(R.style.Theme_Sherlock);
     	
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setDisplayHomeAsUpEnabled(true);
+    	Intent intent = getIntent();
+    	listName = intent.getStringExtra("list_name");
+    	
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
  
     	question = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.question);
     	answer = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.answer);
     	
     	question.setDefaultContent(new CardContent("Pick a question"));
     	answer.setDefaultContent(new CardContent("Pick an answer"));
+    	
+//    	InfoSaver infoSaver = InfoSaver.getInfoSaver(this);  	
+//    	if (infoSaver.cardContentExists(listName + "_new_question")) {
+//    		CardContent questionContent = infoSaver.loadCardContent(listName + "_new_question", new BitmapDownsampler(this, 1000, 1000));
+//        	question.setContent(questionContent);
+//    	}
+//    	if (infoSaver.cardContentExists(listName + "_new_answer")) {
+//    		CardContent answerContent = infoSaver.loadCardContent(listName + "_new_answer", new BitmapDownsampler(this, 1000, 1000));
+//    		answer.setContent(answerContent);
+//    	}
     	
     	question.setNewTextTitle("Write a new question");
     	answer.setNewTextTitle("Write a new answer");
@@ -63,7 +77,8 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     		case android.R.id.home:
     			//doesn't work as intended
     	    	Intent intent = new Intent(this, CardsListActivity.class);
-    	    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    	    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
     	    	startActivity(intent);
     	    	finish(); //??
@@ -90,5 +105,8 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
 	@Override
 	protected void onPause() {
 		super.onPause();
+		InfoSaver saver = InfoSaver.getInfoSaver(this);
+		saver.saveCardContent(listName + "_new_question", question.getCardContent());
+		saver.saveCardContent(listName + "_new_answer", answer.getCardContent());
 	}
 }

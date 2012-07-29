@@ -22,6 +22,10 @@ public class InfoSaver
 		prefs = c.getSharedPreferences(name, Context.MODE_PRIVATE);
 	}
 	
+	public SharedPreferences getPrefs() {
+		return prefs;
+	}
+	
 	public void saveCardLists(List<String> cardLists) {
 		SharedPreferences.Editor edit = prefs.edit();
 		int nr = 0;
@@ -55,18 +59,21 @@ public class InfoSaver
 	}
 
 	public void saveCards(String listName, List<Card> cards) {
-		SharedPreferences.Editor edit = prefs.edit();
 		int nr = 0;
 		for (Card card : cards) {			
-			saveCardContent(edit, "cardlist_" + listName + "_q_" + nr, card.getQuestion());
-			saveCardContent(edit, "cardlist_" + listName + "_a_" + nr, card.getAnswer());	
+			saveCardContent("cardlist_" + listName + "_q_" + nr, card.getQuestion());
+			saveCardContent("cardlist_" + listName + "_a_" + nr, card.getAnswer());	
 			nr++;
 		}
-		edit.commit();
-	
 	}
 	
-	public static void saveCardContent(SharedPreferences.Editor editor, String name, CardContent content) {
+	public boolean cardContentExists(String name) {
+		return !prefs.getString(name, "").equals("");
+	}
+	
+	public void saveCardContent(String name, CardContent content) {
+		SharedPreferences.Editor editor = prefs.edit();
+		
 		String toSave = "";
 		boolean isBmp = false;
 		if (content.isBitmap()) {
@@ -78,9 +85,10 @@ public class InfoSaver
 		}
 		editor.putBoolean(name + "_bmp", isBmp);
 		editor.putString(name, toSave);
+		editor.commit();
 	}
 	
-	public static CardContent loadCardContent(SharedPreferences prefs, String name, BitmapDownsampler downSampler) {
+	public CardContent loadCardContent(String name, BitmapDownsampler downSampler) {
 		boolean isBitmap = prefs.getBoolean(name + "_bmp", true);
 		if (isBitmap) {
 			Uri q = Uri.parse(prefs.getString(name, ""));
@@ -99,27 +107,27 @@ public class InfoSaver
 		private int pos;
 		private BitmapDownsampler sampler;
 		private String listName;
-		private SharedPreferences prefs;
+		private InfoSaver infoSaver;
 		
 		private boolean gotNext;
 		private String nextQ;
 		
-		public CardLoaderIterator(String listName, BitmapDownsampler sampler, SharedPreferences prefs) {
+		public CardLoaderIterator(String listName, BitmapDownsampler sampler, InfoSaver infoSaver) {
 			this.sampler = sampler;
 			this.listName = listName;
-			this.prefs = prefs;
+			this.infoSaver = infoSaver;
 		}
 		
 		@Override
 		public boolean hasNext() {
 			//TODO: optimize, no unnecessary calls to this
-			return !prefs.getString("cardlist_" + listName + "_q_" + pos, "").equals("");
+			return !infoSaver.getPrefs().getString("cardlist_" + listName + "_q_" + pos, "").equals("");
 		}
 
 		@Override
 		public Card next() {
-			CardContent question = loadCardContent(prefs, "cardlist_" + listName + "_q_" + pos, sampler);
-			CardContent answer = loadCardContent(prefs, "cardlist_" + listName + "_a_" + pos, sampler);
+			CardContent question = infoSaver.loadCardContent("cardlist_" + listName + "_q_" + pos, sampler);
+			CardContent answer = infoSaver.loadCardContent("cardlist_" + listName + "_a_" + pos, sampler);
 			
 			pos++;
 			gotNext = false;
@@ -137,13 +145,13 @@ public class InfoSaver
 		}	
 	}
 	
-	public CardLoaderIterator getCardLoaderIterator(String listName, BitmapDownsampler sampler) {
-		return new CardLoaderIterator(listName, sampler, prefs);
+	public CardLoaderIterator getCardLoaderIterator(Context c, String listName, BitmapDownsampler sampler) {
+		return new CardLoaderIterator(listName, sampler, getInfoSaver(c));
 	}
 	
-	public List<Card> getCards(String listName, BitmapDownsampler sampler) throws IOException {
+	public List<Card> getCards(Context c, String listName, BitmapDownsampler sampler) throws IOException {
 		List<Card> cardList = new ArrayList<Card>();
-		CardLoaderIterator it = getCardLoaderIterator(listName, sampler);
+		CardLoaderIterator it = getCardLoaderIterator(c, listName, sampler);
 		
 		for (Card card : it) {
 			cardList.add(card);

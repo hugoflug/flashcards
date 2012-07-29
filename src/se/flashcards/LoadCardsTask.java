@@ -9,7 +9,7 @@ public class LoadCardsTask extends AsyncTask<Void, Card, Void> {
 	private CardLoaderIterator it;
 	
 	public LoadCardsTask(Context c, String listName, BitmapDownsampler sampler) {
-		it = InfoSaver.getInfoSaver(c).getCardLoaderIterator(listName, sampler);
+		it = InfoSaver.getInfoSaver(c).getCardLoaderIterator(c, listName, sampler);
 	}
 	
 	@Override

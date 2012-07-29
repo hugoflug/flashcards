@@ -174,7 +174,7 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
     	}
     }
 	
-	private void setContent(CardContent c) {
+	public void setContent(CardContent c) {
 		cardContent = c;
 		contentIsDefault = false;
 		contentView.setCardContent(c);
