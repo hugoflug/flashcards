@@ -184,7 +184,12 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
     }
     
     public void onMakeTextClicked(View view) {
-        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance(newTextTitle, newTextHint);
+    	String text = "";
+    	if (!contentIsDefault && !cardContent.isBitmap()) {
+    		text = cardContent.getString();
+    	}
+    	
+        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance(newTextTitle, newTextHint, text);
         dialogFragment.setTargetFragment(this, 0);
         dialogFragment.show(getFragmentManager(), "dialog");
     }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -20,11 +21,12 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
 		public void onTextMade(CharSequence text);
 	}
 	
-	public static WriteTextDialogFragment newInstance(String title, String hint) {
+	public static WriteTextDialogFragment newInstance(String title, String hint, String text) {
 		WriteTextDialogFragment fragment = new WriteTextDialogFragment();
 		Bundle args = new Bundle();
 		args.putString("title", title);
 		args.putString("hint", hint);
+		args.putString("text", text);
 		fragment.setArguments(args);
 		return fragment;
 		
@@ -34,12 +36,15 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 		String title = getArguments().getString("title");
 		String hint = getArguments().getString("hint");
+		String text = getArguments().getString("text");
 		
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
-        final TextView textView = (TextView)textEntryView.findViewById(R.id.text);
+        final EditText textView = (EditText)textEntryView.findViewById(R.id.text);
         textView.setHint(hint);
         textView.requestFocus();
+        textView.setText(text);
+        textView.setSelection(textView.getText().length());
         Dialog dialog = new AlertDialog.Builder(getActivity())
             .setIconAttribute(android.R.attr.alertDialogIcon)
             .setTitle(title)
