@@ -50,9 +50,9 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
         newTextHint = "Text";
     }
     
-    public void setDefaultContent(CardContent defaultContent) {
-    	cardContent = defaultContent;
-    	contentView.setCardContent(defaultContent);
+    public void setContentRaw(CardContent content) {
+    	cardContent = content;
+    	contentView.setCardContent(content);
     }
     
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,10 +93,46 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
     	return view;
 	}
     
+	//state saving/reloading in these two methods
 	@Override
-	public void onPause() {
-		super.onPause();
+	public void onSaveInstanceState (Bundle outState) {
+		outState.putParcelable("content", cardContent);
+		outState.putBoolean("contentIsDefault", contentIsDefault);
+		outState.putBoolean("isButtonsVisible", isButtonsVisible());
 	}
+	
+	@Override
+	public void onActivityCreated (Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		if (savedInstanceState != null) {			
+			contentIsDefault = savedInstanceState.getBoolean("contentIsDefault");
+			
+			if (!contentIsDefault) {
+				ImageButton optionsButton = (ImageButton)getView().findViewById(R.id.options);
+				optionsButton.setVisibility(View.VISIBLE);
+				
+				//ugly hack?
+				((OnContentChangedListener)getActivity()).onContentChanged(cardContent);
+			}
+			
+			cardContent = savedInstanceState.getParcelable("content");
+			try {
+				cardContent.reloadBitmap(downSampler);
+				setContentRaw(cardContent);
+			} catch (IOException e) {
+				Log.v("flashcards", "Couldn't load bitmap");
+			}
+			
+			boolean buttonsVisible = savedInstanceState.getBoolean("isButtonsVisible");		
+			if (buttonsVisible) {
+				setButtonsVisibility(View.VISIBLE);
+			} else {
+				setButtonsVisibility(View.GONE);
+			}
+		}
+	}
+
 	
 	public boolean isContentDefault() {
 		return contentIsDefault;

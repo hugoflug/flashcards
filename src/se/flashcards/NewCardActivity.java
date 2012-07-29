@@ -49,18 +49,8 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     	question = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.question);
     	answer = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.answer);
     	
-    	question.setDefaultContent(new CardContent("Pick a question"));
-    	answer.setDefaultContent(new CardContent("Pick an answer"));
-    	
-//    	InfoSaver infoSaver = InfoSaver.getInfoSaver(this);  	
-//    	if (infoSaver.cardContentExists(listName + "_new_question")) {
-//    		CardContent questionContent = infoSaver.loadCardContent(listName + "_new_question", new BitmapDownsampler(this, 1000, 1000));
-//        	question.setContent(questionContent);
-//    	}
-//    	if (infoSaver.cardContentExists(listName + "_new_answer")) {
-//    		CardContent answerContent = infoSaver.loadCardContent(listName + "_new_answer", new BitmapDownsampler(this, 1000, 1000));
-//    		answer.setContent(answerContent);
-//    	}
+    	question.setContentRaw(new CardContent("Pick a question"));
+    	answer.setContentRaw(new CardContent("Pick an answer"));
     	
     	question.setNewTextTitle("Write a new question");
     	answer.setNewTextTitle("Write a new answer");
@@ -100,13 +90,5 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
 		resultIntent.putExtra(QUESTION_EXTRA, question.getCardContent());
 		setResult(SherlockActivity.RESULT_OK, resultIntent);
 		finish();
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		InfoSaver saver = InfoSaver.getInfoSaver(this);
-		saver.saveCardContent(listName + "_new_question", question.getCardContent());
-		saver.saveCardContent(listName + "_new_answer", answer.getCardContent());
 	}
 }
