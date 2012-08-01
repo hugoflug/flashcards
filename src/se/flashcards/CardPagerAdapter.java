@@ -27,6 +27,12 @@ public class CardPagerAdapter extends PagerAdapter {
 	public int getCount() {
         return cards.size();
 	}
+	
+	//hack
+	@Override
+	public int getItemPosition(Object object) {
+		return POSITION_NONE;
+	}
 
 	@Override
 	public boolean isViewFromObject(View view, Object object) {

@@ -4,4 +4,8 @@
 		android:icon="@drawable/android:ic_input_add"
 		android:title="@string/menu_add_new"
 		android:showAsAction="ifRoom|withText" />
+	<item android:id="@+id/menu_delete_card"
+		android:icon="@drawable/android:ic_menu_delete"
+		android:title="@string/menu_delete"
+		android:showAsAction="ifRoom" />
 </menu>

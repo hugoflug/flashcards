@@ -39,10 +39,13 @@ public class CardsListActivity extends SherlockActivity {
 	private WrappingSlidingDrawer drawer;
 	private String name;
 	private InfoSaver infoSaver;
+	private int currentPosition;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
+        
+		Log.v("flashcards", "onCreate");
         
         setContentView(R.layout.cards_list);
         setTheme(R.style.Theme_Sherlock);
@@ -61,8 +64,7 @@ public class CardsListActivity extends SherlockActivity {
         drawer.lock();
         
         infoSaver = InfoSaver.getInfoSaver(this);
-        
-        //new
+
     	cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
     	LoadCardsTask loadCards = new LoadCardsTask(this, name, downSampler) {
@@ -90,8 +92,21 @@ public class CardsListActivity extends SherlockActivity {
 			public void onPageSelected(int position) {
 				drawer.close();
 				answerView.setCardContent(cardList.get(position).getAnswer());
+				currentPosition = position;
 			}
         });
+    }
+    
+    private void removeCard(int pos) {   	
+//    	if (pos == cardList.size() - 1) {
+//            viewPager.setCurrentItem(pos - 1);
+//        } else if (pos == 0){
+//            viewPager.setCurrentItem(1);
+//        }
+    	
+    	cardList.remove(pos);
+    	cardAdapter.notifyDataSetChanged();
+    	
     }
     
     @Override
@@ -116,12 +131,16 @@ public class CardsListActivity extends SherlockActivity {
     			startNewIntent.putExtra("list_name", name);
     			startActivityForResult(startNewIntent, MAKE_NEW_CARD);
     		break;
+    		case R.id.menu_delete_card:
+    			removeCard(currentPosition);
+    		break;
     	}
     	return true;
     }
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) { 
+		Log.v("flashcards", "onActivityResult");
 	    super.onActivityResult(requestCode, resultCode, intent);
 		if (resultCode == RESULT_OK) {
 		    switch (requestCode) {
@@ -134,7 +153,7 @@ public class CardsListActivity extends SherlockActivity {
 					} catch (IOException e) {
 						Log.v("flashcards", "Couldn't load image.");
 					}
-		    		addCard(question, answer);
+					addCard(question, answer);
 		    	break;
 		    }
 		}
@@ -146,6 +165,7 @@ public class CardsListActivity extends SherlockActivity {
 		answerView.setCardContent(answer);
 		drawer.unlock();
 	}
+	
 	@Override
 	protected void onPause() {
 		super.onPause();

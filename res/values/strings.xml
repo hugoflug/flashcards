@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Learn By Heart</string>
     <string name="menu_add_new">Add new</string>
+    <string name="menu_delete">Delete</string>
 </resources>

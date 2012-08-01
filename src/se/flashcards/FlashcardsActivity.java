@@ -87,10 +87,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 			}
 
 			@Override
-			public void onDestroyActionMode(ActionMode mode) {
-
-				
-			}
+			public void onDestroyActionMode(ActionMode mode) {}
 
 			@Override
 			public boolean onPrepareActionMode(ActionMode mode, android.view.Menu menu) {
