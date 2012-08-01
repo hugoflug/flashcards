@@ -69,7 +69,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 		                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();             
 		                int removed = 0;
 		                for (int i = 0; i < checkedItems.size(); i++) {
-		                	cardListsAdapter.remove(cardListsAdapter.getItem(checkedItems.keyAt(i) - removed));
+		                	removeCardList(checkedItems.keyAt(i) - removed);
 		                	removed++;
 		                }
 		                mode.finish();
@@ -134,6 +134,11 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 //				return true;
 //			}
 //		});
+    }
+    
+    private void removeCardList(int nr) {
+    	infoSaver.removeCardList(cardListsAdapter.getItem(nr));
+    	cardListsAdapter.remove(cardListsAdapter.getItem(nr));
     }
     
     @Override

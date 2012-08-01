@@ -22,15 +22,38 @@ public class InfoSaver
 		prefs = c.getSharedPreferences(name, Context.MODE_PRIVATE);
 	}
 	
+	public static String cardListName(int cardListNr) {
+		return "cardlist_" + cardListNr;
+	}
+	
+	public static String cardQuestionName(String listName, int nr) {
+		return "cardlist_" + listName + "_q_" + nr;
+	}
+	
+	public static String cardAnswerName(String listName, int nr) {
+		return "cardlist_" + listName + "_a_" + nr;
+	}
+	
 	public SharedPreferences getPrefs() {
 		return prefs;
+	}
+	
+	public void removeCardList(String name) {
+		SharedPreferences.Editor editor = prefs.edit();
+		int nr = 0;
+		while (!prefs.getString(cardQuestionName(name, nr), "").equals("")) {
+			removeCardContent(cardQuestionName(name, nr));
+			removeCardContent(cardAnswerName(name, nr));
+			nr++;
+		}
+		editor.commit();
 	}
 	
 	public void saveCardLists(List<String> cardLists) {
 		SharedPreferences.Editor edit = prefs.edit();
 		int nr = 0;
 		for (String s : cardLists) {
-			edit.putString("cardlist_" + nr, s);
+			edit.putString(cardListName(nr), s);
 			nr++;
 		}
 		edit.putInt("cardlist_length", nr);
@@ -61,14 +84,21 @@ public class InfoSaver
 	public void saveCards(String listName, List<Card> cards) {
 		int nr = 0;
 		for (Card card : cards) {			
-			saveCardContent("cardlist_" + listName + "_q_" + nr, card.getQuestion());
-			saveCardContent("cardlist_" + listName + "_a_" + nr, card.getAnswer());	
+			saveCardContent(cardQuestionName(listName, nr), card.getQuestion());
+			saveCardContent(cardAnswerName(listName, nr), card.getAnswer());	
 			nr++;
 		}
 	}
 	
 	public boolean cardContentExists(String name) {
 		return !prefs.getString(name, "").equals("");
+	}
+	
+	private void removeCardContent(String name) {
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.remove(name);
+		editor.remove(name + "_bmp");
+		editor.commit();
 	}
 	
 	public void saveCardContent(String name, CardContent content) {
@@ -121,13 +151,13 @@ public class InfoSaver
 		@Override
 		public boolean hasNext() {
 			//TODO: optimize, no unnecessary calls to this
-			return !infoSaver.getPrefs().getString("cardlist_" + listName + "_q_" + pos, "").equals("");
+			return !infoSaver.getPrefs().getString(cardQuestionName(listName, pos), "").equals("");
 		}
 
 		@Override
 		public Card next() {
-			CardContent question = infoSaver.loadCardContent("cardlist_" + listName + "_q_" + pos, sampler);
-			CardContent answer = infoSaver.loadCardContent("cardlist_" + listName + "_a_" + pos, sampler);
+			CardContent question = infoSaver.loadCardContent(cardQuestionName(listName, pos), sampler);
+			CardContent answer = infoSaver.loadCardContent(cardAnswerName(listName, pos), sampler);
 			
 			pos++;
 			gotNext = false;
