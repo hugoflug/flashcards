@@ -50,10 +50,24 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
         newTextHint = "Text";
     }
     
+    //set the content without changing default flag or removing buttons
     public void setContentRaw(CardContent content) {
     	cardContent = content;
     	contentView.setCardContent(content);
     }
+    
+    //set the content, changing the default flag to false and remove add buttons
+	public void setContent(CardContent c) {
+		setContentRaw(c);
+		contentIsDefault = false;
+		
+		setButtonsVisibility(View.GONE);
+		
+		ImageButton optionsButton = (ImageButton)getView().findViewById(R.id.options);
+		optionsButton.setVisibility(View.VISIBLE);	
+		
+		((OnContentChangedListener)getActivity()).onContentChanged(cardContent);
+	}
     
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.pick_card_fragment_layout, container, false);
@@ -215,19 +229,6 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
     	}
     }
 	
-	public void setContent(CardContent c) {
-		cardContent = c;
-		contentIsDefault = false;
-		contentView.setCardContent(c);
-		
-		setButtonsVisibility(View.GONE);
-		
-		ImageButton optionsButton = (ImageButton)getView().findViewById(R.id.options);
-		optionsButton.setVisibility(View.VISIBLE);	
-		
-		((OnContentChangedListener)getActivity()).onContentChanged(cardContent);
-	}
-	
 	private Uri createNewImageUri() {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		String imageFileName = timeStamp + ".jpg";
@@ -243,7 +244,7 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
 		return pickImageButton.getVisibility() == View.VISIBLE;
 	}
 	
-	private void setButtonsVisibility(int visibility) {
+	public void setButtonsVisibility(int visibility) {
 		ImageButton pickImageButton = (ImageButton)getView().findViewById(R.id.pick_image_button);
 		ImageButton pickTextButton = (ImageButton)getView().findViewById(R.id.make_text_button);
 		ImageButton takeImageButton = (ImageButton)getView().findViewById(R.id.take_image_button);

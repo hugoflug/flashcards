@@ -30,6 +30,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class CardsListActivity extends SherlockActivity {
 	private static final int MAKE_NEW_CARD = 1;
+	private static final int EDIT_CARD = 2;
 	
 	private CardPagerAdapter cardAdapter;
 	private List<Card> cardList;
@@ -97,16 +98,15 @@ public class CardsListActivity extends SherlockActivity {
         });
     }
     
-    private void removeCard(int pos) {   	
+    private void removeCard(int pos) {   		
+    	cardList.remove(pos);
+    	cardAdapter.notifyDataSetChanged();
+    	
 //    	if (pos == cardList.size() - 1) {
 //            viewPager.setCurrentItem(pos - 1);
 //        } else if (pos == 0){
 //            viewPager.setCurrentItem(1);
-//        }
-    	
-    	cardList.remove(pos);
-    	cardAdapter.notifyDataSetChanged();
-    	
+//        }   	
     }
     
     @Override
@@ -127,9 +127,14 @@ public class CardsListActivity extends SherlockActivity {
     	    	finish(); //??
     		break;
     		case R.id.menu_make_new:
-    			Intent startNewIntent = new Intent(this, NewCardActivity.class);
-    			startNewIntent.putExtra("list_name", name);
-    			startActivityForResult(startNewIntent, MAKE_NEW_CARD);
+    			Intent makeNew = new Intent(this, NewCardActivity.class);
+    			startActivityForResult(makeNew, MAKE_NEW_CARD);
+    		break;
+    		case R.id.menu_edit_card:
+    			Intent edit = new Intent(this, NewCardActivity.class);
+    			edit.putExtra("question_content", cardList.get(currentPosition).getQuestion());
+    			edit.putExtra("answer_content", cardList.get(currentPosition).getAnswer());
+    			startActivityForResult(edit, EDIT_CARD);
     		break;
     		case R.id.menu_delete_card:
     			removeCard(currentPosition);
@@ -144,7 +149,7 @@ public class CardsListActivity extends SherlockActivity {
 	    super.onActivityResult(requestCode, resultCode, intent);
 		if (resultCode == RESULT_OK) {
 		    switch (requestCode) {
-		    	case MAKE_NEW_CARD:
+		    	case MAKE_NEW_CARD: {
 		    		CardContent question = intent.getParcelableExtra(NewCardActivity.QUESTION_EXTRA);
 		    		CardContent answer = intent.getParcelableExtra(NewCardActivity.ANSWER_EXTRA);
 					try {
@@ -154,6 +159,21 @@ public class CardsListActivity extends SherlockActivity {
 						Log.v("flashcards", "Couldn't load image.");
 					}
 					addCard(question, answer);
+		    	}
+		    	break;
+		    	case EDIT_CARD: {
+		    		CardContent question = intent.getParcelableExtra(NewCardActivity.QUESTION_EXTRA);
+		    		CardContent answer = intent.getParcelableExtra(NewCardActivity.ANSWER_EXTRA);
+					try {
+						question.reloadBitmap(downSampler);
+			    		answer.reloadBitmap(downSampler);
+					} catch (IOException e) {
+						Log.v("flashcards", "Couldn't load image.");
+					}
+					removeCard(currentPosition);
+					cardList.add(currentPosition, new Card(question, answer));
+					cardAdapter.notifyDataSetChanged();
+		    	}
 		    	break;
 		    }
 		}

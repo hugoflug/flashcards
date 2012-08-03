@@ -32,7 +32,6 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
 	private PickCardFragment answer;
 	
 	private Button confirmButton;
-	private String listName;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,25 +39,37 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     	setContentView(R.layout.new_card);
     	setTheme(R.style.Theme_Sherlock);
     	
-    	Intent intent = getIntent();
-    	listName = intent.getStringExtra("list_name");
-    	
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);     
+    	
+    	confirmButton = (Button)findViewById(R.id.confirm_button);
  
     	question = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.question);
     	answer = (PickCardFragment)getSupportFragmentManager().findFragmentById(R.id.answer);
     	
-    	question.setContentRaw(new CardContent("Pick a question"));
-    	answer.setContentRaw(new CardContent("Pick an answer"));
+        Intent intent = getIntent();
+        CardContent questionContent = intent.getParcelableExtra("question_content");
+        CardContent answerContent = intent.getParcelableExtra("answer_content");
+        
+        if (questionContent != null) {
+        	question.setContent(questionContent);
+        	question.setButtonsVisibility(View.VISIBLE);
+        } else {   	
+        	question.setContentRaw(new CardContent("Pick a question"));
+        }
+        
+        if (answerContent != null) {
+        	answer.setContent(answerContent);
+        	answer.setButtonsVisibility(View.VISIBLE);
+        } else {
+        	answer.setContentRaw(new CardContent("Pick an answer"));
+        }
     	
     	question.setNewTextTitle("Write a new question");
     	answer.setNewTextTitle("Write a new answer");
     	
     	question.setNewTextHint("Question");
     	answer.setNewTextHint("Answer");
-    	
-    	confirmButton = (Button)findViewById(R.id.confirm_button);
     }
     
 	@Override
@@ -79,6 +90,10 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
 
 	@Override
 	public void onContentChanged(CardContent newContent) {
+		updateConfirmButtonStatus();
+	}
+	
+	private void updateConfirmButtonStatus() {
 		if (!question.isContentDefault() && !answer.isContentDefault()) {
 			confirmButton.setVisibility(View.VISIBLE);
 		}

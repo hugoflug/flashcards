@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menu_edit_card"
+		android:title="@string/menu_edit_card"
+		android:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/menu_delete_card"
+		android:icon="@drawable/android:ic_menu_delete"
+		android:title="@string/menu_delete"
+		android:showAsAction="ifRoom" />
 	<item android:id="@+id/menu_make_new"
 		android:icon="@drawable/android:ic_input_add"
 		android:title="@string/menu_add_new"
 		android:showAsAction="ifRoom|withText" />
-	<item android:id="@+id/menu_delete_card"
-		android:icon="@drawable/android:ic_menu_delete"
-		android:title="@string/menu_delete"
-		android:showAsAction="ifRoom" />
 </menu>
