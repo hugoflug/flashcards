@@ -47,8 +47,6 @@ public class CardsListActivity extends SherlockActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
         
-		Log.v("flashcards", "onCreate");
-        
         setContentView(R.layout.cards_list);
         setTheme(R.style.Theme_Sherlock);
  
@@ -138,7 +136,7 @@ public class CardsListActivity extends SherlockActivity {
     			startActivityForResult(edit, EDIT_CARD);
     		break;
     		case R.id.menu_delete_card:
-    			removeCard(currentPosition);
+    			removeCard(currentPosition+1); //currentPosition
     		break;
     	}
     	return true;
@@ -159,7 +157,13 @@ public class CardsListActivity extends SherlockActivity {
 					} catch (IOException e) {
 						Log.v("flashcards", "Couldn't load image.");
 					}
-					loadCards.addLastLater(new Card(question, answer));
+		//			loadCards.addLastLater(new Card(question, answer));
+					
+					//TEMP
+		   			cardList.add(new Card(question, answer));
+	    			cardAdapter.notifyDataSetChanged();
+	    			drawer.unlock();
+	    			//END TEMP
 		    	}
 		    	break;
 		    	case EDIT_CARD: {
@@ -178,13 +182,6 @@ public class CardsListActivity extends SherlockActivity {
 		    	break;
 		    }
 		}
-	}
-	
-	private void addCard(CardContent question, CardContent answer) {
-		cardList.add(new Card(question, answer));
-		cardAdapter.notifyDataSetChanged();
-		answerView.setCardContent(answer);
-		drawer.unlock();
 	}
 	
 	@Override
