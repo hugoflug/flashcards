@@ -184,9 +184,6 @@ public class CardsListActivity extends SherlockActivity {
 					} catch (IOException e) {
 						Log.v("flashcards", "Couldn't load image.");
 					}
-					if (hasLoaded) {
-						
-					}
 					
 					if (!hasLoaded) {
 						loadCards.addLastLater(new Card(question, answer));

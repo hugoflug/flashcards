@@ -93,7 +93,7 @@ public class InfoSaver
 	}
 	
 	public boolean cardContentExists(String name) {
-		return !prefs.getString(name, "sfdfsdofsd0jsfpdh").equals("sfdfsdofsd0jsfpdh");
+		return !(prefs.getString(name, null) == null);
 	}
 	
 	private void removeCardContent(String name) {
