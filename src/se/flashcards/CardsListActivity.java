@@ -41,6 +41,7 @@ public class CardsListActivity extends SherlockActivity {
 	private String name;
 	private InfoSaver infoSaver;
 	private int currentPosition;
+	private LoadCardsTask loadCards;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class CardsListActivity extends SherlockActivity {
 
     	cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
-    	LoadCardsTask loadCards = new LoadCardsTask(this, name, downSampler) {
+    	loadCards = new LoadCardsTask(this, name, downSampler) {
     		private boolean answerImageSet = false;
     		
     		@Override
@@ -158,7 +159,7 @@ public class CardsListActivity extends SherlockActivity {
 					} catch (IOException e) {
 						Log.v("flashcards", "Couldn't load image.");
 					}
-					addCard(question, answer);
+					loadCards.addLastLater(new Card(question, answer));
 		    	}
 		    	break;
 		    	case EDIT_CARD: {
