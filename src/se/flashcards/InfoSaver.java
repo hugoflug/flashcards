@@ -72,10 +72,12 @@ public class InfoSaver
 	
 	public void removeAllCardsAbove(String listName, int pos) {
 		int remPos = pos;
+		Log.v("flashcards", "removing stuff");
 		while (cardContentExists(cardAnswerName(listName, remPos))) {
-			remPos++;
+			Log.v("flashcards", "content being removed: " + remPos);
 			removeCardContent(cardAnswerName(listName, remPos));
 			removeCardContent(cardQuestionName(listName, remPos));
+			remPos++;
 		}
 	}
 	
@@ -86,11 +88,12 @@ public class InfoSaver
 			saveCardContent(cardAnswerName(listName, nr), card.getAnswer());	
 			nr++;
 		}
+		Log.v("flashcards", "listSize: " + cards.size() + " nr: " + nr);
 		removeAllCardsAbove(listName, nr);
 	}
 	
 	public boolean cardContentExists(String name) {
-		return !prefs.getString(name, "").equals("");
+		return !prefs.getString(name, "sfdfsdofsd0jsfpdh").equals("sfdfsdofsd0jsfpdh");
 	}
 	
 	private void removeCardContent(String name) {
