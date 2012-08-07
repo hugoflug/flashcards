@@ -127,13 +127,7 @@ public class CardsListActivity extends SherlockActivity {
     
     private void removeCard(int pos) {   		
     	cardList.remove(pos);
-    	cardAdapter.notifyDataSetChanged();
-    	
-//    	if (pos == cardList.size() - 1) {
-//            viewPager.setCurrentItem(pos - 1);
-//        } else if (pos == 0){
-//            viewPager.setCurrentItem(1);
-//        }   	
+    	cardAdapter.notifyDataSetChanged(); 	
     }
     
     @Override
@@ -203,7 +197,8 @@ public class CardsListActivity extends SherlockActivity {
 					} catch (IOException e) {
 						Log.v("flashcards", "Couldn't load image.");
 					}
-					removeCard(currentPosition);
+
+					cardList.remove(currentPosition);
 					cardList.add(currentPosition, new Card(question, answer));
 					cardAdapter.notifyDataSetChanged();
 		    	}
@@ -217,5 +212,4 @@ public class CardsListActivity extends SherlockActivity {
 		super.onPause();
 		infoSaver.saveCards(name, cardList);
 	}
-
 }
