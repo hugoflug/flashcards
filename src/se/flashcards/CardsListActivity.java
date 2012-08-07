@@ -42,6 +42,7 @@ public class CardsListActivity extends SherlockActivity {
 	private InfoSaver infoSaver;
 	private int currentPosition;
 	private LoadCardsTask loadCards;
+	private boolean hasLoaded;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,8 @@ public class CardsListActivity extends SherlockActivity {
         
         setContentView(R.layout.cards_list);
         setTheme(R.style.Theme_Sherlock);
+        
+        hasLoaded = false;
  
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -82,7 +85,6 @@ public class CardsListActivity extends SherlockActivity {
     			 drawer.unlock();
     		}
     	};
-    	loadCards.execute();
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         viewPager.setAdapter(cardAdapter);    
@@ -95,6 +97,15 @@ public class CardsListActivity extends SherlockActivity {
 				currentPosition = position;
 			}
         });
+    }
+    
+    @Override
+    public void onResume() {
+    	super.onResume();
+    	if (!hasLoaded) {
+    		loadCards.execute();
+    		hasLoaded = true;
+    	}
     }
     
     private void removeCard(int pos) {   		
@@ -157,12 +168,12 @@ public class CardsListActivity extends SherlockActivity {
 					} catch (IOException e) {
 						Log.v("flashcards", "Couldn't load image.");
 					}
-		//			loadCards.addLastLater(new Card(question, answer));
+					loadCards.addLastLater(new Card(question, answer));
 					
 					//TEMP
-		   			cardList.add(new Card(question, answer));
-	    			cardAdapter.notifyDataSetChanged();
-	    			drawer.unlock();
+//		   			cardList.add(new Card(question, answer));
+//	    			cardAdapter.notifyDataSetChanged();
+//	    			drawer.unlock();
 	    			//END TEMP
 		    	}
 		    	break;
