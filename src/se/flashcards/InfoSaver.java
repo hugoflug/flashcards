@@ -66,9 +66,19 @@ public class InfoSaver
 		for (int i = 0; i < cardListsAmnt; i++) {
 			cardLists.add(prefs.getString("cardlist_" + i, "katja le hipster"));
 		}
+		
 		return cardLists;
 	}
-
+	
+	public void removeAllCardsAbove(String listName, int pos) {
+		int remPos = pos;
+		while (cardContentExists(cardAnswerName(listName, remPos))) {
+			remPos++;
+			removeCardContent(cardAnswerName(listName, remPos));
+			removeCardContent(cardQuestionName(listName, remPos));
+		}
+	}
+	
 	public void saveCards(String listName, List<Card> cards) {
 		int nr = 0;
 		for (Card card : cards) {			
@@ -76,6 +86,7 @@ public class InfoSaver
 			saveCardContent(cardAnswerName(listName, nr), card.getAnswer());	
 			nr++;
 		}
+		removeAllCardsAbove(listName, nr);
 	}
 	
 	public boolean cardContentExists(String name) {
