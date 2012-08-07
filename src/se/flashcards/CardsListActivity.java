@@ -98,22 +98,22 @@ public class CardsListActivity extends SherlockActivity {
 			}
         });
         
-        if (savedInstanceState != null) {
-	        int currentCard = savedInstanceState.getInt("current_card", 0);
-	        viewPager.setCurrentItem(currentCard);
-	        boolean drawerOpen = savedInstanceState.getBoolean("drawer_open", false);
-	        if (drawerOpen) {
-	        	drawer.open();
-	        } else {
-	        	drawer.close();
-	        }
-        }
+//        if (savedInstanceState != null) {
+//	        int currentCard = savedInstanceState.getInt("current_card", 0);
+//	        viewPager.setCurrentItem(currentCard);
+//	        boolean drawerOpen = savedInstanceState.getBoolean("drawer_open", false);
+//	        if (drawerOpen) {
+//	        	drawer.open();
+//	        } else {
+//	        	drawer.close();
+//	        }
+//        }
     }
     
 	@Override
 	public void onSaveInstanceState (Bundle outState) {
-		outState.putInt("current_card", currentPosition);
-		outState.putBoolean("drawer_open", drawer.isOpened());
+//		outState.putInt("current_card", currentPosition);
+//		outState.putBoolean("drawer_open", drawer.isOpened());
 	}
     
     @Override
@@ -164,7 +164,7 @@ public class CardsListActivity extends SherlockActivity {
     			startActivityForResult(edit, EDIT_CARD);
     		break;
     		case R.id.menu_delete_card:
-    			removeCard(currentPosition+1); //currentPosition
+    			removeCard(currentPosition); 
     		break;
     	}
     	return true;
@@ -172,7 +172,6 @@ public class CardsListActivity extends SherlockActivity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) { 
-		Log.v("flashcards", "onActivityResult");
 	    super.onActivityResult(requestCode, resultCode, intent);
 		if (resultCode == RESULT_OK) {
 		    switch (requestCode) {
