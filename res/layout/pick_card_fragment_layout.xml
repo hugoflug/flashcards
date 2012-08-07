@@ -22,7 +22,8 @@
     	    android:layout_height="wrap_content"
     	    android:layout_alignBottom="@id/content"
     	    android:layout_alignRight="@id/content"
-    	    android:src="@drawable/android:ic_menu_gallery"
+    	    android:src="@drawable/dropdown_ic"
+    	    android:background="@android:color/transparent"
     	    android:visibility="gone">
     	</ImageButton>
     </RelativeLayout>

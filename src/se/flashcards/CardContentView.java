@@ -41,6 +41,8 @@ public class CardContentView extends FrameLayout {
 				i.setScaleType(bitmapScaleType);
 			}
 			
+			setPadding(0, 0, 0, 0);
+			
 			addView(i);
 		} else {
 			TextView t = new TextView(context);
@@ -48,6 +50,8 @@ public class CardContentView extends FrameLayout {
 			t.setTextAppearance(context, android.R.style.TextAppearance_Large);
 			
 			t.setGravity(Gravity.CENTER);
+			
+			setPadding(0, 0, 30, 30);
 			
 			addView(t);
 		}
