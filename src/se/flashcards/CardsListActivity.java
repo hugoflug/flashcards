@@ -97,7 +97,24 @@ public class CardsListActivity extends SherlockActivity {
 				currentPosition = position;
 			}
         });
+        
+        if (savedInstanceState != null) {
+	        int currentCard = savedInstanceState.getInt("current_card", 0);
+	        viewPager.setCurrentItem(currentCard);
+	        boolean drawerOpen = savedInstanceState.getBoolean("drawer_open", false);
+	        if (drawerOpen) {
+	        	drawer.open();
+	        } else {
+	        	drawer.close();
+	        }
+        }
     }
+    
+	@Override
+	public void onSaveInstanceState (Bundle outState) {
+		outState.putInt("current_card", currentPosition);
+		outState.putBoolean("drawer_open", drawer.isOpened());
+	}
     
     @Override
     public void onResume() {
@@ -168,13 +185,17 @@ public class CardsListActivity extends SherlockActivity {
 					} catch (IOException e) {
 						Log.v("flashcards", "Couldn't load image.");
 					}
-					loadCards.addLastLater(new Card(question, answer));
+					if (hasLoaded) {
+						
+					}
 					
-					//TEMP
-//		   			cardList.add(new Card(question, answer));
-//	    			cardAdapter.notifyDataSetChanged();
-//	    			drawer.unlock();
-	    			//END TEMP
+					if (!hasLoaded) {
+						loadCards.addLastLater(new Card(question, answer));
+					} else {
+			   			cardList.add(new Card(question, answer));
+		    			cardAdapter.notifyDataSetChanged();
+		    			drawer.unlock();
+					}
 		    	}
 		    	break;
 		    	case EDIT_CARD: {
