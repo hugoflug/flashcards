@@ -164,6 +164,20 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	startActivity(intent);
     }
     
+    public void tryToAddNewList(String name) {
+    	boolean match = false;
+    	for (String listName : cardLists) {
+    		if (name.equals(listName)) {
+    			match = true;
+    		}
+    	}
+    	if (!match) {
+    		cardListsAdapter.add(name);
+    	} else {
+    		//show dialog saying there is already a list with that name
+    	}
+    }
+    
     protected Dialog onCreateDialog(int id) {
     	switch (id) {
     		case DIALOG_MAKE_NEW:
@@ -179,7 +193,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                         public void onClick(DialogInterface dialog, int whichButton) {
                         	String text = textView.getText().toString();
                         	if (!text.equals("")) {
-                        		cardListsAdapter.add(text);
+                        		tryToAddNewList(text);
                         	}
                         	textView.setText("");
                         }

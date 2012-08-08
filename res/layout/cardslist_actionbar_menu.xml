@@ -2,10 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/menu_edit_card"
         android:icon="@drawable/ic_menu_edit"
-		android:title="@string/menu_edit_card"/>
+		android:title="@string/menu_edit_card"
+		android:visible="false"/>
     <item android:id="@+id/menu_delete_card"
 		android:icon="@drawable/android:ic_menu_delete"
-		android:title="@string/menu_delete" />
+		android:title="@string/menu_delete" 
+		android:visible="false"/>
 	<item android:id="@+id/menu_make_new"
 		android:icon="@drawable/android:ic_input_add"
 		android:title="@string/menu_add_new"

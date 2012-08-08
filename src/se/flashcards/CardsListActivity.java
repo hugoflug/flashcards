@@ -43,6 +43,8 @@ public class CardsListActivity extends SherlockActivity {
 	private int currentPosition;
 	private LoadCardsTask loadCards;
 	private boolean hasLoaded;
+	private MenuItem deleteCardMenuItem;
+	private MenuItem editCardMenuItem;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,14 @@ public class CardsListActivity extends SherlockActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.layout.cardslist_actionbar_menu, menu);
+        
+        deleteCardMenuItem = menu.findItem(R.id.menu_delete_card);
+        editCardMenuItem = menu.findItem(R.id.menu_edit_card);
+        
+        //TEMP
+		deleteCardMenuItem.setVisible(true);
+		editCardMenuItem.setVisible(true);
+        
         return true;
     }
     
