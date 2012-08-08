@@ -33,23 +33,23 @@
     	android:layout_weight="0"
     	android:orientation="horizontal" >
     	<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
-    	    android:id="@+id/pick_image_button"
-    	    android:layout_width="0px"
-    	    android:layout_height="wrap_content" 
-    	    android:layout_weight="1"
-    	    android:src="@drawable/android:ic_menu_gallery">
-    	</ImageButton>
-    	<ImageButton
     	    android:id="@+id/make_text_button"
     	    android:layout_width="0px"
-    	    android:layout_height="wrap_content" 
+    	    android:layout_height="50dp" 
+    	    android:layout_weight="1"
+    	    android:src="@drawable/ic_menu_edit">
+    	</ImageButton>
+    	<ImageButton
+    	    android:id="@+id/pick_image_button"
+    	    android:layout_width="0px"
+    	    android:layout_height="50dp" 
     	    android:layout_weight="1"
     	    android:src="@drawable/android:ic_menu_gallery" >
     	</ImageButton>
     	<ImageButton
     	    android:id="@+id/take_image_button"
     	    android:layout_width="0px"
-    	    android:layout_height="wrap_content" 
+    	    android:layout_height="50dp" 
     	    android:layout_weight="1"
     	    android:src="@drawable/android:ic_menu_camera" >
     	</ImageButton>

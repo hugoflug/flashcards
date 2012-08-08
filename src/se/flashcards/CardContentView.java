@@ -51,7 +51,8 @@ public class CardContentView extends FrameLayout {
 			
 			t.setGravity(Gravity.CENTER);
 			
-			setPadding(0, 0, 30, 30);
+			int padding = Util.fromDips(context, 20);
+			setPadding(padding, padding, padding, padding);
 			
 			addView(t);
 		}
