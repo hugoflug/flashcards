@@ -195,6 +195,7 @@ public class CardsListActivity extends SherlockActivity {
 			   			cardList.add(new Card(question, answer));
 		    			cardAdapter.notifyDataSetChanged();
 		    			drawer.unlock();
+		    			answerView.setCardContent(answer);
 					}
 		    	}
 		    	break;
