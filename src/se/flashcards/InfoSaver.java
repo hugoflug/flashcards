@@ -22,7 +22,7 @@ public class InfoSaver
 		prefs = c.getSharedPreferences(name, Context.MODE_PRIVATE);
 	}
 	
-	public static String cardListName(int cardListNr) {
+	public static String cardListId(int cardListNr) {
 		return "cardlist_" + cardListNr;
 	}
 	
@@ -32,6 +32,10 @@ public class InfoSaver
 	
 	public static String cardAnswerName(String listName, int nr) {
 		return "cardlist_" + listName + "_a_" + nr;
+	}
+	
+	public static String cardListName(long id) {
+		return "cardlist_name_" + id;
 	}
 	
 	public SharedPreferences getPrefs() {
@@ -68,6 +72,10 @@ public class InfoSaver
 		}
 		
 		return cardLists;
+	}
+	
+	public String nameFromId(long id) {
+		return prefs.getString(id + "", null);
 	}
 	
 	public void removeAllCardsAbove(String listName, int pos) {

@@ -51,7 +51,15 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
         CardContent questionContent = intent.getParcelableExtra("question_content");
         CardContent answerContent = intent.getParcelableExtra("answer_content");
         
+        BitmapDownsampler sampler = new BitmapDownsampler(this, 600, 1000);
+        
         if (questionContent != null) {
+            try {
+    			questionContent.reloadBitmap(sampler);
+    			answerContent.reloadBitmap(sampler);
+    		} catch (IOException e) {
+    			Log.v("flashcards", "Couldn't load bitmap");
+    		}
         	question.setContent(questionContent);
         	question.setButtonsVisibility(View.VISIBLE);
         } else {   	
