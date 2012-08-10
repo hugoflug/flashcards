@@ -22,9 +22,9 @@ public class InfoSaver
 		prefs = c.getSharedPreferences(name, Context.MODE_PRIVATE);
 	}
 	
-	public static String cardListId(int cardListNr) {
-		return "cardlist_" + cardListNr;
-	}
+//	public static String cardListId(int cardListNr) {
+//		return "cardlist_" + cardListNr;
+//	}
 	
 	public static String cardQuestionName(String listName, int nr) {
 		return "cardlist_" + listName + "_q_" + nr;
@@ -68,7 +68,7 @@ public class InfoSaver
 		List<String> cardLists = new ArrayList<String>();
 		int cardListsAmnt = prefs.getInt("cardlist_length", 0);
 		for (int i = 0; i < cardListsAmnt; i++) {
-			cardLists.add(prefs.getString("cardlist_" + i, "katja le hipster"));
+			cardLists.add(prefs.getString(cardListName(i), "katja le hipster"));
 		}
 		
 		return cardLists;
