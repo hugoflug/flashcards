@@ -223,7 +223,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 					} catch (IOException e) {
 						Log.v("flashcards", "Couldn't load image.");
 					}
-
+					
+					//will not work if the activity is reloaded
 					cardList.remove(currentPosition);
 					cardList.add(currentPosition, new Card(question, answer));
 					cardAdapter.notifyDataSetChanged();
