@@ -11,5 +11,7 @@
 	<item android:id="@+id/menu_make_new"
 		android:icon="@drawable/android:ic_input_add"
 		android:title="@string/menu_add_new"
-		android:showAsAction="ifRoom|withText" />
+		android:showAsAction="ifRoom" />
+	<item android:id="@+id/rename_list"
+		android:title="@string/rename_list"/>
 </menu>

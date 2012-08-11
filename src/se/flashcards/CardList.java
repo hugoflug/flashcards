@@ -18,6 +18,10 @@ public class CardList {
 		id = random.nextLong();
 	}
 	
+	public void rename(String newName) {
+		name = newName;
+	}
+	
 	public long getID() {
 		return id;
 	}

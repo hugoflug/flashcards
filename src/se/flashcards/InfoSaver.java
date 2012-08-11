@@ -86,6 +86,12 @@ public class InfoSaver
 		return prefs.getString(cardNameIdentifier(id), null);
 	}
 	
+	public void renameCardList(long id, String newName) {
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(cardNameIdentifier(id), newName);
+		editor.commit();
+	}
+	
 	public void removeAllCardsAbove(long id, int pos) {
 		int remPos = pos;
 		while (cardContentExists(cardAnswerIdentifier(id, remPos))) {

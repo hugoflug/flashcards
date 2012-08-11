@@ -140,6 +140,23 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     }
     
     @Override
+    public void onResume() {
+    	super.onResume();
+    	validateListNames();
+    }
+    
+    private void validateListNames() {
+    	for (CardList cl : cardLists) {
+    		String oldName = cl.getName();
+    		String newName = infoSaver.nameFromId(cl.getID());
+    		if (!oldName.equals(newName)) {
+    			cl.rename(newName);
+    			cardListsAdapter.notifyDataSetChanged();
+    		}
+    	}
+    }
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) 
     {
         com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();

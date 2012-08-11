@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -24,11 +25,12 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class CardsListActivity extends SherlockActivity {
+public class CardsListActivity extends SherlockFragmentActivity implements WriteTextDialogFragment.OnTextMadeListener {
 	private static final int MAKE_NEW_CARD = 1;
 	private static final int EDIT_CARD = 2;
 	
@@ -46,6 +48,7 @@ public class CardsListActivity extends SherlockActivity {
 	private boolean hasLoaded;
 	private MenuItem deleteCardMenuItem;
 	private MenuItem editCardMenuItem;
+	private ActionBar actionBar;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class CardsListActivity extends SherlockActivity {
         
         hasLoaded = false;
  
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         
         Intent intent = getIntent();
@@ -135,6 +138,12 @@ public class CardsListActivity extends SherlockActivity {
     	cardAdapter.notifyDataSetChanged(); 	
     }
     
+    private void renameList(String newName) {
+    	infoSaver.renameCardList(listId, newName);
+    	name = newName;
+    	actionBar.setTitle(newName);
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getSupportMenuInflater();
@@ -172,6 +181,10 @@ public class CardsListActivity extends SherlockActivity {
     		break;
     		case R.id.menu_delete_card:
     			removeCard(currentPosition); 
+    		break;
+    		case R.id.rename_list:
+    	        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
+    	        dialogFragment.show(getSupportFragmentManager(), "");
     		break;
     	}
     	return true;
@@ -224,5 +237,10 @@ public class CardsListActivity extends SherlockActivity {
 	protected void onPause() {
 		super.onPause();
 		infoSaver.saveCards(listId, cardList);
+	}
+
+	@Override
+	public void onTextMade(CharSequence text) {
+		renameList(text.toString());
 	}
 }

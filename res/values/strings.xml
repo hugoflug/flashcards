@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Learn By Heart</string>
-    <string name="menu_add_new">Add new</string>
-    <string name="menu_delete">Delete</string>
-    <string name="menu_edit_card">Edit</string>
-</resources>
+    <string name="menu_add_new">Add new card</string>
+    <string name="menu_delete">Delete card</string>
+    <string name="menu_edit_card">Edit card</string>
+    <string name="rename_list">Rename list</string>
+    </resources>
