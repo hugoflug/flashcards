@@ -41,10 +41,11 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	
 	private static final int DIALOG_MAKE_NEW = 0;
 	
-	public static final String CARD_LIST_NAME = "cardlistname";
+	public static final String CARD_LIST_NAME = "card_list_name";
+	public static final String CARD_LIST_ID = "card_list_id";
 
-	private List<String> cardLists;
-	private ArrayAdapter<String> cardListsAdapter;
+	private List<CardList> cardLists;
+	private ArrayAdapter<CardList> cardListsAdapter;
 	private InfoSaver infoSaver;
 	
     @Override
@@ -55,7 +56,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         infoSaver = InfoSaver.getInfoSaver(this);
         
         cardLists = infoSaver.getCardLists();
-        cardListsAdapter = new ArrayAdapter<String>(this, R.layout.list_item, cardLists);
+        cardListsAdapter = new ArrayAdapter<CardList>(this, R.layout.list_item, cardLists);
         setListAdapter(cardListsAdapter);
         //
         //3.0+ ONLY code!!!
@@ -134,7 +135,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     }
     
     private void removeCardList(int nr) {
-    	infoSaver.removeCardList(cardListsAdapter.getItem(nr));
+    	infoSaver.removeCardList(cardListsAdapter.getItem(nr).getID());
     	cardListsAdapter.remove(cardListsAdapter.getItem(nr));
     }
     
@@ -160,23 +161,24 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     
     public void onListItemClick(ListView listView, View view, int position, long id) {
     	Intent intent = new Intent(this, CardsListActivity.class);
-    	intent.putExtra(CARD_LIST_NAME, cardLists.get(position));
+    	intent.putExtra(CARD_LIST_NAME, cardLists.get(position).getName());
+       	intent.putExtra(CARD_LIST_ID, cardLists.get(position).getID());
     	startActivity(intent);
     }
     
-    public void tryToAddNewList(String name) {
-    	boolean match = false;
-    	for (String listName : cardLists) {
-    		if (name.equals(listName)) {
-    			match = true;
-    		}
-    	}
-    	if (!match) {
-    		cardListsAdapter.add(name);
-    	} else {
-    		//show dialog saying there is already a list with that name
-    	}
-    }
+//    public void tryToAddNewList(String name) {
+//    	boolean match = false;
+//    	for (String listName : cardLists) {
+//    		if (name.equals(listName)) {
+//    			match = true;
+//    		}
+//    	}
+//    	if (!match) {
+//    		cardListsAdapter.add(name);
+//    	} else {
+//    		//show dialog saying there is already a list with that name
+//    	}
+//    }
     
     protected Dialog onCreateDialog(int id) {
     	switch (id) {
@@ -193,7 +195,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                         public void onClick(DialogInterface dialog, int whichButton) {
                         	String text = textView.getText().toString();
                         	if (!text.equals("")) {
-                        		tryToAddNewList(text);
+                        		cardListsAdapter.add(new CardList(text));
                         	}
                         	textView.setText("");
                         }
@@ -220,7 +222,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	@Override
 	public void onTextMade(CharSequence text) {
 		if (!text.toString().equals("")) {
-    		cardListsAdapter.add(text.toString());
+    		cardListsAdapter.add(new CardList(text.toString()));
     	}
 	}
 }

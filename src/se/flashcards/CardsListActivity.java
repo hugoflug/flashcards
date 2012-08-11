@@ -34,6 +34,7 @@ public class CardsListActivity extends SherlockActivity {
 	
 	private CardPagerAdapter cardAdapter;
 	private List<Card> cardList;
+	private long listId;
 	private ViewPager viewPager;
 	private CardContentView answerView;
 	private BitmapDownsampler downSampler;
@@ -60,6 +61,7 @@ public class CardsListActivity extends SherlockActivity {
         
         Intent intent = getIntent();
         name = intent.getStringExtra(FlashcardsActivity.CARD_LIST_NAME);
+        listId = intent.getLongExtra(FlashcardsActivity.CARD_LIST_ID, 0);
         actionBar.setTitle(name);
         
         downSampler = new BitmapDownsampler(this, 600, 1000); //600, 1000
@@ -72,7 +74,7 @@ public class CardsListActivity extends SherlockActivity {
 
     	cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
-    	loadCards = new LoadCardsTask(this, name, downSampler) {
+    	loadCards = new LoadCardsTask(this, listId, downSampler) {
     		private boolean answerImageSet = false;
     		
     		@Override
@@ -102,6 +104,7 @@ public class CardsListActivity extends SherlockActivity {
         
 //        if (savedInstanceState != null) {
 //	        int currentCard = savedInstanceState.getInt("current_card", 0);
+//	        
 //	        viewPager.setCurrentItem(currentCard);
 //	        boolean drawerOpen = savedInstanceState.getBoolean("drawer_open", false);
 //	        if (drawerOpen) {
@@ -220,6 +223,6 @@ public class CardsListActivity extends SherlockActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		infoSaver.saveCards(name, cardList);
+		infoSaver.saveCards(listId, cardList);
 	}
 }

@@ -11,13 +11,13 @@ public class LoadCardsTask extends AsyncTask<Void, Card, Void> {
 	private CardLoaderIterator it;
 	private List<Card> addLast;
 	
-	public LoadCardsTask(Context c, String listName, BitmapDownsampler sampler) {
-		it = InfoSaver.getInfoSaver(c).getCardLoaderIterator(c, listName, sampler);
+	public LoadCardsTask(Context c, long listId, BitmapDownsampler sampler) {
+		it = InfoSaver.getInfoSaver(c).getCardLoaderIterator(c, listId, sampler);
 		addLast = new ArrayList<Card>();
 	}
 	
-	public LoadCardsTask(Context c, String listName, BitmapDownsampler sampler, List<Card> addLast) {
-		it = InfoSaver.getInfoSaver(c).getCardLoaderIterator(c, listName, sampler);
+	public LoadCardsTask(Context c, long listId, BitmapDownsampler sampler, List<Card> addLast) {
+		it = InfoSaver.getInfoSaver(c).getCardLoaderIterator(c, listId, sampler);
 		this.addLast = addLast;
 	}
 	
