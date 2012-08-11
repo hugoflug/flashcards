@@ -30,7 +30,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class CardsListActivity extends SherlockFragmentActivity implements WriteTextDialogFragment.OnTextMadeListener {
+public class CardsListActivity extends SherlockFragmentActivity implements WriteTextDialogFragment.OnTextMadeListener, 
+																		   ConfirmDialogFragment.OnConfirmedListener {
 	private static final int MAKE_NEW_CARD = 1;
 	private static final int EDIT_CARD = 2;
 	
@@ -181,12 +182,15 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     			edit.putExtra("answer_content", cardList.get(currentPosition).getAnswer());
     			startActivityForResult(edit, EDIT_CARD);
     		break;
-    		case R.id.menu_delete_card:
-    			removeCard(currentPosition); 
+    		case R.id.menu_delete_card: {
+    	        DialogFragment dialogFragment = ConfirmDialogFragment.newInstance("Delete", "Are you sure you want to delete card?", "Delete", "Cancel");
+    	        dialogFragment.show(getSupportFragmentManager(), "");
+    		}
     		break;
-    		case R.id.rename_list:
+    		case R.id.rename_list: {
     	        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
     	        dialogFragment.show(getSupportFragmentManager(), "");
+    		}
     		break;
     	}
     	return true;
@@ -248,5 +252,10 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	@Override
 	public void onTextMade(CharSequence text) {
 		renameList(text.toString());
+	} 
+
+	@Override
+	public void onConfirmed() {
+		removeCard(currentPosition); 
 	}
 }
