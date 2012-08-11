@@ -49,6 +49,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	private MenuItem deleteCardMenuItem;
 	private MenuItem editCardMenuItem;
 	private ActionBar actionBar;
+	private int loadedCurrentItem;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,23 +106,24 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 			}
         });
         
-//        if (savedInstanceState != null) {
-//	        int currentCard = savedInstanceState.getInt("current_card", 0);
-//	        
-//	        viewPager.setCurrentItem(currentCard);
-//	        boolean drawerOpen = savedInstanceState.getBoolean("drawer_open", false);
-//	        if (drawerOpen) {
-//	        	drawer.open();
-//	        } else {
-//	        	drawer.close();
-//	        }
-//        }
+        if (savedInstanceState != null) {
+	        int currentCard = savedInstanceState.getInt("current_card", 0);
+	        loadedCurrentItem = currentCard;
+	        
+	        viewPager.setCurrentItem(currentCard);
+	        boolean drawerOpen = savedInstanceState.getBoolean("drawer_open", false);
+	        if (drawerOpen) {
+	        	drawer.open();
+	        } else {
+	        	drawer.close();
+	        }
+        }
     }
     
 	@Override
 	public void onSaveInstanceState (Bundle outState) {
-//		outState.putInt("current_card", currentPosition);
-//		outState.putBoolean("drawer_open", drawer.isOpened());
+		outState.putInt("current_card", currentPosition);
+		outState.putBoolean("drawer_open", drawer.isOpened());
 	}
     
     @Override
@@ -225,7 +227,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 					}
 					
 					if (!hasLoaded) {
-						loadCards.replaceLater(currentPosition /* not currently correct*/, new Card(question, answer));
+						loadCards.replaceLater(loadedCurrentItem /* not currently correct*/, new Card(question, answer));
 					} else {
 						cardList.remove(currentPosition);
 						cardList.add(currentPosition, new Card(question, answer));
