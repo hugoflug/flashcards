@@ -51,6 +51,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	private MenuItem editCardMenuItem;
 	private ActionBar actionBar;
 	private int loadedCurrentItem;
+	private boolean cardsListChanged;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
         drawer.lock();
         
         infoSaver = InfoSaver.getInfoSaver(this);
+        
+        cardsListChanged = false;
 
     	cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
@@ -138,7 +141,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     
     private void removeCard(int pos) {   		
     	cardList.remove(pos);
-    	cardAdapter.notifyDataSetChanged(); 	
+    	cardAdapter.notifyDataSetChanged(); 
+		cardsListChanged = true;
     }
     
     private void renameList(String newName) {
@@ -190,7 +194,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     		case R.id.rename_list: {
     	        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
     	        dialogFragment.show(getSupportFragmentManager(), "");
-    		}
+    		}		    		cardsListChanged = true;
     		break;
     	}
     	return true;
@@ -218,6 +222,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 		    			cardAdapter.notifyDataSetChanged();
 		    			drawer.unlock();
 					}
+		    		cardsListChanged = true;
 		    	}
 		    	break;
 		    	case EDIT_CARD: {
@@ -237,6 +242,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 						cardList.add(currentPosition, new Card(question, answer));
 						cardAdapter.notifyDataSetChanged();
 					}
+		    		cardsListChanged = true;
 		    	}
 		    	break;
 		    }
@@ -246,7 +252,9 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	@Override
 	protected void onPause() {
 		super.onPause();
-		infoSaver.saveCards(listId, cardList);
+		if (cardsListChanged) {
+			infoSaver.saveCards(listId, cardList);
+		}
 	}
 
 	@Override
