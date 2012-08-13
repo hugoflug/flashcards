@@ -90,8 +90,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     			addCard(values[0]);
     			
     			if (!answerImageSet) {
-    			 answerView.setCardContent(values[0].getAnswer());
-    			 answerImageSet = true;
+    				answerView.setCardContent(values[0].getAnswer());
+    				answerImageSet = true;
     			}
     		}    
     	};
@@ -242,7 +242,12 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 					if (!hasLoaded) {
 						loadCards.addLastLater(new Card(question, answer));
 					} else {
-		    			addCard(new Card(question, answer));
+						Card card = new Card(question, answer);
+		    			addCard(card);
+		    			
+		    			if (cardList.size() == 1) {
+		    				answerView.setCardContent(card.getAnswer());
+		    			}
 					}
 		    		cardsListChanged = true;
 		    	}
@@ -261,8 +266,10 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 						loadCards.replaceLater(loadedCurrentItem /* not currently correct*/, new Card(question, answer));
 					} else {
 						cardList.remove(currentPosition);
-						cardList.add(currentPosition, new Card(question, answer));
+						Card card = new Card(question, answer);
+						cardList.add(currentPosition, card);
 						cardAdapter.notifyDataSetChanged();
+						answerView.setCardContent(card.getAnswer());
 					}
 		    		cardsListChanged = true;
 		    	}
