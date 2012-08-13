@@ -187,7 +187,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     			startActivityForResult(edit, EDIT_CARD);
     		break;
     		case R.id.menu_delete_card: {
-    	        DialogFragment dialogFragment = ConfirmDialogFragment.newInstance("Delete", "Are you sure you want to delete card?", "Delete", "Cancel");
+    	        DialogFragment dialogFragment = ConfirmDialogFragment.newInstance("", "The card will be deleted", "Delete", "Cancel");
     	        dialogFragment.show(getSupportFragmentManager(), "");
     		}
     		break;

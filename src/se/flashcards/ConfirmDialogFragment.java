@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 
@@ -37,9 +38,12 @@ public class ConfirmDialogFragment extends SherlockDialogFragment {
 		String question = getArguments().getString("question");
 		String confirm = getArguments().getString("confirm");
 		String dismiss = getArguments().getString("dismiss");
-
-        Dialog dialog = new AlertDialog.Builder(getActivity())
-            .setIconAttribute(android.R.attr.alertDialogIcon)
+		
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        if (!title.equals("")) {
+        	builder.setTitle(title);
+        }
+        builder.setIconAttribute(android.R.attr.alertDialogIcon)
             .setTitle(title)
             .setMessage(question)
             .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
@@ -57,8 +61,13 @@ public class ConfirmDialogFragment extends SherlockDialogFragment {
                 public void onClick(DialogInterface dialog, int whichButton) {
                 	
                 }
-            })
-            .create();
+            });
+
+        Dialog dialog = builder.create();
+        
+        if (title.equals("")) {
+        	dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
         return dialog;
     }
 }
