@@ -155,13 +155,15 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     }
     
     private void onEmptyList() {
-//		deleteCardMenuItem.setVisible(false);
-//		editCardMenuItem.setVisible(false);
+		deleteCardMenuItem.setVisible(false);
+		editCardMenuItem.setVisible(false);
     }
     
     private void onNonEmptyList() {
-//		deleteCardMenuItem.setVisible(true);
-//		editCardMenuItem.setVisible(true);
+    	if (editCardMenuItem != null) {
+			deleteCardMenuItem.setVisible(true);
+			editCardMenuItem.setVisible(true);
+    	}
     }
     
     private void addCard(Card card) {
@@ -174,18 +176,16 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    	Log.v("flashcards", "onCreateOptionsMenu");
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.layout.cardslist_actionbar_menu, menu);
         
         deleteCardMenuItem = menu.findItem(R.id.menu_delete_card);
         editCardMenuItem = menu.findItem(R.id.menu_edit_card);
-
-		onEmptyList();
 		
-		//TEMP
-		deleteCardMenuItem.setVisible(true);
-		editCardMenuItem.setVisible(true);
+		
+		if (cardList.size() != 0) {
+			onNonEmptyList();
+		}
         
         return true;
     }
