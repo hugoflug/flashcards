@@ -87,15 +87,13 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     		
     		@Override
     		protected void onProgressUpdate (Card... values) {
-    			 cardList.add(values[0]);
-    			 cardAdapter.notifyDataSetChanged();
-    			 
-    			 if (!answerImageSet) {
-    				 answerView.setCardContent(values[0].getAnswer());
-    				 answerImageSet = true;
-    			 }
-    			 drawer.unlock();
-    		}
+    			addCard(values[0]);
+    			
+    			if (!answerImageSet) {
+    			 answerView.setCardContent(values[0].getAnswer());
+    			 answerImageSet = true;
+    			}
+    		}    
     	};
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
@@ -133,6 +131,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     @Override
     public void onResume() {
     	super.onResume();
+    	Log.v("flashcards", "onResume");
     	if (!hasLoaded) {
     		loadCards.execute();
     		hasLoaded = true;
@@ -143,6 +142,10 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     	cardList.remove(pos);
     	cardAdapter.notifyDataSetChanged(); 
 		cardsListChanged = true;
+		
+		if (cardList.size() == 0) {
+			onEmptyList();
+		}
     }
     
     private void renameList(String newName) {
@@ -151,15 +154,36 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     	actionBar.setTitle(newName);
     }
     
+    private void onEmptyList() {
+//		deleteCardMenuItem.setVisible(false);
+//		editCardMenuItem.setVisible(false);
+    }
+    
+    private void onNonEmptyList() {
+//		deleteCardMenuItem.setVisible(true);
+//		editCardMenuItem.setVisible(true);
+    }
+    
+    private void addCard(Card card) {
+	    cardList.add(card);
+		cardAdapter.notifyDataSetChanged();
+		 
+		onNonEmptyList();
+		drawer.unlock();
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+    	Log.v("flashcards", "onCreateOptionsMenu");
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.layout.cardslist_actionbar_menu, menu);
         
         deleteCardMenuItem = menu.findItem(R.id.menu_delete_card);
         editCardMenuItem = menu.findItem(R.id.menu_edit_card);
-        
-        //TEMP
+
+		onEmptyList();
+		
+		//TEMP
 		deleteCardMenuItem.setVisible(true);
 		editCardMenuItem.setVisible(true);
         
@@ -218,9 +242,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 					if (!hasLoaded) {
 						loadCards.addLastLater(new Card(question, answer));
 					} else {
-			   			cardList.add(new Card(question, answer));
-		    			cardAdapter.notifyDataSetChanged();
-		    			drawer.unlock();
+		    			addCard(new Card(question, answer));
 					}
 		    		cardsListChanged = true;
 		    	}
@@ -264,6 +286,6 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 
 	@Override
 	public void onConfirmed() {
-		removeCard(currentPosition); 
+		removeCard(currentPosition);
 	}
 }
