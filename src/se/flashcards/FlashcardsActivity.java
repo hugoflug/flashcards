@@ -157,8 +157,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     }
     
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) 
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.layout.actionbar_menu, menu);
         return true;

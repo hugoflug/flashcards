@@ -84,13 +84,12 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) {
     		case android.R.id.home:
-
     	    	Intent intent = new Intent(this, CardsListActivity.class);
     	    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
     	    	startActivity(intent);
-    	    	finish(); //??
+    	    	finish(); 
     		break;
     	}
     	return true;

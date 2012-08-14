@@ -198,7 +198,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     	    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
     	    	startActivity(intent);
-    	    	finish(); //??
+    	    	finish();
     		break;
     		case R.id.menu_make_new:
     			Intent makeNew = new Intent(this, NewCardActivity.class);
@@ -263,7 +263,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 					}
 					
 					if (!hasLoaded) {
-						loadCards.replaceLater(loadedCurrentItem /* not currently correct*/, new Card(question, answer));
+						loadCards.replaceLater(loadedCurrentItem, new Card(question, answer));
 					} else {
 						cardList.remove(currentPosition);
 						Card card = new Card(question, answer);

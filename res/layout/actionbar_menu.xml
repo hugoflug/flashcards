@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_make_new"
           android:icon="@drawable/android:ic_input_add"
-          android:title="@string/menu_add_new"
+          android:title="@string/menu_add_new_list"
           android:showAsAction="ifRoom|withText" />
 </menu>
