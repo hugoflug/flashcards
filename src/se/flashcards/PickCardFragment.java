@@ -8,6 +8,8 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -81,14 +83,14 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
 		    	onPickImageClicked(v);
 			}
     	});
-    	ImageButton makeTextButton = (ImageButton)view.findViewById(R.id.make_text_button);
+    	final ImageButton makeTextButton = (ImageButton)view.findViewById(R.id.make_text_button);
     	makeTextButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 		    	onMakeTextClicked(v);
 			}
     	});   	
-    	ImageButton takeImageButton = (ImageButton)view.findViewById(R.id.take_image_button);
+    	final ImageButton takeImageButton = (ImageButton)view.findViewById(R.id.take_image_button);
     	takeImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -110,6 +112,10 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
 			public void onClick(View v) {
 				if (!contentIsDefault) {
 					onOptionsClicked(v);
+				} else {
+					//set button "backgrounds" to the transition
+//					TransitionDrawable transition = (TransitionDrawable) makeTextButton.getBackground();
+//					transition.startTransition(200);
 				}
 			}
     	});

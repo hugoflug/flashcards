@@ -37,7 +37,7 @@ public class CardListListItem extends TextView implements Checkable {
 	private void updateBackground() {
 		int backgroundId;
         if (isChecked()) {
-        	backgroundId = android.R.color.darker_gray; //blue??
+        	backgroundId = android.R.color.holo_blue_dark; //blue??
         } else {
         	backgroundId = -1;
         }

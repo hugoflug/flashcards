@@ -63,6 +63,8 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         final ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL); //_MODAL
         listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+        	private int selectedItems = 0;
+        	
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
 				switch (item.getItemId()) {
@@ -84,11 +86,16 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 			public boolean onCreateActionMode(ActionMode mode, android.view.Menu menu) {
 				MenuInflater inflater = mode.getMenuInflater();
 				inflater.inflate(R.layout.list_item_longpress_menu, menu);
+				
+				mode.setTitle(selectedItems + " selected");
 				return true;
 			}
 
 			@Override
-			public void onDestroyActionMode(ActionMode mode) {}
+			public void onDestroyActionMode(ActionMode mode) 
+			{
+				selectedItems = 0;
+			}
 
 			@Override
 			public boolean onPrepareActionMode(ActionMode mode, android.view.Menu menu) {
@@ -97,7 +104,12 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 
 			@Override
 			public void onItemCheckedStateChanged(ActionMode mode, int pos, long id, boolean checked) {
-
+				if (checked) {
+					selectedItems++;
+				} else {
+					selectedItems--;
+				}
+				mode.setTitle(selectedItems + " selected");
 			}
         });
        
@@ -175,6 +187,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         return true;
     }
     
+	@Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
     	Intent intent = new Intent(this, CardsListActivity.class);
     	intent.putExtra(CARD_LIST_NAME, cardLists.get(position).getName());
