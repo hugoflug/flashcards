@@ -104,6 +104,16 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
 			}
     	});
     	
+    	//clicking anywhere on the ContentView brings up the options menu
+    	contentView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (!contentIsDefault) {
+					onOptionsClicked(v);
+				}
+			}
+    	});
+    	
     	return view;
 	}
     
