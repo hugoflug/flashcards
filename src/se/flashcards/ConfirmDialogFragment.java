@@ -17,7 +17,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 public class ConfirmDialogFragment extends SherlockDialogFragment {
 	//containing fragments or activities must implement this
 	public interface OnConfirmedListener {
-		public void onConfirmed();
+		public void onConfirmed(String tag);
 	}
 	
 	public static ConfirmDialogFragment newInstance(String title, String question, String confirmText, String dismissText) {
@@ -51,9 +51,9 @@ public class ConfirmDialogFragment extends SherlockDialogFragment {
                 public void onClick(DialogInterface dialog, int whichButton) {
                 	Fragment target = getTargetFragment();
                 	if (target != null) {
-                		((OnConfirmedListener)target).onConfirmed();
+                		((OnConfirmedListener)target).onConfirmed(getTag());
                 	} else {
-                		((OnConfirmedListener)getActivity()).onConfirmed();
+                		((OnConfirmedListener)getActivity()).onConfirmed(getTag());
                 	}
                 }
             })

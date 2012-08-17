@@ -228,11 +228,14 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
     	
         DialogFragment dialogFragment = WriteTextDialogFragment.newInstance(newTextTitle, newTextHint, text);
         dialogFragment.setTargetFragment(this, 0);
-        dialogFragment.show(getFragmentManager(), "");
+        dialogFragment.show(getFragmentManager(), "text_content");
     }
     
-    public void onTextMade(CharSequence text) {
-    	setContent(new CardContent(text.toString()));
+    @Override
+    public void onTextMade(String tag, CharSequence text) {
+    	if (tag.equals("text_content")) {
+    		setContent(new CardContent(text.toString()));
+    	}
     }
     
     public void onTakeImageClicked(View view) {

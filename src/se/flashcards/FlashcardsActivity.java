@@ -3,6 +3,7 @@ package se.flashcards;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import se.flashcards.WriteTextDialogFragment.OnTextMadeListener;
@@ -161,14 +162,14 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     }
     
     private void validateListNames() {
-    	for (CardList cl : cardLists) {
-    		String oldName = cl.getName();
-    		String newName = infoSaver.nameFromId(cl.getID());
-    		if (!oldName.equals(newName)) {
-    			cl.rename(newName);
-    			cardListsAdapter.notifyDataSetChanged();
-    		}
-    	}
+//    	for (CardList cl : cardLists) {
+//    		String oldName = cl.getName();
+//    		String newName = infoSaver.nameFromId(cl.getID());
+//    		if (!oldName.equals(newName)) {
+//    			cl.rename(newName);
+//    			cardListsAdapter.notifyDataSetChanged();
+//    		}
+//    	}
     }
     
     @Override
@@ -183,7 +184,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	switch(item.getItemId()) {
     		case R.id.menu_make_new:
     	//		DialogFragment dialogFragment = new WriteTextDialogFragment();
-    	//		dialogFragment.show(getFragmentManager(), "dialog");
+    	//		dialogFragment.show(getFragmentManager(), "make_new_list");
     			showDialog(DIALOG_MAKE_NEW);
     			break;
     	}
@@ -204,13 +205,16 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 		if (resultCode == RESULT_OK) {
 		    switch (requestCode) {
 		    	case OPEN_CARDSLIST: {
-		    		Log.v("flashcards", "asd");
-		    		String newName = intent.getStringExtra(CARD_LIST_NAME);
-		    		if (newName != null) {
+		    		boolean shouldBeRemoved = intent.getBooleanExtra(CardsListActivity.SHOULD_BE_REMOVED, false);
+		    		if (shouldBeRemoved) {
 		    			long id = intent.getLongExtra(CARD_LIST_ID, -1);
-		    			if (id != -1) {
-		    				renameId(id, newName);
-		    			}
+		    			removeId(id);
+		    		} else {
+			    		String newName = intent.getStringExtra(CARD_LIST_NAME);
+			    		if (newName != null) {
+			    			long id = intent.getLongExtra(CARD_LIST_ID, -1);
+			    			renameId(id, newName);
+			    		}
 		    		}
 		    	}
 		    }
@@ -218,7 +222,15 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	}
 	
 	private void removeId(long id) {
-		
+		Iterator<CardList> it = cardLists.iterator();
+		while (it.hasNext()) {
+			CardList cl = it.next();
+			if (cl.getID() == id) {
+				it.remove();
+				infoSaver.removeCardList(id);
+				cardListsAdapter.notifyDataSetChanged();
+			}
+		}
 	}
 	
 	private void renameId(long id, String newName) {
@@ -284,9 +296,11 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	}
 
 	@Override
-	public void onTextMade(CharSequence text) {
-		if (!text.toString().equals("")) {
-    		cardListsAdapter.add(new CardList(text.toString()));
-    	}
+	public void onTextMade(String tag, CharSequence text) {
+		if (tag.equals("make_new_list")) {
+			if (!text.toString().equals("")) {
+	    		cardListsAdapter.add(new CardList(text.toString()));
+	    	}
+		}
 	}
 }

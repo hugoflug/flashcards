@@ -18,7 +18,7 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
 	
 	//containing fragments or activities must implement this
 	public interface OnTextMadeListener {
-		public void onTextMade(CharSequence text);
+		public void onTextMade(String tag, CharSequence text);
 	}
 	
 	public static WriteTextDialogFragment newInstance(String title, String hint, String text) {
@@ -54,9 +54,9 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
                 public void onClick(DialogInterface dialog, int whichButton) {
                 	Fragment target = getTargetFragment();
                 	if (target != null) {
-                		((OnTextMadeListener)target).onTextMade(textView.getText());
+                		((OnTextMadeListener)target).onTextMade(getTag(), textView.getText());
                 	} else {
-                		((OnTextMadeListener)getActivity()).onTextMade(textView.getText());
+                		((OnTextMadeListener)getActivity()).onTextMade(getTag(), textView.getText());
                 	}
                 }
             })

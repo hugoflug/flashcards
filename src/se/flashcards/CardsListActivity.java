@@ -34,6 +34,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 																		   ConfirmDialogFragment.OnConfirmedListener {
 	private static final int MAKE_NEW_CARD = 1;
 	private static final int EDIT_CARD = 2;
+	public static final String SHOULD_BE_REMOVED = "should_be_removed";
 	
 	private CardPagerAdapter cardAdapter;
 	private List<Card> cardList;
@@ -202,10 +203,11 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) {
     		case android.R.id.home:
-    	    	Intent intent = new Intent(this, FlashcardsActivity.class);
-    	    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    	    	startActivity(intent);
+    			//temp commented away
+//    	    	Intent intent = new Intent(this, FlashcardsActivity.class);
+//    	    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//    	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//    	    	startActivity(intent);
     	    	finish();
     		break;
     		case R.id.menu_make_new:
@@ -220,13 +222,18 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     		break;
     		case R.id.menu_delete_card: {
     	        DialogFragment dialogFragment = ConfirmDialogFragment.newInstance("", "The card will be deleted", "Delete", "Cancel");
-    	        dialogFragment.show(getSupportFragmentManager(), "");
+    	        dialogFragment.show(getSupportFragmentManager(), "delete_card");
     		}
     		break;
     		case R.id.rename_list: {
     	        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
-    	        dialogFragment.show(getSupportFragmentManager(), "");
-    		}		    		cardsListChanged = true;
+    	        dialogFragment.show(getSupportFragmentManager(), "rename_list");
+    		}		    		
+    		break;
+    		case R.id.delete_list: {
+    			DialogFragment dialogFragment = ConfirmDialogFragment.newInstance("", "The list will be deleted", "Delete", "Cancel");
+    	        dialogFragment.show(getSupportFragmentManager(), "delete_list");
+    		}
     		break;
     	}
     	return true;
@@ -296,12 +303,20 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	}
 
 	@Override
-	public void onTextMade(CharSequence text) {
-		renameList(text.toString());
+	public void onTextMade(String tag, CharSequence text) {
+		if (tag.equals("rename_list")) {
+			renameList(text.toString());
+		}
 	} 
 
 	@Override
-	public void onConfirmed() {
-		removeCard(currentPosition);
+	public void onConfirmed(String tag) {
+		if (tag.equals("remove_card")) {
+			removeCard(currentPosition);
+		} else if (tag.equals("delete_list")) {
+			result.putExtra(SHOULD_BE_REMOVED, true);
+	        setResult(SherlockActivity.RESULT_OK, result);
+	        finish();
+		}
 	}
 }
