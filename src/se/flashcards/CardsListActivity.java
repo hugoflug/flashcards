@@ -203,12 +203,14 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) {
     		case android.R.id.home:
-    			//temp commented away
-//    	    	Intent intent = new Intent(this, FlashcardsActivity.class);
-//    	    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//    	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//    	    	startActivity(intent);
-    	    	finish();
+    			if (getCallingActivity().getClassName().equals("se.flashcards.FlashcardsActivity")) {
+    				finish();
+    			} else {
+	    	    	Intent intent = new Intent(this, FlashcardsActivity.class);
+	    	    	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    	    	intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	    	    	startActivity(intent);
+    			}
     		break;
     		case R.id.menu_make_new:
     			Intent makeNew = new Intent(this, NewCardActivity.class);
