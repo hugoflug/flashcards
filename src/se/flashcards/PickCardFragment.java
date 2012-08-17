@@ -20,6 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -76,7 +79,7 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
     	contentView = (CardContentView)view.findViewById(R.id.content);
     	
     	
-    	ImageButton pickImageButton = (ImageButton)view.findViewById(R.id.pick_image_button);
+    	final ImageButton pickImageButton = (ImageButton)view.findViewById(R.id.pick_image_button);
     	pickImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -116,6 +119,10 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
 					//set button "backgrounds" to the transition
 //					TransitionDrawable transition = (TransitionDrawable) makeTextButton.getBackground();
 //					transition.startTransition(200);
+					Animation highlight = AnimationUtils.loadAnimation(getActivity(), R.anim.highlight_cards);
+					makeTextButton.startAnimation(highlight);
+					takeImageButton.startAnimation(highlight);
+					pickImageButton.startAnimation(highlight);
 				}
 			}
     	});

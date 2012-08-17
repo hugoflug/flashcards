@@ -33,6 +33,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +58,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         infoSaver = InfoSaver.getInfoSaver(this);
         
         cardLists = infoSaver.getCardLists();
-        cardListsAdapter = new ArrayAdapter<CardList>(this, R.layout.list_item, cardLists);
+        cardListsAdapter = new ArrayAdapter<CardList>(this, R.layout.list_item, R.id.card_list_list_item, cardLists);
         setListAdapter(cardListsAdapter);
         //
         //3.0+ ONLY code!!!
@@ -143,7 +145,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 //				view.setSelected(true);
 //				return true;
 //			}
-//		});
+//		}); 	
     }
     
     private void removeCardList(int nr) {
@@ -193,6 +195,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	intent.putExtra(CARD_LIST_NAME, cardLists.get(position).getName());
        	intent.putExtra(CARD_LIST_ID, cardLists.get(position).getID());
     	startActivity(intent);
+
     }
     
 //    public void tryToAddNewList(String name) {
