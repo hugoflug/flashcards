@@ -42,6 +42,7 @@ import android.widget.Toast;
 public class FlashcardsActivity extends SherlockListActivity implements OnTextMadeListener {
 	
 	private static final int DIALOG_MAKE_NEW = 0;
+	private static final int OPEN_CARDSLIST = 1;
 	
 	public static final String CARD_LIST_NAME = "card_list_name";
 	public static final String CARD_LIST_ID = "card_list_id";
@@ -194,9 +195,40 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	Intent intent = new Intent(this, CardsListActivity.class);
     	intent.putExtra(CARD_LIST_NAME, cardLists.get(position).getName());
        	intent.putExtra(CARD_LIST_ID, cardLists.get(position).getID());
-    	startActivity(intent);
-
+    	startActivityForResult(intent, OPEN_CARDSLIST);
     }
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) { 
+	    super.onActivityResult(requestCode, resultCode, intent);
+		if (resultCode == RESULT_OK) {
+		    switch (requestCode) {
+		    	case OPEN_CARDSLIST: {
+		    		Log.v("flashcards", "asd");
+		    		String newName = intent.getStringExtra(CARD_LIST_NAME);
+		    		if (newName != null) {
+		    			long id = intent.getLongExtra(CARD_LIST_ID, -1);
+		    			if (id != -1) {
+		    				renameId(id, newName);
+		    			}
+		    		}
+		    	}
+		    }
+		}
+	}
+	
+	private void removeId(long id) {
+		
+	}
+	
+	private void renameId(long id, String newName) {
+    	for (CardList cl : cardLists) {
+    		if (cl.getID() == id) {
+    			cl.rename(newName);
+    			cardListsAdapter.notifyDataSetChanged();
+    		}
+    	}
+	}
     
 //    public void tryToAddNewList(String name) {
 //    	boolean match = false;

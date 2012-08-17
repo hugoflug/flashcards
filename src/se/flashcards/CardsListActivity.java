@@ -52,6 +52,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	private ActionBar actionBar;
 	private int loadedCurrentItem;
 	private boolean cardsListChanged;
+	private Intent result;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,11 +65,14 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
  
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        
+
         Intent intent = getIntent();
         name = intent.getStringExtra(FlashcardsActivity.CARD_LIST_NAME);
         listId = intent.getLongExtra(FlashcardsActivity.CARD_LIST_ID, 0);
         actionBar.setTitle(name);
+        
+        result = new Intent();
+        result.putExtra(FlashcardsActivity.CARD_LIST_ID, listId);
         
         downSampler = new BitmapDownsampler(this, 600, 1000); //600, 1000
         
@@ -120,6 +124,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	        	drawer.close();
 	        }
         }
+        
+        setResult(SherlockActivity.RESULT_OK, result);
     }
     
 	@Override
@@ -152,6 +158,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     	infoSaver.renameCardList(listId, newName);
     	name = newName;
     	actionBar.setTitle(newName);
+    	result.putExtra(FlashcardsActivity.CARD_LIST_NAME, newName);
+        setResult(SherlockActivity.RESULT_OK, result);
     }
     
     private void onEmptyList() {
@@ -263,7 +271,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 					}
 					
 					if (!hasLoaded) {
-						loadCards.replaceLater(loadedCurrentItem, new Card(question, answer));
+						loadCards.replaceLater(loadedCurrentItem, new 
+								Card(question, answer));
 					} else {
 						cardList.remove(currentPosition);
 						Card card = new Card(question, answer);
