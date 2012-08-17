@@ -311,7 +311,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 
 	@Override
 	public void onConfirmed(String tag) {
-		if (tag.equals("remove_card")) {
+		if (tag.equals("delete_card")) {
 			removeCard(currentPosition);
 		} else if (tag.equals("delete_list")) {
 			result.putExtra(SHOULD_BE_REMOVED, true);
