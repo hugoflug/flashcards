@@ -1,0 +1,10 @@
+-> Make the button background a StateListDrawable
+-> Make the "unpressed" button a transition from unpressed to pressed/tinted state
+
+----
+ALTERNATIVE
+----
+
+-> Make a view that aligns perfectly with the buttons (add dynamically using code?)
+-> Make the view fade in using an animation, alternately using a TransitionDrawable
+
