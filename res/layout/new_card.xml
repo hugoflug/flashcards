@@ -9,14 +9,14 @@
 	    android:layout_height="0px"
 	    android:layout_weight="1"
 	    android:orientation="vertical"
-	    default_text="Pick question"/>
+	    default_text="@string/question_default"/>
     <fragment android:name="se.flashcards.PickCardFragment"
         android:id="@+id/answer"
 	    android:layout_width="match_parent"
 	    android:layout_height="0px"
 	    android:layout_weight="1"
 	    android:orientation="vertical"
-	    default_text="Pick answer"/>
+	    default_text="@string/answer_default"/>
     <Button
         android:id="@+id/confirm_button"
         android:layout_width="match_parent"
