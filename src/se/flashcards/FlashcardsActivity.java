@@ -60,7 +60,8 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         infoSaver = InfoSaver.getInfoSaver(this);
         
         cardLists = infoSaver.getCardLists();
-        cardListsAdapter = new ArrayAdapter<CardList>(this, R.layout.list_item, R.id.card_list_list_item, cardLists);
+        cardListsAdapter = new ArrayAdapter<CardList>(this, R.layout.card_list_item, cardLists);
+//        cardListsAdapter = new ArrayAdapter<CardList>(this, R.layout.list_item, R.id.card_list_list_item_2, cardLists);
         setListAdapter(cardListsAdapter);
         //
         //3.0+ ONLY code!!!

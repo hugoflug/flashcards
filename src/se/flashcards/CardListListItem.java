@@ -3,6 +3,7 @@ package se.flashcards;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.Checkable;
 import android.widget.TextView;
 
