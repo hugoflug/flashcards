@@ -49,7 +49,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	public static final String CARD_LIST_ID = "card_list_id";
 
 	private List<CardList> cardLists;
-	private ArrayAdapter<CardList> cardListsAdapter;
+	private CardsListListAdapter cardListsAdapter;
 	private InfoSaver infoSaver;
 	
     @Override
@@ -60,8 +60,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         infoSaver = InfoSaver.getInfoSaver(this);
         
         cardLists = infoSaver.getCardLists();
-        cardListsAdapter = new ArrayAdapter<CardList>(this, R.layout.card_list_item, cardLists);
-//        cardListsAdapter = new ArrayAdapter<CardList>(this, R.layout.list_item, R.id.card_list_list_item_2, cardLists);
+        cardListsAdapter = new CardsListListAdapter(this, cardLists);
         setListAdapter(cardListsAdapter);
         //
         //3.0+ ONLY code!!!
@@ -153,7 +152,8 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     
     private void removeCardList(int nr) {
     	infoSaver.removeCardList(cardListsAdapter.getItem(nr).getID());
-    	cardListsAdapter.remove(cardListsAdapter.getItem(nr));
+    	cardLists.remove(cardListsAdapter.getItem(nr));
+    	cardListsAdapter.notifyDataSetChanged();
     }
     
     @Override
@@ -272,7 +272,8 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                         public void onClick(DialogInterface dialog, int whichButton) {
                         	String text = textView.getText().toString();
                         	if (!text.equals("")) {
-                        		cardListsAdapter.add(new CardList(text));
+                        		cardLists.add(new CardList(text));
+                        		cardListsAdapter.notifyDataSetChanged();
                         	}
                         	textView.setText("");
                         }
@@ -300,7 +301,8 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	public void onTextMade(String tag, CharSequence text) {
 		if (tag.equals("make_new_list")) {
 			if (!text.toString().equals("")) {
-	    		cardListsAdapter.add(new CardList(text.toString()));
+	    		cardLists.add(new CardList(text.toString()));
+	    		cardListsAdapter.notifyDataSetChanged();
 	    	}
 		}
 	}

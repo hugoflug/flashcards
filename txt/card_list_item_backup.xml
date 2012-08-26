@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+	<se.flashcards.CardListListItem xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/card_list_list_item"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:padding="16dp"
+	    android:textSize="20sp"
+	    android:layout_weight="1">
+	</se.flashcards.CardListListItem>
+</LinearLayout>

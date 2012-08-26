@@ -1,5 +1,6 @@
 package se.flashcards;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -32,6 +33,8 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
 		
 	}
 	
+	//.setIconAttribute API 11+ (?)
+	@TargetApi(11)
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 		String title = getArguments().getString("title");

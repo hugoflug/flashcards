@@ -10,4 +10,6 @@
     <string name="delete_list">Delete list</string>
     <string name="question_default">Pick question</string>
     <string name="answer_default">Pick answer</string>
+    <string name="card">card</string>
+    <string name="cards">cards</string>
     </resources>

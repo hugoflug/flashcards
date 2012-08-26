@@ -42,6 +42,10 @@ public class InfoSaver
 		return "card_list_name_" + id;
 	}
 	
+	public static String cardAmountIdentifier(long id) {
+		return "card_list_amount_" + id;
+	}
+	
 	public SharedPreferences getPrefs() {
 		return prefs;
 	}
@@ -63,6 +67,7 @@ public class InfoSaver
 		for (CardList cl : cardLists) {
 			edit.putLong(cardListIdentifier(nr), cl.getID());
 			edit.putString(cardNameIdentifier(cl.getID()), cl.getName());
+			edit.putInt(cardAmountIdentifier(cl.getID()), cl.getNumberOfCards());
 			nr++;
 		}
 		edit.putInt("cardlist_length", nr);
@@ -75,20 +80,34 @@ public class InfoSaver
 		for (int i = 0; i < cardListsAmnt; i++) {
 			long id = prefs.getLong(cardListIdentifier(i), 0);
 			String name = nameFromId(id);
-			Log.v("flashcards", "id: " + id);
-			cardLists.add(new CardList(id, name));
+			int amount = amountFromId(id);
+			cardLists.add(new CardList(id, name, amount));
 		}
 		
 		return cardLists;
 	}
 	
-	public String nameFromId(long id) {
+	private int amountFromId(long id) {
+		return prefs.getInt(cardAmountIdentifier(id), 0);
+	}
+	
+	private String nameFromId(long id) {
 		return prefs.getString(cardNameIdentifier(id), null);
+	}
+	
+	private boolean identifierExists(String identifier) {
+		return getPrefs().getString(identifier, "").equals("");
 	}
 	
 	public void renameCardList(long id, String newName) {
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(cardNameIdentifier(id), newName);
+		editor.commit();
+	}
+	
+	public void changeAmountCardList(long id, int newAmount) {
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putInt(cardAmountIdentifier(id), newAmount);
 		editor.commit();
 	}
 	
@@ -122,7 +141,7 @@ public class InfoSaver
 		editor.commit();
 	}
 	
-	public void saveCardContent(String name, CardContent content) {
+	public void saveCardContent(String identifier, CardContent content) {
 		SharedPreferences.Editor editor = prefs.edit();
 		
 		String toSave = "";
@@ -134,8 +153,8 @@ public class InfoSaver
 			toSave = content.getString();
 			isBmp = false;
 		}
-		editor.putBoolean(name + "_bmp", isBmp);
-		editor.putString(name, toSave);
+		editor.putBoolean(identifier + "_bmp", isBmp);
+		editor.putString(identifier, toSave);
 		editor.commit();
 	}
 	
@@ -172,7 +191,7 @@ public class InfoSaver
 		@Override
 		public boolean hasNext() {
 			//TODO: optimize, no unnecessary calls to this
-			return !infoSaver.getPrefs().getString(cardQuestionIdentifier(listId, pos), "").equals("");
+			return !infoSaver.identifierExists(cardQuestionIdentifier(listId, pos));
 		}
 
 		@Override

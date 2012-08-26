@@ -138,7 +138,6 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     @Override
     public void onResume() {
     	super.onResume();
-    	Log.v("flashcards", "onResume");
     	if (!hasLoaded) {
     		loadCards.execute();
     		hasLoaded = true;
@@ -302,6 +301,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 		if (cardsListChanged) {
 			infoSaver.saveCards(listId, cardList);
 		}
+		infoSaver.changeAmountCardList(listId, cardList.size());
 	}
 
 	@Override
@@ -315,6 +315,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	public void onConfirmed(String tag) {
 		if (tag.equals("delete_card")) {
 			removeCard(currentPosition);
+			infoSaver.changeAmountCardList(listId, cardList.size());
 		} else if (tag.equals("delete_list")) {
 			result.putExtra(SHOULD_BE_REMOVED, true);
 	        setResult(SherlockActivity.RESULT_OK, result);
