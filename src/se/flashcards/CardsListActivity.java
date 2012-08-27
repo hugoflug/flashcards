@@ -184,13 +184,9 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     }
     
     private void changeAmountOfCards(int newAmount) {
-    	Log.v("flashcards", "noc: " + newAmount);
-    	
     	infoSaver.changeAmountCardList(listId, newAmount);
     	result.putExtra(NUMBER_OF_CARDS, newAmount);
     	setResult(SherlockActivity.RESULT_OK, result);
-    	
-    	Log.v("flashcards", "noc: " + newAmount);
     }
     
     @Override
@@ -265,6 +261,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 					} catch (IOException e) {
 						Log.v("flashcards", "Couldn't load image.");
 					}
+
+					changeAmountOfCards(cardList.size() + 1);
 					
 					if (!hasLoaded) {
 						loadCards.addLastLater(new Card(question, answer));
@@ -312,7 +310,6 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 		if (cardsListChanged) {
 			infoSaver.saveCards(listId, cardList);
 		}
-		changeAmountOfCards(cardList.size());
 	}
 
 	@Override
