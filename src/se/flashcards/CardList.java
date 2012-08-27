@@ -46,4 +46,8 @@ public class CardList {
 	public int getNumberOfCards() {
 		return numberOfCards;
 	}
+	
+	public void setNumberOfCards(int noc) {
+		numberOfCards = noc;
+	}
 }

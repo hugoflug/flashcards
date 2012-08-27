@@ -16,6 +16,8 @@ import com.actionbarsherlock.view.Menu;
 //import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -40,6 +42,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@TargetApi(11)
 public class FlashcardsActivity extends SherlockListActivity implements OnTextMadeListener {
 	
 	private static final int DIALOG_MAKE_NEW = 0;
@@ -206,19 +209,33 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 		if (resultCode == RESULT_OK) {
 		    switch (requestCode) {
 		    	case OPEN_CARDSLIST: {
+		    		long id = intent.getLongExtra(CARD_LIST_ID, -1);
 		    		boolean shouldBeRemoved = intent.getBooleanExtra(CardsListActivity.SHOULD_BE_REMOVED, false);
 		    		if (shouldBeRemoved) {
-		    			long id = intent.getLongExtra(CARD_LIST_ID, -1);
 		    			removeId(id);
 		    		} else {
 			    		String newName = intent.getStringExtra(CARD_LIST_NAME);
 			    		if (newName != null) {
-			    			long id = intent.getLongExtra(CARD_LIST_ID, -1);
 			    			renameId(id, newName);
+			    		}
+			    		
+			    		int newAmount = intent.getIntExtra(CardsListActivity.NUMBER_OF_CARDS, -1);
+			    		Log.v("flashcards", "new: " + newAmount);
+			    		if (newAmount != -1) {
+			    			changeAmountOnId(id, newAmount);
 			    		}
 		    		}
 		    	}
 		    }
+		}
+	}
+	
+	private void changeAmountOnId(long id, int newAmount) {
+		for (CardList cl : cardLists) {
+			if (cl.getID() == id) {
+				cl.setNumberOfCards(newAmount);
+				cardListsAdapter.notifyDataSetChanged();
+			}
 		}
 	}
 	
@@ -256,8 +273,9 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 //    		//show dialog saying there is already a list with that name
 //    	}
 //    }
-    
-    protected Dialog onCreateDialog(int id) {
+	
+	@TargetApi(11)
+	protected Dialog onCreateDialog(int id) {
     	switch (id) {
     		case DIALOG_MAKE_NEW:
                 LayoutInflater factory = LayoutInflater.from(this);

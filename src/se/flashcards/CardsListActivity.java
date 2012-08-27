@@ -35,6 +35,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	private static final int MAKE_NEW_CARD = 1;
 	private static final int EDIT_CARD = 2;
 	public static final String SHOULD_BE_REMOVED = "should_be_removed";
+	public static final String NUMBER_OF_CARDS = "number_of_cards";
 	
 	private CardPagerAdapter cardAdapter;
 	private List<Card> cardList;
@@ -182,6 +183,16 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 		drawer.unlock();
     }
     
+    private void changeAmountOfCards(int newAmount) {
+    	Log.v("flashcards", "noc: " + newAmount);
+    	
+    	infoSaver.changeAmountCardList(listId, newAmount);
+    	result.putExtra(NUMBER_OF_CARDS, newAmount);
+    	setResult(SherlockActivity.RESULT_OK, result);
+    	
+    	Log.v("flashcards", "noc: " + newAmount);
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getSupportMenuInflater();
@@ -301,7 +312,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 		if (cardsListChanged) {
 			infoSaver.saveCards(listId, cardList);
 		}
-		infoSaver.changeAmountCardList(listId, cardList.size());
+		changeAmountOfCards(cardList.size());
 	}
 
 	@Override
@@ -315,7 +326,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	public void onConfirmed(String tag) {
 		if (tag.equals("delete_card")) {
 			removeCard(currentPosition);
-			infoSaver.changeAmountCardList(listId, cardList.size());
+			changeAmountOfCards(cardList.size());
 		} else if (tag.equals("delete_list")) {
 			result.putExtra(SHOULD_BE_REMOVED, true);
 	        setResult(SherlockActivity.RESULT_OK, result);
