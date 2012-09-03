@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.opengl.Visibility;
 import android.os.Bundle;
@@ -40,7 +41,11 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     	setTheme(R.style.Theme_Sherlock);
     	
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);     
+        actionBar.setDisplayHomeAsUpEnabled(true); 
+        
+        //TEMP, should be set through XML
+        ActionBar bar = getSupportActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(0xff3C3636));
     	
     	confirmButton = (Button)findViewById(R.id.confirm_button);
  

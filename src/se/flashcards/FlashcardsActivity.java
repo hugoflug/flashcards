@@ -22,6 +22,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -61,6 +62,10 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         setTheme(R.style.Theme_Sherlock);
         
         infoSaver = InfoSaver.getInfoSaver(this);
+        
+        //TEMP, should be set through XML
+        ActionBar bar = getSupportActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(0xff3C3636));
         
         cardLists = infoSaver.getCardLists();
         cardListsAdapter = new CardsListListAdapter(this, cardLists);
