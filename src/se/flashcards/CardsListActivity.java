@@ -71,7 +71,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
         
         //TEMP, should be set through XML
         ActionBar bar = getSupportActionBar();
-        bar.setBackgroundDrawable(new ColorDrawable(0xff3C3636));
+        Util.customizeActionBar(getResources(), bar);
 
         Intent intent = getIntent();
         name = intent.getStringExtra(FlashcardsActivity.CARD_LIST_NAME);

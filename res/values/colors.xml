@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="gray">#ffff0000</color>
+    <color name="action_bar_bg_backup">#f83C3636</color>
+    <color name="action_bar_bg">#ff404040</color>
+    <color name="handle_rest">#ff404040</color>
+    <color name="handle_top">#ff404040</color>
 </resources>

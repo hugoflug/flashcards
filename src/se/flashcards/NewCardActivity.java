@@ -45,7 +45,7 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
         
         //TEMP, should be set through XML
         ActionBar bar = getSupportActionBar();
-        bar.setBackgroundDrawable(new ColorDrawable(0xff3C3636));
+        Util.customizeActionBar(getResources(), bar);
     	
     	confirmButton = (Button)findViewById(R.id.confirm_button);
  

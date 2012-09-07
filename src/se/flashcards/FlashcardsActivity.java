@@ -65,7 +65,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         
         //TEMP, should be set through XML
         ActionBar bar = getSupportActionBar();
-        bar.setBackgroundDrawable(new ColorDrawable(0xff3C3636));
+        Util.customizeActionBar(getResources(), bar);
         
         cardLists = infoSaver.getCardLists();
         cardListsAdapter = new CardsListListAdapter(this, cardLists);
