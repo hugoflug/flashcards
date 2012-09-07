@@ -286,12 +286,13 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                 LayoutInflater factory = LayoutInflater.from(this);
                 final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
                 final TextView textView = (TextView)textEntryView.findViewById(R.id.text);
+                textView.setHint("Title");
                 textView.requestFocus();
                 Dialog dialog = new AlertDialog.Builder(this)
                     .setIconAttribute(android.R.attr.alertDialogIcon)
-                    .setTitle("Make new entry")
+                    .setTitle("Create new list")
                     .setView(textEntryView)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                         	String text = textView.getText().toString();
                         	if (!text.equals("")) {
