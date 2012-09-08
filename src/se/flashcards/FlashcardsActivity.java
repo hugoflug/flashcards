@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -37,6 +38,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -48,6 +50,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	
 	private static final int DIALOG_MAKE_NEW = 0;
 	private static final int OPEN_CARDSLIST = 1;
+	private static final int DIALOG_RENAME = 2;
 	
 	public static final String CARD_LIST_NAME = "card_list_name";
 	public static final String CARD_LIST_ID = "card_list_id";
@@ -55,6 +58,8 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	private List<CardList> cardLists;
 	private CardsListListAdapter cardListsAdapter;
 	private InfoSaver infoSaver;
+	private int itemToRename = 0;
+	private ActionMode modeToFinish; //3.0+ ONLY 
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,11 +81,12 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL); //_MODAL
         listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
         	private int selectedItems = 0;
+        	private android.view.MenuItem renameItem = null;
         	
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
 				switch (item.getItemId()) {
-		            case R.id.menu_delete:
+		            case R.id.menu_delete: {
 		                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();             
 		                int removed = 0;
 		                for (int i = 0; i < checkedItems.size(); i++) {
@@ -89,6 +95,16 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 		                }
 		                mode.finish();
 		                return true;
+		            }
+		            case R.id.rename_item: {
+		            	itemToRename = listView.getCheckedItemPositions().keyAt(0);
+		 //   	        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
+		 //   	        dialogFragment.show(FlashcardsActivity.this.getSupportFragmentManager(), "rename_list");
+		            	//TEMP, do through fragments instead
+		            	showDialog(DIALOG_RENAME);
+		            	modeToFinish = mode;
+		            	return true;
+		            }
 		            default:
 		                return false;
 				}
@@ -98,6 +114,10 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 			public boolean onCreateActionMode(ActionMode mode, android.view.Menu menu) {
 				MenuInflater inflater = mode.getMenuInflater();
 				inflater.inflate(R.layout.list_item_longpress_menu, menu);
+				
+				renameItem = menu.findItem(R.id.rename_item);
+				//TEMP
+		//		renameItem.setVisible(false);
 				
 				mode.setTitle(selectedItems + " selected");
 				return true;
@@ -120,6 +140,11 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 					selectedItems++;
 				} else {
 					selectedItems--;
+				}
+				if (selectedItems > 1) {
+					renameItem.setVisible(false);
+				} else if (selectedItems <= 1) {
+					renameItem.setVisible(true);
 				}
 				mode.setTitle(selectedItems + " selected");
 			}
@@ -194,6 +219,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     		case R.id.menu_make_new:
     	//		DialogFragment dialogFragment = new WriteTextDialogFragment();
     	//		dialogFragment.show(getFragmentManager(), "make_new_list");
+    			//TEMP, do through fragments instead
     			showDialog(DIALOG_MAKE_NEW);
     			break;
     	}
@@ -264,6 +290,13 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     		}
     	}
 	}
+	
+	private void renameNumber(int number, String newName) {
+		CardList cl = cardLists.get(number);
+		cl.rename(newName);
+		cardListsAdapter.notifyDataSetChanged();
+		infoSaver.renameCardList(cl.getID(), newName);
+	}
     
 //    public void tryToAddNewList(String name) {
 //    	boolean match = false;
@@ -282,7 +315,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	@TargetApi(11)
 	protected Dialog onCreateDialog(int id) {
     	switch (id) {
-    		case DIALOG_MAKE_NEW:
+    		case DIALOG_MAKE_NEW: {
                 LayoutInflater factory = LayoutInflater.from(this);
                 final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
                 final TextView textView = (TextView)textEntryView.findViewById(R.id.text);
@@ -310,6 +343,40 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                     .create();
                 dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 return dialog;
+    		}
+            //TEMP, do through fragments instead
+    		case DIALOG_RENAME: {
+    			String title = "Rename list";
+    			String hint = "Name";
+    			String text = "";
+    			final String tag = "rename_list";
+    			
+    	        LayoutInflater factory = LayoutInflater.from(this);
+    	        final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
+    	        final EditText textView = (EditText)textEntryView.findViewById(R.id.text);
+    	        textView.setHint(hint);
+    	        textView.requestFocus();
+    	        textView.setText(text);
+    	        textView.setSelection(textView.getText().length());
+    	        Dialog dialog = new AlertDialog.Builder(this)
+    	            .setIconAttribute(android.R.attr.alertDialogIcon)
+    	            .setTitle(title)
+    	            .setView(textEntryView)
+    	            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    	            	@Override
+    	                public void onClick(DialogInterface dialog, int whichButton) {
+    	            		onTextMade(tag, textView.getText());
+    	                }
+    	            })
+    	            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+    	                public void onClick(DialogInterface dialog, int whichButton) {
+    	                	textView.setText("");
+    	                }
+    	            })
+    	            .create();
+    	        dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    	        return dialog;
+    		}
     		default:
     			return null;
     	}
@@ -328,6 +395,9 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	    		cardLists.add(new CardList(text.toString()));
 	    		cardListsAdapter.notifyDataSetChanged();
 	    	}
+		} else if (tag.equals("rename_list")) {
+			renameNumber(itemToRename, text.toString());
+			modeToFinish.finish(); //3.0+ ONLY
 		}
 	}
 }

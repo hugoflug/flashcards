@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.SlidingDrawer;
+import android.view.MotionEvent;
 
 
 public class WrappingSlidingDrawer extends SlidingDrawer {
@@ -24,6 +25,12 @@ public class WrappingSlidingDrawer extends SlidingDrawer {
         mVertical = (orientation == SlidingDrawer.ORIENTATION_VERTICAL);
     }
 
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//    	super.onTouchEvent(event);
+//    	return true;
+//    }
+    
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 

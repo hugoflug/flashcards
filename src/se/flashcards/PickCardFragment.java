@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +30,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class PickCardFragment extends Fragment implements WriteTextDialogFragment.OnTextMadeListener {
+@TargetApi(8)
+public class PickCardFragment extends SherlockFragment implements WriteTextDialogFragment.OnTextMadeListener {
 	
 	//must be implemented by container Activity
     public interface OnContentChangedListener {
@@ -254,7 +259,7 @@ public class PickCardFragment extends Fragment implements WriteTextDialogFragmen
     		setButtonsVisibility(View.VISIBLE);
     	}
     }
-	
+
 	private Uri createNewImageUri() {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		String imageFileName = timeStamp + ".jpg";
