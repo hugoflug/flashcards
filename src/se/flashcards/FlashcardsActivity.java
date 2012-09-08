@@ -349,6 +349,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     			String title = "Rename list";
     			String hint = "Name";
     			String text = "";
+    			String positiveText = "Rename";
     			final String tag = "rename_list";
     			
     	        LayoutInflater factory = LayoutInflater.from(this);
@@ -362,7 +363,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	            .setIconAttribute(android.R.attr.alertDialogIcon)
     	            .setTitle(title)
     	            .setView(textEntryView)
-    	            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    	            .setPositiveButton(positiveText, new DialogInterface.OnClickListener() {
     	            	@Override
     	                public void onClick(DialogInterface dialog, int whichButton) {
     	            		onTextMade(tag, textView.getText());

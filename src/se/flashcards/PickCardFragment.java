@@ -231,7 +231,7 @@ public class PickCardFragment extends SherlockFragment implements WriteTextDialo
     		text = cardContent.getString();
     	}
     	
-        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance(newTextTitle, newTextHint, text);
+        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance(newTextTitle, newTextHint, text, "OK", "Cancel");
         dialogFragment.setTargetFragment(this, 0);
         dialogFragment.show(getFragmentManager(), "text_content");
     }

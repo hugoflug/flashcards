@@ -239,7 +239,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     		}
     		break;
     		case R.id.rename_list: {
-    	        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
+    	        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "", "Rename", "Cancel");
     	        dialogFragment.show(getSupportFragmentManager(), "rename_list");
     		}		    		
     		break;

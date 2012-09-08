@@ -22,12 +22,14 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
 		public void onTextMade(String tag, CharSequence text);
 	}
 	
-	public static WriteTextDialogFragment newInstance(String title, String hint, String text) {
+	public static WriteTextDialogFragment newInstance(String title, String hint, String text, String positiveButton, String negativeButton) {
 		WriteTextDialogFragment fragment = new WriteTextDialogFragment();
 		Bundle args = new Bundle();
 		args.putString("title", title);
 		args.putString("hint", hint);
 		args.putString("text", text);
+		args.putString("pos", positiveButton);
+		args.putString("neg", negativeButton);
 		fragment.setArguments(args);
 		return fragment;
 		
@@ -40,6 +42,8 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
 		String title = getArguments().getString("title");
 		String hint = getArguments().getString("hint");
 		String text = getArguments().getString("text");
+		String posButton = getArguments().getString("pos");
+		String negButton = getArguments().getString("neg");
 		
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
@@ -52,7 +56,7 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
             .setIconAttribute(android.R.attr.alertDialogIcon)
             .setTitle(title)
             .setView(textEntryView)
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            .setPositiveButton(posButton, new DialogInterface.OnClickListener() {
             	@Override
                 public void onClick(DialogInterface dialog, int whichButton) {
                 	Fragment target = getTargetFragment();
@@ -63,7 +67,7 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
                 	}
                 }
             })
-            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            .setNegativeButton(negButton, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                 	textView.setText("");
                 }
