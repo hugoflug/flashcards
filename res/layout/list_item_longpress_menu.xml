@@ -5,6 +5,6 @@
           android:icon="@drawable/android:ic_menu_delete"
           android:showAsAction="ifRoom|withText" />
     <item android:id="@+id/rename_item"
-          android:title="@string/rename_list" 
+          android:title="@string/rename" 
           android:showAsAction="never"/>
 </menu>

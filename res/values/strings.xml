@@ -6,6 +6,7 @@
     <string name="menu_delete">Delete card</string>
     <string name="menu_edit_card">Edit card</string>
     <string name="rename_list">Rename list</string>
+    <string name="rename">Rename</string>
     <string name="delete_list">Delete list</string>
     <string name="question_default">Pick question</string>
     <string name="answer_default">Pick answer</string>
