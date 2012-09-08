@@ -90,18 +90,29 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 		                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();             
 		                int removed = 0;
 		                for (int i = 0; i < checkedItems.size(); i++) {
-		                	removeCardList(checkedItems.keyAt(i) - removed);
-		                	removed++;
+		                	int key = checkedItems.keyAt(i);
+		                	if (checkedItems.get(key)) {
+			                	removeCardList(key - removed);
+			                	removed++;
+		                	}
 		                }
 		                mode.finish();
 		                return true;
 		            }
 		            case R.id.rename_item: {
-		            	itemToRename = listView.getCheckedItemPositions().keyAt(0);
-		 //   	        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
-		 //   	        dialogFragment.show(FlashcardsActivity.this.getSupportFragmentManager(), "rename_list");
-		            	//TEMP, do through fragments instead
-		            	showDialog(DIALOG_RENAME);
+		            	SparseBooleanArray checkedItems = listView.getCheckedItemPositions();   
+		            	for (int i = 0; i < checkedItems.size(); i++) {
+		            		int key = checkedItems.keyAt(i);
+		            		if (checkedItems.get(key)) {
+				            	itemToRename = key;
+	       		            	modeToFinish = mode;
+	       		    	        // DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
+	       		    	        // dialogFragment.show(FlashcardsActivity.this.getSupportFragmentManager(), "rename_list");
+	       		            	//TEMP, do through fragments instead
+	       		            	showDialog(DIALOG_RENAME);
+		            		}
+		            	}
+
 		            	modeToFinish = mode;
 		            	return true;
 		            }
