@@ -4,4 +4,5 @@
     <color name="action_bar_bg">#ff404040</color>
     <color name="handle_rest">#ff404040</color>
     <color name="handle_top">#ff404040</color>
+    <color name="checked_list_item">#ff155A62</color>
 </resources>
