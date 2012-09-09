@@ -206,7 +206,6 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 		if (cardList.size() != 0) {
 			onNonEmptyList();
 		}
-        
         return true;
     }
     
@@ -325,6 +324,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	} 
 
 	@Override
+	
 	public void onConfirmed(String tag) {
 		if (tag.equals("delete_card")) {
 			removeCard(currentPosition);
