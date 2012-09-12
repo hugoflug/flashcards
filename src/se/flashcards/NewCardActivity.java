@@ -64,6 +64,10 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
         CardContent questionContent = intent.getParcelableExtra("question_content");
         CardContent answerContent = intent.getParcelableExtra("answer_content");
         
+        if (questionContent != null || answerContent != null) {
+        	bar.setTitle(R.string.menu_edit_card);
+        }
+        
         BitmapDownsampler sampler = new BitmapDownsampler(this, 600, 1000);
         
         if (questionContent != null) {
