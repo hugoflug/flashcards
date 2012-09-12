@@ -4,6 +4,7 @@
     <string name="menu_add_new">Add new card</string>
     <string name="menu_add_new_list">Add new list</string>
     <string name="menu_delete">Delete card</string>
+    <string name="menu_delete_list">Delete list</string>
     <string name="menu_edit_card">Edit card</string>
     <string name="rename_list">Rename list</string>
     <string name="rename">Rename</string>

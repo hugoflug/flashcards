@@ -30,12 +30,15 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
@@ -167,6 +170,8 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 					mode.setTitle(selectedItems + " selected");
 				}
 	        });	
+        } else {
+        	registerForContextMenu(getListView());
         }
        
         
@@ -200,6 +205,35 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 //				return true;
 //			}
 //		}); 	
+    }
+    
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.layout.list_item_longpress_menu, menu);
+		Log.v("flashcards", "oCCM");
+    }
+    
+    @Override
+    public boolean onContextItemSelected (android.view.MenuItem item) {
+    	Log.v("flashcards", "oCIS");
+    	AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
+		switch (item.getItemId()) {
+	        case R.id.menu_delete: {
+	        	removeCardList(info.position);
+	        }
+	        break;
+	        case R.id.rename_item: {
+            	itemToRename = info.position;
+    	        // DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
+    	        // dialogFragment.show(FlashcardsActivity.this.getSupportFragmentManager(), "rename_list");
+            	//TEMP, do through fragments instead
+            	showDialog(DIALOG_RENAME);
+	        }
+	        break;
+		}
+    	return false;
     }
     
     private void removeCardList(int nr) {
@@ -242,7 +276,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     			showDialog(DIALOG_MAKE_NEW);
     			break;
     	}
-        return true;
+        return false;
     }
     
 	@Override
@@ -378,7 +412,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	        textView.setText(text);
     	        textView.setSelection(textView.getText().length());
     	        Dialog dialog = new AlertDialog.Builder(this)
-    	            .setIconAttribute(android.R.attr.alertDialogIcon)
+ //   	            .setIconAttribute(android.R.attr.alertDialogIcon)
     	            .setTitle(title)
     	            .setView(textEntryView)
     	            .setPositiveButton(positiveText, new DialogInterface.OnClickListener() {
@@ -416,7 +450,9 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	    	}
 		} else if (tag.equals("rename_list")) {
 			renameNumber(itemToRename, text.toString());
-			modeToFinish.finish(); //3.0+ ONLY
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				modeToFinish.finish();
+			}
 		}
 	}
 }
