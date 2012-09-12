@@ -373,6 +373,12 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                 final TextView textView = (TextView)textEntryView.findViewById(R.id.text);
                 textView.setHint("Title");
                 textView.requestFocus();
+                
+                //TEMP
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                	textView.setTextColor(getResources().getColor(android.R.color.black));
+                }
+                
                 Dialog dialog = new AlertDialog.Builder(this)
          //           .setIconAttribute(android.R.attr.alertDialogIcon)
                     .setTitle("Create new list")
@@ -407,6 +413,12 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	        LayoutInflater factory = LayoutInflater.from(this);
     	        final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
     	        final EditText textView = (EditText)textEntryView.findViewById(R.id.text);
+    	        
+                //TEMP
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                	textView.setTextColor(getResources().getColor(android.R.color.black));
+                }
+    	        
     	        textView.setHint(hint);
     	        textView.requestFocus();
     	        textView.setText(text);

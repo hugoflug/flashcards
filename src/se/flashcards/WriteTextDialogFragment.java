@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -35,8 +36,6 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
 		
 	}
 	
-	//.setIconAttribute API 11+ (?)
-	@TargetApi(11)
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 		String title = getArguments().getString("title");
@@ -48,6 +47,12 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
         final EditText textView = (EditText)textEntryView.findViewById(R.id.text);
+        
+        //TEMP
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+        	textView.setTextColor(getResources().getColor(android.R.color.black));
+        }
+        	
         textView.setHint(hint);
         textView.requestFocus();
         textView.setText(text);
