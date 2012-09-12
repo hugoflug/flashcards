@@ -9,11 +9,13 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.opengl.Visibility;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -37,8 +39,13 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.new_card);
     	setTheme(R.style.Theme_Sherlock);
+    	
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
+        	requestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
+    	
+    	setContentView(R.layout.new_card);
     	
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true); 

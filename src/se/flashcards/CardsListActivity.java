@@ -13,12 +13,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
@@ -60,9 +62,14 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
+     
+        setTheme(R.style.Theme_Sherlock);
+        
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
+        	requestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
         
         setContentView(R.layout.cards_list);
-        setTheme(R.style.Theme_Sherlock);
         
         hasLoaded = false;
  

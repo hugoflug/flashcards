@@ -23,6 +23,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -44,6 +45,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.Window;
 
 @TargetApi(11)
 public class FlashcardsActivity extends SherlockListActivity implements OnTextMadeListener {
@@ -64,102 +66,108 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
-        setTheme(R.style.Theme_Sherlock);
+        setTheme(R.style.Theme_Sherlock);  
+        
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
+        	requestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
         
         infoSaver = InfoSaver.getInfoSaver(this);
         
         //TEMP, should be set through XML
         ActionBar bar = getSupportActionBar();
-        Util.customizeActionBar(getResources(), bar);
+        Util.customizeActionBar(getResources(), bar);     
         
         cardLists = infoSaver.getCardLists();
         cardListsAdapter = new CardsListListAdapter(this, cardLists);
         setListAdapter(cardListsAdapter);
         //
         //3.0+ ONLY code!!!
-        final ListView listView = getListView();
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL); //_MODAL
-        listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
-        	private int selectedItems = 0;
-        	private android.view.MenuItem renameItem = null;
-        	
-			@Override
-			public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
-				switch (item.getItemId()) {
-		            case R.id.menu_delete: {
-		                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();             
-		                int removed = 0;
-		                for (int i = 0; i < checkedItems.size(); i++) {
-		                	int key = checkedItems.keyAt(i);
-		                	if (checkedItems.get(key)) {
-			                	removeCardList(key - removed);
-			                	removed++;
-		                	}
-		                }
-		                mode.finish();
-		                return true;
-		            }
-		            case R.id.rename_item: {
-		            	SparseBooleanArray checkedItems = listView.getCheckedItemPositions();   
-		            	for (int i = 0; i < checkedItems.size(); i++) {
-		            		int key = checkedItems.keyAt(i);
-		            		if (checkedItems.get(key)) {
-				            	itemToRename = key;
-	       		            	modeToFinish = mode;
-	       		    	        // DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
-	       		    	        // dialogFragment.show(FlashcardsActivity.this.getSupportFragmentManager(), "rename_list");
-	       		            	//TEMP, do through fragments instead
-	       		            	showDialog(DIALOG_RENAME);
-		            		}
-		            	}
-
-		            	modeToFinish = mode;
-		            	return true;
-		            }
-		            default:
-		                return false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	        final ListView listView = getListView();
+	        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL); //_MODAL
+	        listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+	        	private int selectedItems = 0;
+	        	private android.view.MenuItem renameItem = null;
+	        	
+				@Override
+				public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
+					switch (item.getItemId()) {
+			            case R.id.menu_delete: {
+			                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();             
+			                int removed = 0;
+			                for (int i = 0; i < checkedItems.size(); i++) {
+			                	int key = checkedItems.keyAt(i);
+			                	if (checkedItems.get(key)) {
+				                	removeCardList(key - removed);
+				                	removed++;
+			                	}
+			                }
+			                mode.finish();
+			                return true;
+			            }
+			            case R.id.rename_item: {
+			            	SparseBooleanArray checkedItems = listView.getCheckedItemPositions();   
+			            	for (int i = 0; i < checkedItems.size(); i++) {
+			            		int key = checkedItems.keyAt(i);
+			            		if (checkedItems.get(key)) {
+					            	itemToRename = key;
+		       		            	modeToFinish = mode;
+		       		    	        // DialogFragment dialogFragment = WriteTextDialogFragment.newInstance("Rename", "Name", "");
+		       		    	        // dialogFragment.show(FlashcardsActivity.this.getSupportFragmentManager(), "rename_list");
+		       		            	//TEMP, do through fragments instead
+		       		            	showDialog(DIALOG_RENAME);
+			            		}
+			            	}
+	
+			            	modeToFinish = mode;
+			            	return true;
+			            }
+			            default:
+			                return false;
+					}
 				}
-			}
-
-			@Override
-			public boolean onCreateActionMode(ActionMode mode, android.view.Menu menu) {
-				MenuInflater inflater = mode.getMenuInflater();
-				inflater.inflate(R.layout.list_item_longpress_menu, menu);
-				
-				renameItem = menu.findItem(R.id.rename_item);
-				//TEMP
-		//		renameItem.setVisible(false);
-				
-				mode.setTitle(selectedItems + " selected");
-				return true;
-			}
-
-			@Override
-			public void onDestroyActionMode(ActionMode mode) 
-			{
-				selectedItems = 0;
-			}
-
-			@Override
-			public boolean onPrepareActionMode(ActionMode mode, android.view.Menu menu) {
-				return false;
-			}
-
-			@Override
-			public void onItemCheckedStateChanged(ActionMode mode, int pos, long id, boolean checked) {
-				if (checked) {
-					selectedItems++;
-				} else {
-					selectedItems--;
+	
+				@Override
+				public boolean onCreateActionMode(ActionMode mode, android.view.Menu menu) {
+					MenuInflater inflater = mode.getMenuInflater();
+					inflater.inflate(R.layout.list_item_longpress_menu, menu);
+					
+					renameItem = menu.findItem(R.id.rename_item);
+					//TEMP
+			//		renameItem.setVisible(false);
+					
+					mode.setTitle(selectedItems + " selected");
+					return true;
 				}
-				if (selectedItems > 1) {
-					renameItem.setVisible(false);
-				} else if (selectedItems <= 1) {
-					renameItem.setVisible(true);
+	
+				@Override
+				public void onDestroyActionMode(ActionMode mode) 
+				{
+					selectedItems = 0;
 				}
-				mode.setTitle(selectedItems + " selected");
-			}
-        });
+	
+				@Override
+				public boolean onPrepareActionMode(ActionMode mode, android.view.Menu menu) {
+					return false;
+				}
+	
+				@Override
+				public void onItemCheckedStateChanged(ActionMode mode, int pos, long id, boolean checked) {
+					if (checked) {
+						selectedItems++;
+					} else {
+						selectedItems--;
+					}
+					if (selectedItems > 1) {
+						renameItem.setVisible(false);
+					} else if (selectedItems <= 1) {
+						renameItem.setVisible(true);
+					}
+					mode.setTitle(selectedItems + " selected");
+				}
+	        });	
+        }
        
         
 //        final ListView listView = getListView();
@@ -323,7 +331,6 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 //    	}
 //    }
 	
-	@TargetApi(11)
 	protected Dialog onCreateDialog(int id) {
     	switch (id) {
     		case DIALOG_MAKE_NEW: {
@@ -333,7 +340,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                 textView.setHint("Title");
                 textView.requestFocus();
                 Dialog dialog = new AlertDialog.Builder(this)
-                    .setIconAttribute(android.R.attr.alertDialogIcon)
+         //           .setIconAttribute(android.R.attr.alertDialogIcon)
                     .setTitle("Create new list")
                     .setView(textEntryView)
                     .setPositiveButton("Create", new DialogInterface.OnClickListener() {

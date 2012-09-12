@@ -43,7 +43,7 @@ public class ConfirmDialogFragment extends SherlockDialogFragment {
         if (!title.equals("")) {
         	builder.setTitle(title);
         }
-        builder.setIconAttribute(android.R.attr.alertDialogIcon)
+        builder//.setIconAttribute(android.R.attr.alertDialogIcon)
             .setTitle(title)
             .setMessage(question)
             .setPositiveButton(confirm, new DialogInterface.OnClickListener() {

@@ -53,7 +53,7 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
         textView.setText(text);
         textView.setSelection(textView.getText().length());
         Dialog dialog = new AlertDialog.Builder(getActivity())
-            .setIconAttribute(android.R.attr.alertDialogIcon)
+      //      .setIconAttribute(android.R.attr.alertDialogIcon)
             .setTitle(title)
             .setView(textEntryView)
             .setPositiveButton(posButton, new DialogInterface.OnClickListener() {
