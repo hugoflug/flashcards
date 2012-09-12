@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -99,12 +100,18 @@ public class PickCardFragment extends SherlockFragment implements WriteTextDialo
 			}
     	});   	
     	final ImageButton takeImageButton = (ImageButton)view.findViewById(R.id.take_image_button);
-    	takeImageButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-		    	onTakeImageClicked(v);
-			}
-    	});
+    	
+    	if (isTakeImageAvailable()) {
+    		Log.v("flashcards", "sure is available!");
+	    	takeImageButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+			    	onTakeImageClicked(v);
+				}
+	    	});
+    	} else {
+    		takeImageButton.setVisibility(View.GONE);
+    	}
     	
     	ImageButton optionsButton = (ImageButton)view.findViewById(R.id.options);
     	optionsButton.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +140,13 @@ public class PickCardFragment extends SherlockFragment implements WriteTextDialo
     	});
     	
     	return view;
+	}
+	
+	private boolean isTakeImageAvailable() {
+		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		newPhotoUri = createNewImageUri();
+		takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, newPhotoUri);
+		return getActivity().getPackageManager().resolveActivity(takePictureIntent, 0) != null;
 	}
     
 	//state saving/reloading in these two methods
@@ -263,8 +277,18 @@ public class PickCardFragment extends SherlockFragment implements WriteTextDialo
 	private Uri createNewImageUri() {
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		String imageFileName = timeStamp + ".jpg";
+		
+		File dir;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+			dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+		} else {
+			String packageName = getActivity().getPackageName();
+			File externalPath = Environment.getExternalStorageDirectory();
+			dir = new File(externalPath.getAbsolutePath() + "/Android/data/" + packageName + "/files");		
+		}
+		
 		File file = new File(
-			    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), 
+			    dir,
 			    imageFileName
 			);	
 		return Uri.fromFile(file);
