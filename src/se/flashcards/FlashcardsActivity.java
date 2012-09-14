@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import se.flashcards.ConfirmDialogFragment.OnConfirmedListener;
 import se.flashcards.WriteTextDialogFragment.OnTextMadeListener;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -51,11 +52,12 @@ import android.widget.Toast;
 import android.view.Window;
 
 @TargetApi(11)
-public class FlashcardsActivity extends SherlockListActivity implements OnTextMadeListener {
+public class FlashcardsActivity extends SherlockListActivity implements OnTextMadeListener, OnConfirmedListener {
 	
 	private static final int DIALOG_MAKE_NEW = 0;
 	private static final int OPEN_CARDSLIST = 1;
 	private static final int DIALOG_RENAME = 2;
+	private static final int DIALOG_CONFIRM = 3;
 	
 	public static final String CARD_LIST_NAME = "card_list_name";
 	public static final String CARD_LIST_ID = "card_list_id";
@@ -65,12 +67,13 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	private InfoSaver infoSaver;
 	private int itemToRename = 0;
 	private ActionMode modeToFinish; //3.0+ ONLY 
+	private SparseBooleanArray itemsToRemove;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
         setTheme(R.style.Theme_Sherlock);  
-        
+
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
         	requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
@@ -97,16 +100,23 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 				public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
 					switch (item.getItemId()) {
 			            case R.id.menu_delete: {
-			                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();             
-			                int removed = 0;
-			                for (int i = 0; i < checkedItems.size(); i++) {
-			                	int key = checkedItems.keyAt(i);
-			                	if (checkedItems.get(key)) {
-				                	removeCardList(key - removed);
-				                	removed++;
-			                	}
-			                }
-			                mode.finish();
+	            	//		DialogFragment dialogFragment = new ConfirmDialogFragment();
+	            	//		dialogFragment.show(getFragmentManager(), "delete_list");
+	            			//TEMP, do through fragments instead
+			            	modeToFinish = mode;			            	
+			            	itemsToRemove = listView.getCheckedItemPositions();
+			            	showDialog(DIALOG_CONFIRM);
+			            	
+//			                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();             
+//			                int removed = 0;
+//			                for (int i = 0; i < checkedItems.size(); i++) {
+//			                	int key = checkedItems.keyAt(i);
+//			                	if (checkedItems.get(key)) {
+//				                	removeCardList(key - removed);
+//				                	removed++;
+//			                	}
+//			                }
+//			                mode.finish();
 			                return true;
 			            }
 			            case R.id.rename_item: {
@@ -442,6 +452,38 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	        dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     	        return dialog;
     		}
+    		case DIALOG_CONFIRM: {
+    			String title = "Delete list";
+    			String question = "These lists will be removed";
+    			String confirm = "Delete";
+    			String dismiss = "Cancel";
+    			final String tag = "confirm_delete";
+    			
+    	        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	        if (!title.equals("")) {
+    	        	builder.setTitle(title);
+    	        }
+    	        builder.setTitle(title)
+    	            .setMessage(question)
+    	            .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
+    	            	@Override
+    	                public void onClick(DialogInterface dialog, int whichButton) {
+    	                	onConfirmed(tag);
+    	                }
+    	            })
+    	            .setNegativeButton(dismiss, new DialogInterface.OnClickListener() {
+    	                public void onClick(DialogInterface dialog, int whichButton) {
+    	                	
+    	                }
+    	            });
+
+    	        Dialog dialog = builder.create();
+    	        
+    	        if (title.equals("")) {
+    	        	dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	        }
+    	        return dialog;
+    		}
     		default:
     			return null;
     	}
@@ -465,6 +507,21 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				modeToFinish.finish();
 			}
+		}
+	}
+
+	@Override
+	public void onConfirmed(String tag) {
+		if (tag.equals("confirm_delete")) {       
+            int removed = 0;
+            for (int i = 0; i <  itemsToRemove.size(); i++) {
+            	int key = itemsToRemove.keyAt(i);
+            	if (itemsToRemove.get(key)) {
+                	removeCardList(key - removed);
+                	removed++;
+            	}
+            }
+            modeToFinish.finish();
 		}
 	}
 }
