@@ -154,6 +154,7 @@ public class PickCardFragment extends SherlockFragment implements WriteTextDialo
 		outState.putParcelable("content", cardContent);
 		outState.putBoolean("contentIsDefault", contentIsDefault);
 		outState.putBoolean("isButtonsVisible", isButtonsVisible());
+		outState.putParcelable("new_photo_uri", newPhotoUri);
 	}
 	
 	@Override
@@ -185,6 +186,12 @@ public class PickCardFragment extends SherlockFragment implements WriteTextDialo
 			} else {
 				setButtonsVisibility(View.GONE);
 			}
+			
+			Uri photoUri = (Uri)savedInstanceState.getParcelable("new_photo_uri");
+			if (photoUri != null) {
+				newPhotoUri = photoUri;
+			}
+			
 		}
 	}
 
