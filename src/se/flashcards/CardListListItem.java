@@ -67,7 +67,6 @@ public class CardListListItem extends LinearLayout implements Checkable {
 	private void updateBackground() {
 		int backgroundId;
         if (isChecked()) {
-   //     	backgroundId = android.R.color.holo_blue_dark; //blue??
         	backgroundId = R.color.checked_list_item;
         } else {
         	backgroundId = -1;

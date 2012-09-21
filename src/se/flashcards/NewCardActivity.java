@@ -80,21 +80,21 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
         	question.setContent(questionContent);
         	question.setButtonsVisibility(View.VISIBLE);
         } else {   	
-        	question.setContentRaw(new CardContent("Pick a question"));
+        	question.setContentRaw(new CardContent(getString(R.string.pick_a_question)));
         }
         
         if (answerContent != null) {
         	answer.setContent(answerContent);
         	answer.setButtonsVisibility(View.VISIBLE);
         } else {
-        	answer.setContentRaw(new CardContent("Pick an answer"));
+        	answer.setContentRaw(new CardContent(getString(R.string.pick_an_answer)));
         }
     	
-    	question.setNewTextTitle("Write a new question");
-    	answer.setNewTextTitle("Write a new answer");
+    	question.setNewTextTitle(getString(R.string.write_new_question));
+    	answer.setNewTextTitle(getString(R.string.write_new_answer));
     	
-    	question.setNewTextHint("Question");
-    	answer.setNewTextHint("Answer");
+    	question.setNewTextHint(getString(R.string.question));
+    	answer.setNewTextHint(getString(R.string.answer));
     }
     
 	@Override

@@ -37,7 +37,7 @@
     	    android:layout_width="0px"
     	    android:layout_height="50dp" 
     	    android:layout_weight="1"
-    	    android:src="@drawable/ic_menu_edit">
+    	    android:src="@drawable/ic_menu_edit_2">
     	</ImageButton>
     	<ImageButton
     	    android:id="@+id/pick_image_button"

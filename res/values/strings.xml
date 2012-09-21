@@ -9,8 +9,25 @@
     <string name="rename_list">Rename list</string>
     <string name="rename">Rename</string>
     <string name="delete_list">Delete list</string>
-    <string name="question_default">Pick question</string>
-    <string name="answer_default">Pick answer</string>
     <string name="card">card</string>
     <string name="cards">cards</string>
+    <string name="card_will_be_deleted">The card will be deleted</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="name">Name</string>
+    <string name="list_will_be_deleted">The list will be deleted</string>
+    <string name="lists_will_be_deleted">These lists will be deleted</string>
+    <string name="selected">selected</string>
+    <string name="title">Title</string>
+    <string name="create_new_list">Create new list</string>
+    <string name="create">Create</string>
+    <string name="pick_a_question">Pick a question</string>
+    <string name="pick_an_answer">Pick an answer</string>
+    <string name="write_new_question">Write a new question</string>
+    <string name="write_new_answer">Write a new answer</string>
+    <string name="question">Question</string>
+    <string name="answer">Answer</string>
+    <string name="write_new_text">Write new text</string>
+    <string name="text">Text</string>
+    <string name="ok">OK</string>
     </resources>

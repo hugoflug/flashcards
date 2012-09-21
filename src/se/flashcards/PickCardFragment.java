@@ -57,8 +57,8 @@ public class PickCardFragment extends SherlockFragment implements WriteTextDialo
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
         downSampler = new BitmapDownsampler(getActivity(), 1000, 1000);
-        newTextTitle = "Write new text";
-        newTextHint = "Text";
+        newTextTitle = getString(R.string.write_new_text);
+        newTextHint = getString(R.string.text);
     }
     
     //set the content without changing default flag or removing buttons
@@ -102,7 +102,6 @@ public class PickCardFragment extends SherlockFragment implements WriteTextDialo
     	final ImageButton takeImageButton = (ImageButton)view.findViewById(R.id.take_image_button);
     	
     	if (isTakeImageAvailable()) {
-    		Log.v("flashcards", "sure is available!");
 	    	takeImageButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -245,7 +244,7 @@ public class PickCardFragment extends SherlockFragment implements WriteTextDialo
     		text = cardContent.getString();
     	}
     	
-        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance(newTextTitle, newTextHint, text, "OK", "Cancel");
+        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance(newTextTitle, newTextHint, text, getString(R.string.ok), getString(R.string.cancel));
         dialogFragment.setTargetFragment(this, 0);
         dialogFragment.show(getFragmentManager(), "text_content");
     }

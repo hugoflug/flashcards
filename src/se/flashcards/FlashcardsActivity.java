@@ -150,7 +150,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 					//TEMP
 			//		renameItem.setVisible(false);
 					
-					mode.setTitle(selectedItems + " selected");
+					mode.setTitle(selectedItems + " " + getString(R.string.selected));
 					return true;
 				}
 	
@@ -165,6 +165,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 					return false;
 				}
 	
+				@TargetApi(11)
 				@Override
 				public void onItemCheckedStateChanged(ActionMode mode, int pos, long id, boolean checked) {
 					if (checked) {
@@ -177,7 +178,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 					} else if (selectedItems <= 1) {
 						renameItem.setVisible(true);
 					}
-					mode.setTitle(selectedItems + " selected");
+					mode.setTitle(selectedItems + " " + getString(R.string.selected));
 				}
 	        });	
         } else {
@@ -222,7 +223,6 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.layout.list_item_longpress_menu, menu);
-		Log.v("flashcards", "oCCM");
     }
     
     @Override
@@ -251,24 +251,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	cardLists.remove(cardListsAdapter.getItem(nr));
     	cardListsAdapter.notifyDataSetChanged();
     }
-    
-    @Override
-    public void onResume() {
-    	super.onResume();
-    	validateListNames();
-    }
-    
-    private void validateListNames() {
-//    	for (CardList cl : cardLists) {
-//    		String oldName = cl.getName();
-//    		String newName = infoSaver.nameFromId(cl.getID());
-//    		if (!oldName.equals(newName)) {
-//    			cl.rename(newName);
-//    			cardListsAdapter.notifyDataSetChanged();
-//    		}
-//    	}
-    }
-    
+   
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
@@ -381,7 +364,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                 LayoutInflater factory = LayoutInflater.from(this);
                 final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
                 final TextView textView = (TextView)textEntryView.findViewById(R.id.text);
-                textView.setHint("Title");
+                textView.setHint(getString(R.string.title));
                 textView.requestFocus();
                 
                 //TEMP
@@ -391,9 +374,9 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                 
                 Dialog dialog = new AlertDialog.Builder(this)
          //           .setIconAttribute(android.R.attr.alertDialogIcon)
-                    .setTitle("Create new list")
+                    .setTitle(R.string.create_new_list)
                     .setView(textEntryView)
-                    .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.create), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                         	String text = textView.getText().toString();
                         	if (!text.equals("")) {
@@ -403,7 +386,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                         	textView.setText("");
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                         	textView.setText("");
                         }
@@ -414,10 +397,10 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     		}
             //TEMP, do through fragments instead
     		case DIALOG_RENAME: {
-    			String title = "Rename list";
-    			String hint = "Name";
+    			String title = getString(R.string.rename_list);
+    			String hint = getString(R.string.name);
     			String text = "";
-    			String positiveText = "Rename";
+    			String positiveText = getString(R.string.rename);
     			final String tag = "rename_list";
     			
     	        LayoutInflater factory = LayoutInflater.from(this);
@@ -443,7 +426,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	            		onTextMade(tag, textView.getText());
     	                }
     	            })
-    	            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+    	            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
     	                public void onClick(DialogInterface dialog, int whichButton) {
     	                	textView.setText("");
     	                }
@@ -453,10 +436,10 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	        return dialog;
     		}
     		case DIALOG_CONFIRM: {
-    			String title = "Delete list";
-    			String question = "These lists will be removed";
-    			String confirm = "Delete";
-    			String dismiss = "Cancel";
+    			String title = getString(R.string.delete_list);
+    			String question = getString(R.string.lists_will_be_deleted);
+    			String confirm = getString(R.string.delete);
+    			String dismiss = getString(R.string.cancel);
     			final String tag = "confirm_delete";
     			
     	        AlertDialog.Builder builder = new AlertDialog.Builder(this);
