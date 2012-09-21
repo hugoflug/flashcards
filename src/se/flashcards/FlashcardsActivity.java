@@ -436,7 +436,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	        return dialog;
     		}
     		case DIALOG_CONFIRM: {
-    			String title = getString(R.string.delete_list);
+    			String title = getString(R.string.delete_lists);
     			String question = getString(R.string.lists_will_be_deleted);
     			String confirm = getString(R.string.delete);
     			String dismiss = getString(R.string.cancel);
