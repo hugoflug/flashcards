@@ -13,7 +13,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -68,7 +70,8 @@ public class NewCardActivity extends SherlockFragmentActivity implements PickCar
         	bar.setTitle(R.string.menu_edit_card);
         }
         
-        BitmapDownsampler sampler = new BitmapDownsampler(this, 600, 1000);
+        Display display = getWindowManager().getDefaultDisplay();
+        BitmapDownsampler sampler = new BitmapDownsampler(this, display.getWidth(), display.getHeight()/2); //600, 1000
         
         if (questionContent != null) {
             try {

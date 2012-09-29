@@ -10,7 +10,7 @@
     </uses-feature>
     
     <application
-        android:icon="@drawable/heart"
+        android:icon="@drawable/heart10"
         android:label="@string/app_name"
         android:hardwareAccelerated="true">
         <activity

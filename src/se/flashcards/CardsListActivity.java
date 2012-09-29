@@ -11,6 +11,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -20,6 +21,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Display;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Gallery;
@@ -88,7 +90,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
         result = new Intent();
         result.putExtra(FlashcardsActivity.CARD_LIST_ID, listId);
         
-        downSampler = new BitmapDownsampler(this, 600, 1000); //600, 1000
+        Display display = getWindowManager().getDefaultDisplay();
+        downSampler = new BitmapDownsampler(this, display.getWidth(), display.getHeight()/2); //600, 1000
         
         answerView = (CardContentView)findViewById(R.id.content);
         drawer = (WrappingSlidingDrawer)findViewById(R.id.drawer);

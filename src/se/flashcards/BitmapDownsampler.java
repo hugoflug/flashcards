@@ -25,9 +25,15 @@ public class BitmapDownsampler
 		
 	    final BitmapFactory.Options options = new BitmapFactory.Options();
 	    options.inJustDecodeBounds = true;
+	    
+	    options.inDither = false;
+	    options.inPurgeable = true;
+	    options.inInputShareable = true;
+	    
 	    BitmapFactory.decodeStream(input, null, options);
 	    
 	    options.inSampleSize = calculateInSampleSize(options);
+	    
 	    options.inJustDecodeBounds = false;
 		
 		input.close();

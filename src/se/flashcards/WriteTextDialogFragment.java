@@ -47,8 +47,8 @@ public class WriteTextDialogFragment extends SherlockDialogFragment {
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View textEntryView = factory.inflate(R.layout.make_new_dialog, null);
         final EditText textView = (EditText)textEntryView.findViewById(R.id.text);
-        
         //TEMP
+        
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
         	textView.setTextColor(getResources().getColor(android.R.color.black));
         }

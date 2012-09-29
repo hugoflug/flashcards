@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +58,10 @@ public class PickCardFragment extends SherlockFragment implements WriteTextDialo
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-        downSampler = new BitmapDownsampler(getActivity(), 1000, 1000);
+    	
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        downSampler = new BitmapDownsampler(getActivity(), display.getWidth(), display.getHeight()/2); //500, 1000
+        
         newTextTitle = getString(R.string.write_new_text);
         newTextHint = getString(R.string.text);
     }
