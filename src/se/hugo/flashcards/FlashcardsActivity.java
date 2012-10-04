@@ -1,4 +1,4 @@
-package se.flashcards;
+package se.hugo.flashcards;
 
 
 import java.util.ArrayList;
@@ -6,8 +6,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import se.flashcards.ConfirmDialogFragment.OnConfirmedListener;
-import se.flashcards.WriteTextDialogFragment.OnTextMadeListener;
+import se.flashcards.R;
+import se.hugo.flashcards.ConfirmDialogFragment.OnConfirmedListener;
+import se.hugo.flashcards.WriteTextDialogFragment.OnTextMadeListener;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;

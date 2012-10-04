@@ -1,11 +1,11 @@
-package se.flashcards;
+package se.hugo.flashcards;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import se.flashcards.InfoSaver.CardLoaderIterator;
+import se.hugo.flashcards.InfoSaver.CardLoaderIterator;
 import android.content.Context;
 import android.os.AsyncTask;
 

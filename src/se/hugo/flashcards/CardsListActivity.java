@@ -1,4 +1,4 @@
-package se.flashcards;
+package se.hugo.flashcards;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import se.flashcards.R;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

@@ -1,6 +1,8 @@
-package se.flashcards;
+package se.hugo.flashcards;
 
 import java.util.Random;
+
+import se.flashcards.R;
 
 import com.actionbarsherlock.app.ActionBar;
 

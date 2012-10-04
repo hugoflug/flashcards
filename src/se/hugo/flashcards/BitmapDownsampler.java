@@ -1,4 +1,4 @@
-package se.flashcards;
+package se.hugo.flashcards;
 
 import java.io.IOException;
 import java.io.InputStream;

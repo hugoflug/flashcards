@@ -1,9 +1,11 @@
-package se.flashcards;
+package se.hugo.flashcards;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import se.flashcards.R;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;

@@ -1,6 +1,6 @@
-package se.flashcards;
+package se.hugo.flashcards;
 
-import se.flashcards.WriteTextDialogFragment.OnTextMadeListener;
+import se.hugo.flashcards.WriteTextDialogFragment.OnTextMadeListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;

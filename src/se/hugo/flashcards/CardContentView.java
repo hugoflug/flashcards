@@ -1,4 +1,4 @@
-package se.flashcards;
+package se.hugo.flashcards;
 
 import android.content.Context;
 import android.util.AttributeSet;
