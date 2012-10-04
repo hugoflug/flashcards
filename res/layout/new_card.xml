@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <fragment android:name="se.flashcards.PickCardFragment"
+    <fragment android:name="se.hugo.flashcards.PickCardFragment"
         android:id="@+id/question"
 	    android:layout_width="match_parent"
 	    android:layout_height="0px"
 	    android:layout_weight="1"
 	    android:orientation="vertical"
 	    default_text="@string/pick_a_question"/>
-    <fragment android:name="se.flashcards.PickCardFragment"
+    <fragment android:name="se.hugo.flashcards.PickCardFragment"
         android:id="@+id/answer"
 	    android:layout_width="match_parent"
 	    android:layout_height="0px"
