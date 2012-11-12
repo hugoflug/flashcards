@@ -1,6 +1,7 @@
 package se.hugo.flashcards;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -60,6 +62,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	private static final int OPEN_CARDSLIST = 1;
 	private static final int DIALOG_RENAME = 2;
 	private static final int DIALOG_CONFIRM = 3;
+	private static final int PICK_CSV = 4;
 	
 	public static final String CARD_LIST_NAME = "card_list_name";
 	public static final String CARD_LIST_ID = "card_list_id";
@@ -270,8 +273,17 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     			showDialog(DIALOG_MAKE_NEW);
     			break;
     		case R.id.menu_import_csv:
-    			importCSV("test.csv");
-    			break;
+    			
+     		    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+    	        intent.setType("file/*");
+    	        startActivityForResult(intent, PICK_CSV);
+    			
+    			//TEMP
+    	//		String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
+    	//		String filepath = dir + File.separator + "test.txt";
+    			
+    	//	    importCSV(filepath);
+    		    break;
     	}
         return false;
     }
@@ -306,15 +318,28 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 			    		}
 		    		}
 		    	}
+		    	break;
+		    	case PICK_CSV: {
+		    		String pickedPath = intent.getData().getPath();
+		    		Log.v("flashcards", intent.getData().getLastPathSegment());
+		    		
+		    		String name = intent.getData().getLastPathSegment();
+		    		name = Util.until(name, "\\.");
+		    		
+		    		importCSV(name, pickedPath);
+	
+		    	}
+		    	break;
 		    }
 		}
 	}
 	
-	private void importCSV(String filename) {
+	private void importCSV(String listName, String filename) {
+		
 		try {
 			List<Card> listOfCards = Importer.importCards(filename);
 			InfoSaver saver = InfoSaver.getInfoSaver(this);
-			CardList cardList = new CardList("foo");
+			CardList cardList = new CardList(listName);
 			cardList.setNumberOfCards(listOfCards.size());
 			saver.saveCards(cardList.getID(), listOfCards);
 			cardLists.add(cardList);

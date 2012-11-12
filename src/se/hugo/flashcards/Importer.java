@@ -10,14 +10,14 @@ import au.com.bytecode.opencsv.CSVReader;
 
 public class Importer {
 	
-	public static List<Card> importCards(String filename) throws IOException {
+	public static List<Card> importCardsx(String filename) throws IOException {
 		ArrayList<Card> cardList = new ArrayList<Card>();
 		cardList.add(new Card(new CardContent("foo"), new CardContent("bar")));
 		cardList.add(new Card(new CardContent("hip"), new CardContent("ster")));
 		return cardList;
 	}
 	
-	public static List<Card> importCardsx(String filename) throws IOException {
+	public static List<Card> importCards(String filename) throws IOException {
 		CSVReader reader = new CSVReader(new FileReader(filename));
 		List<String[]> lines = reader.readAll();
 		

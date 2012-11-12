@@ -25,4 +25,8 @@ public class Util {
 	public static void customizeActionBar(Resources resources, ActionBar bar) {
 		bar.setBackgroundDrawable(new ColorDrawable(resources.getColor(R.color.action_bar_bg)));
 	}
+	
+	public static String until(String str, String regex) {
+		return str.split(regex)[0];
+	}
 }
