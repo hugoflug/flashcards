@@ -20,7 +20,7 @@
         android:gravity="bottom"
         android:orientation="vertical">
         
-	    <se.flashcards.WrappingSlidingDrawer
+	    <se.hugo.flashcards.WrappingSlidingDrawer
 		    android:id="@+id/drawer"
 		    android:layout_width="match_parent" 
 		    android:layout_height="wrap_content"
@@ -44,13 +44,13 @@
 			        android:background="@color/handle_top">
 			    </View>
 			</LinearLayout>
-		    <se.flashcards.CardContentView
+		    <se.hugo.flashcards.CardContentView
 		        android:id="@id/content"
 		        android:layout_width="match_parent" 
 		        android:layout_height="match_parent"
 		        android:background="@color/handle_rest"
 		        android:minHeight="150dp">
-		    </se.flashcards.CardContentView>  
-		</se.flashcards.WrappingSlidingDrawer>	      
+		    </se.hugo.flashcards.CardContentView>  
+		</se.hugo.flashcards.WrappingSlidingDrawer>	      
     </LinearLayout>
 </FrameLayout>

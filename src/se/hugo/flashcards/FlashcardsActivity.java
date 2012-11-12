@@ -1,12 +1,13 @@
 package se.hugo.flashcards;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import se.flashcards.R;
+import se.hugo.flashcards.R;
 import se.hugo.flashcards.ConfirmDialogFragment.OnConfirmedListener;
 import se.hugo.flashcards.WriteTextDialogFragment.OnTextMadeListener;
 
@@ -228,7 +229,6 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     
     @Override
     public boolean onContextItemSelected (android.view.MenuItem item) {
-    	Log.v("flashcards", "oCIS");
     	AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 		switch (item.getItemId()) {
 	        case R.id.menu_delete: {
@@ -269,6 +269,9 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     			//TEMP, do through fragments instead
     			showDialog(DIALOG_MAKE_NEW);
     			break;
+    		case R.id.menu_import_csv:
+    			importCSV("test.csv");
+    			break;
     	}
         return false;
     }
@@ -298,13 +301,26 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 			    		}
 			    		
 			    		int newAmount = intent.getIntExtra(CardsListActivity.NUMBER_OF_CARDS, -1);
-			    		Log.v("flashcards", "new: " + newAmount);
 			    		if (newAmount != -1) {
 			    			changeAmountOnId(id, newAmount);
 			    		}
 		    		}
 		    	}
 		    }
+		}
+	}
+	
+	private void importCSV(String filename) {
+		try {
+			List<Card> listOfCards = Importer.importCards(filename);
+			InfoSaver saver = InfoSaver.getInfoSaver(this);
+			CardList cardList = new CardList("foo");
+			cardList.setNumberOfCards(listOfCards.size());
+			saver.saveCards(cardList.getID(), listOfCards);
+			cardLists.add(cardList);
+			cardListsAdapter.notifyDataSetChanged();
+		} catch (IOException e) {
+			//TODO: warn for invalid CSV
 		}
 	}
 	

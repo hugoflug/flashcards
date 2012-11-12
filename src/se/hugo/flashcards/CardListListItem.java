@@ -1,6 +1,6 @@
 package se.hugo.flashcards;
 
-import se.flashcards.R;
+import se.hugo.flashcards.R;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;

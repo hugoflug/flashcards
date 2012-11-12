@@ -2,7 +2,7 @@ package se.hugo.flashcards;
 
 import java.util.Random;
 
-import se.flashcards.R;
+import se.hugo.flashcards.R;
 
 import com.actionbarsherlock.app.ActionBar;
 

@@ -1,6 +1,6 @@
 package se.hugo.flashcards;
 
-import se.flashcards.R;
+import se.hugo.flashcards.R;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import se.flashcards.R;
+import se.hugo.flashcards.R;
 
 import com.actionbarsherlock.app.SherlockFragment;
 

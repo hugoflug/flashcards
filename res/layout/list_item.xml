@@ -4,14 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:layout_weight="0">
-	<se.flashcards.CardListListItem xmlns:android="http://schemas.android.com/apk/res/android"
+	<se.hugo.flashcards.CardListListItem xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/card_list_list_item_2"
 	    android:layout_width="0px"
 	    android:layout_height="fill_parent"
 	    android:padding="16dp"
 	    android:textSize="20sp"
 	    android:layout_weight="1">
-	</se.flashcards.CardListListItem>
+	</se.hugo.flashcards.CardListListItem>
     <ImageView
         android:src="@drawable/dropdown_ic"
         android:layout_width="wrap_content"

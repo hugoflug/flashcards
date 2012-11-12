@@ -31,4 +31,5 @@
     <string name="write_new_text">Write new text</string>
     <string name="text">Text</string>
     <string name="ok">OK</string>
+    <string name="import_csv">"Import from CSV</string>
     </resources>

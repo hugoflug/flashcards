@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import se.flashcards.R;
+import se.hugo.flashcards.R;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
