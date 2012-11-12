@@ -83,6 +83,12 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         	requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
         
+        Intent intent = getIntent();
+        String action = intent.getAction();
+       
+        
+        Log.v("flashcards", "action: " + intent.getAction());
+        
         infoSaver = InfoSaver.getInfoSaver(this);
         
         //TEMP, should be set through XML
@@ -92,6 +98,13 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         cardLists = infoSaver.getCardLists();
         cardListsAdapter = new CardsListListAdapter(this, cardLists);
         setListAdapter(cardListsAdapter);
+        
+        if (action == "android.intent.action.VIEW" ||
+            	action == "android.intent.action.EDIT" ||
+            	action == "android.intent.action.PICK") {
+            	handleImportCSVIntent(intent);
+        }
+        
         //
         //3.0+ ONLY code!!!
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -320,18 +333,21 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 		    	}
 		    	break;
 		    	case PICK_CSV: {
-		    		String pickedPath = intent.getData().getPath();
-		    		Log.v("flashcards", intent.getData().getLastPathSegment());
-		    		
-		    		String name = intent.getData().getLastPathSegment();
-		    		name = Util.until(name, "\\.");
-		    		
-		    		importCSV(name, pickedPath);
-	
+		    		handleImportCSVIntent(intent);
 		    	}
 		    	break;
 		    }
 		}
+	}
+	
+	private void handleImportCSVIntent(Intent intent) {
+		String pickedPath = intent.getData().getPath();
+		Log.v("flashcards", intent.getData().getLastPathSegment());
+		
+		String name = intent.getData().getLastPathSegment();
+		name = Util.until(name, "\\.");
+		
+		importCSV(name, pickedPath);
 	}
 	
 	private void importCSV(String listName, String filename) {
@@ -344,9 +360,11 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 			saver.saveCards(cardList.getID(), listOfCards);
 			cardLists.add(cardList);
 			cardListsAdapter.notifyDataSetChanged();
+			Toast.makeText(this, "List \"" + listName + "\" added", Toast.LENGTH_SHORT).show();
 		} catch (IOException e) {
 			//TODO: warn for invalid CSV
 		}
+		
 	}
 	
 	private void changeAmountOnId(long id, int newAmount) {
