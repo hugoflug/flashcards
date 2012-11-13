@@ -3,6 +3,7 @@ package se.hugo.flashcards;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +18,15 @@ public class Importer {
 		return cardList;
 	}
 	
-	public static List<Card> importCards(String filename) throws IOException {
+	public static List<Card> importCards(String filename) throws IOException {	
 		CSVReader reader = new CSVReader(new FileReader(filename));
 		List<String[]> lines = reader.readAll();
 		
 		ArrayList<Card> cardList = new ArrayList<Card>(lines.size());
 		for (String[] s : lines) {
+			if (s.length < 2) {
+				throw new IOException();
+			}
 			cardList.add(new Card(new CardContent(s[0]), new CardContent(s[1])));
 		}
 		return cardList;

@@ -63,6 +63,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	private static final int DIALOG_RENAME = 2;
 	private static final int DIALOG_CONFIRM = 3;
 	private static final int PICK_CSV = 4;
+	private static final int DIALOG_INVALID_CSV = 5;
 	
 	public static final String CARD_LIST_NAME = "card_list_name";
 	public static final String CARD_LIST_ID = "card_list_id";
@@ -83,12 +84,6 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         	requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
         
-        Intent intent = getIntent();
-        String action = intent.getAction();
-       
-        
-        Log.v("flashcards", "action: " + intent.getAction());
-        
         infoSaver = InfoSaver.getInfoSaver(this);
         
         //TEMP, should be set through XML
@@ -99,9 +94,12 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         cardListsAdapter = new CardsListListAdapter(this, cardLists);
         setListAdapter(cardListsAdapter);
         
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        
         if (action == "android.intent.action.VIEW" ||
-            	action == "android.intent.action.EDIT" ||
-            	action == "android.intent.action.PICK") {
+            action == "android.intent.action.EDIT" ||
+            action == "android.intent.action.PICK") {
             	handleImportCSVIntent(intent);
         }
         
@@ -202,6 +200,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         } else {
         	registerForContextMenu(getListView());
         }
+      
        
         
 //        final ListView listView = getListView();
@@ -342,7 +341,6 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	
 	private void handleImportCSVIntent(Intent intent) {
 		String pickedPath = intent.getData().getPath();
-		Log.v("flashcards", intent.getData().getLastPathSegment());
 		
 		String name = intent.getData().getLastPathSegment();
 		name = Util.until(name, "\\.");
@@ -354,15 +352,17 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 		
 		try {
 			List<Card> listOfCards = Importer.importCards(filename);
-			InfoSaver saver = InfoSaver.getInfoSaver(this);
 			CardList cardList = new CardList(listName);
 			cardList.setNumberOfCards(listOfCards.size());
+			
+			InfoSaver saver = InfoSaver.getInfoSaver(this);
 			saver.saveCards(cardList.getID(), listOfCards);
+			
 			cardLists.add(cardList);
 			cardListsAdapter.notifyDataSetChanged();
 			Toast.makeText(this, "List \"" + listName + "\" added", Toast.LENGTH_SHORT).show();
 		} catch (IOException e) {
-			//TODO: warn for invalid CSV
+			showDialog(DIALOG_INVALID_CSV);
 		}
 		
 	}
@@ -526,6 +526,26 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	        	dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
     	        }
     	        return dialog;
+    		}
+    		case DIALOG_INVALID_CSV: {
+       			String title = getString(R.string.invalid_csv_title);
+    			String text = getString(R.string.invalid_csv_text);
+       			String dismiss = getString(R.string.cancel);
+    			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    			builder.setTitle(title)
+    				   .setMessage(text)
+    				   .setNeutralButton(dismiss, new DialogInterface.OnClickListener() {
+    	                public void onClick(DialogInterface dialog, int whichButton) {
+    	                	
+    	                }
+    	            });
+    			
+    			Dialog dialog = builder.create();
+    			
+    	        if (title.equals("")) {
+    	        	dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	        }
+    			return dialog;
     		}
     		default:
     			return null;
