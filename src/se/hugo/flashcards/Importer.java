@@ -44,8 +44,6 @@ public class Importer {
 	}
 	
 	public static void exportCards(String name, List<Card> cards) {
-		Intent shareIntent = new Intent();
-		
 		StringBuilder csvBuilder = new StringBuilder();
 		
 		ArrayList<Uri> uris = new ArrayList<Uri>();
@@ -57,10 +55,7 @@ public class Importer {
 		
 		Log.v("flashcards", "csv_out: " + csvBuilder.toString()); //TEMP
 		
-		//TODO: send cards as image content
-		
-		shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-		shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-		shareIntent.setType("*/*");
+		//TODO: save csv file
+		//if images, save images + csv file in same archive
 	}
 }
