@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -200,6 +201,12 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 		drawer.unlock();
     }
     
+    private void shuffleCards() {
+    	Collections.shuffle(cardList);
+    	cardAdapter.notifyDataSetChanged();
+    	cardsListChanged = true;
+    }
+    
     private void changeAmountOfCards(int newAmount) {
     	infoSaver.changeAmountCardList(listId, newAmount);
     	result.putExtra(NUMBER_OF_CARDS, newAmount);
@@ -252,7 +259,10 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     		case R.id.rename_list: {
     	        DialogFragment dialogFragment = WriteTextDialogFragment.newInstance(getString(R.string.rename), getString(R.string.name), "", getString(R.string.rename), getString(R.string.cancel));
     	        dialogFragment.show(getSupportFragmentManager(), "rename_list");
-    		}		    		
+    		}		    	
+    		case R.id.menu_shuffle_cards: {
+    			shuffleCards();
+    		}
     		break;
     		case R.id.delete_list: {
     			DialogFragment dialogFragment = ConfirmDialogFragment.newInstance("", getString(R.string.list_will_be_deleted), getString(R.string.delete), getString(R.string.cancel));
