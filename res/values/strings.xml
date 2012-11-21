@@ -39,4 +39,6 @@
     <string name="csv_info">About CSV format</string>
     <string name="csv_info_text">Correct CSV file format is:\n\nquestion,answer\nquestion.png,answer\nquestion,answer.jpg\n\nImages in the same folder can be referred to by filename.\n\nZip files containing a single CSV file and multiple image files are also accepted.</string>
     <string name="csv_info_title">About CSV format</string>
+    <string name="no_such_activity_title"></string>
+    <string name="no_such_activity_text">There is no app installed for picking files.</string>
     </resources>
