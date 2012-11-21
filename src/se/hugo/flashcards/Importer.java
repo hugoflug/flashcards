@@ -4,32 +4,82 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import au.com.bytecode.opencsv.CSVReader;
 
 public class Importer {
 	
-	public static List<Card> importCardsx(String filename) throws IOException {
-		ArrayList<Card> cardList = new ArrayList<Card>();
-		cardList.add(new Card(new CardContent("foo"), new CardContent("bar")));
-		cardList.add(new Card(new CardContent("hip"), new CardContent("ster")));
-		return cardList;
+	public static List<Card> importCards(Context context, String filename, BitmapDownsampler sampler) throws IOException {
+		Log.v("flashcards", "asdos");
+		if (Util.isFile(filename, "zip")) {
+			return importCardsFromZip(context, new ZipFile(filename), sampler);
+		} else {
+			return importCardsFromFolder(filename, sampler);
+		}
 	}
 	
-	//REMEMBER: TFile.listFiles
-	
-	public static List<Card> importCards(String filename, BitmapDownsampler sampler) throws IOException {
-		Log.d("flashcards", "filename: " + filename);
+	public static List<Card> importCardsFromZip(Context context, ZipFile file, BitmapDownsampler sampler) throws IOException {
+		Log.v("flashcards", "asdas");
+		Enumeration<? extends ZipEntry> e = file.entries();
 		
+		while (e.hasMoreElements()) {
+			ZipEntry z = e.nextElement();
+			if (Util.isFile(z.getName(), "csv")) {
+				CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream(z)));
+				List<String[]> lines = reader.readAll();
+				reader.close();
+				
+				ArrayList<Card> cardList = new ArrayList<Card>(lines.size());
+				for (String[] s : lines) {
+					if (s.length < 2) {
+						throw new IOException();
+					}
+					
+					CardContent c1, c2;
+					if (Util.isImageFile(s[0])) {
+						ZipEntry entry = file.getEntry(s[0]);
+						Bitmap bitmap = sampler.decode(file, entry);
+						Util.saveBitmapToFile(context, bitmap, entry.getName());
+						File savedPath = context.getFileStreamPath(entry.getName());
+						c1 = new CardContent(sampler.decode(file, entry), Uri.fromFile(savedPath));
+					} else {
+						c1 = new CardContent(s[0]);
+					}
+					
+					if (Util.isImageFile(s[1])) {
+						ZipEntry entry = file.getEntry(s[1]);	
+						Bitmap bitmap = sampler.decode(file, entry);
+						Util.saveBitmapToFile(context, bitmap, entry.getName());
+						File savedPath = context.getFileStreamPath(entry.getName());
+						c2 = new CardContent(sampler.decode(file, entry), Uri.fromFile(savedPath));
+					} else {
+						c2 = new CardContent(s[1]);
+					}
+					
+					cardList.add(new Card(c1, c2));
+				}
+				return cardList;
+			}
+		}
+		
+		return null;
+	}
+	
+	public static List<Card> importCardsFromFolder(String filename, BitmapDownsampler sampler) throws IOException {
 		CSVReader reader = new CSVReader(new FileReader(filename));
 		List<String[]> lines = reader.readAll();
 		reader.close();
