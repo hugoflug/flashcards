@@ -31,7 +31,12 @@
     <string name="write_new_text">Write new text</string>
     <string name="text">Text</string>
     <string name="ok">OK</string>
-    <string name="import_csv">Import from CSV</string>
+    <string name="import_csv">Import from CSV file</string>
+    <string name="export_as_csv">Export as CSV file</string>
     <string name="invalid_csv_title"></string>
-    <string name="invalid_csv_text">Invalid CSV file. Correct format is:\n\nquestion,answer\nquestion,answer\nquestion,answer</string>
+    <string name="invalid_csv_text">Invalid CSV file</string>
+    <string name="shuffle_cards">Shuffle cards</string>
+    <string name="csv_info">About CSV format</string>
+    <string name="csv_info_text">Correct CSV file format is:\n\nquestion,answer\nquestion.png,answer\nquestion,answer.jpg\n\nImages in the same folder can be referred to by filename.\n\nZip files containing a single CSV file and multiple image files are also accepted.</string>
+    <string name="csv_info_title">About CSV format</string>
     </resources>

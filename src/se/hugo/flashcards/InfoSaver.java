@@ -91,7 +91,7 @@ public class InfoSaver
 		return prefs.getInt(cardAmountIdentifier(id), 0);
 	}
 	
-	private String nameFromId(long id) {
+	public String nameFromId(long id) {
 		return prefs.getString(cardNameIdentifier(id), null);
 	}
 	
@@ -119,7 +119,7 @@ public class InfoSaver
 			remPos++;
 		}
 	}
-	
+	//
 	public void saveCards(long id, List<Card> cards) {
 		int nr = 0;
 		for (Card card : cards) {			
@@ -163,7 +163,11 @@ public class InfoSaver
 		if (isBitmap) {
 			Uri q = Uri.parse(prefs.getString(identifier, ""));
 			try {
-				return new CardContent(downSampler.decode(q), q);
+				if (downSampler != null) {
+					return new CardContent(downSampler.decode(q), q);
+				} else {
+					return new CardContent(null, q);
+				}
 			} catch (IOException e) {
 				Log.v("flashcards", "Couldn't load question bitmap");
 				return null;

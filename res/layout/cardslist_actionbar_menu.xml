@@ -7,6 +7,8 @@
 		android:icon="@drawable/android:ic_menu_delete"
 		android:title="@string/menu_delete" 
 		android:visible="false"/>
+	<item android:id="@+id/menu_shuffle_cards"
+		android:title="@string/shuffle_cards"/>
 	<item android:id="@+id/menu_make_new"
 		android:icon="@drawable/android:ic_input_add"
 		android:title="@string/menu_add_new"

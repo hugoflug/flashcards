@@ -1,6 +1,8 @@
 package se.hugo.flashcards;
 
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import se.hugo.flashcards.R;
 
@@ -28,5 +30,11 @@ public class Util {
 	
 	public static String until(String str, String regex) {
 		return str.split(regex)[0];
+	}
+	
+	public static boolean isImageFile(String filename) {
+		Pattern p = Pattern.compile("\\.(png|PNG|bmp|BMP|gif|GIF|jpg|JPG|jpeg|JPEG)$");
+		Matcher m = p.matcher(filename); //
+		return m.find(); //false; //TEMP
 	}
 }

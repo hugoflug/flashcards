@@ -10,7 +10,7 @@
     </uses-feature>
     
     <application
-        android:icon="@drawable/heart10"
+        android:icon="@drawable/heart11"
         android:label="@string/app_name"
         android:hardwareAccelerated="true">
         <activity
@@ -19,6 +19,15 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+		        <category android:name="android.intent.category.DEFAULT" />
+		        <category android:name="android.intent.category.BROWSABLE" />
+		        <data android:scheme="file" />
+		        <data android:mimeType="*/*" />
+		        <data android:pathPattern=".*\\.csv" />
+		        <data android:host="*" />
             </intent-filter>
         </activity>
         <activity android:name=".CardsListActivity" />

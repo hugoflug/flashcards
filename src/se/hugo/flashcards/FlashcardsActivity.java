@@ -37,6 +37,7 @@ import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -64,6 +65,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	private static final int DIALOG_CONFIRM = 3;
 	private static final int PICK_CSV = 4;
 	private static final int DIALOG_INVALID_CSV = 5;
+	private static final int DIALOG_CSV_INFO = 6;
 	
 	public static final String CARD_LIST_NAME = "card_list_name";
 	public static final String CARD_LIST_ID = "card_list_id";
@@ -74,6 +76,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	private int itemToRename = 0;
 	private ActionMode modeToFinish; //3.0+ ONLY 
 	private SparseBooleanArray itemsToRemove;
+	private BitmapDownsampler downSampler;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,10 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
         	requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
+        
+        Display display = getWindowManager().getDefaultDisplay();
+        downSampler = new BitmapDownsampler(this, display.getWidth(), display.getHeight()/2); //600, 1000
+
         
         infoSaver = InfoSaver.getInfoSaver(this);
         
@@ -97,11 +104,13 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         Intent intent = getIntent();
         String action = intent.getAction();
         
-        if (action == "android.intent.action.VIEW" ||
-            action == "android.intent.action.EDIT" ||
-            action == "android.intent.action.PICK") {
-            	handleImportCSVIntent(intent);
-        }
+//	    if (!hasBeenRestored()) {
+//	        if (action == "android.intent.action.VIEW" ||
+//	            action == "android.intent.action.EDIT" ||
+//	            action == "android.intent.action.PICK") {
+//	            	handleImportCSVIntent(intent);
+//	        }
+//	    }
         
         //
         //3.0+ ONLY code!!!
@@ -111,6 +120,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	        listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 	        	private int selectedItems = 0;
 	        	private android.view.MenuItem renameItem = null;
+	        	private android.view.MenuItem exportItem = null;
 	        	
 				@Override
 				public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
@@ -152,6 +162,17 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 			            	modeToFinish = mode;
 			            	return true;
 			            }
+			            case R.id.export_as_csv: {
+			            	SparseBooleanArray checkedItems = listView.getCheckedItemPositions();   
+			            	for (int i = 0; i < checkedItems.size(); i++) {
+			            		int key = checkedItems.keyAt(i);
+			            		if (checkedItems.get(key)) {
+			            			long exportId = cardLists.get(key).getID();
+			            			exportAsCsv(exportId); //temp 0
+			            		}
+			            	}
+			            	return true;
+			            }
 			            default:
 			                return false;
 					}
@@ -163,6 +184,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 					inflater.inflate(R.layout.list_item_longpress_menu, menu);
 					
 					renameItem = menu.findItem(R.id.rename_item);
+					exportItem = menu.findItem(R.id.export_as_csv);
 					//TEMP
 			//		renameItem.setVisible(false);
 					
@@ -191,8 +213,10 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 					}
 					if (selectedItems > 1) {
 						renameItem.setVisible(false);
+						exportItem.setVisible(false);
 					} else if (selectedItems <= 1) {
 						renameItem.setVisible(true);
+						exportItem.setVisible(true);
 					}
 					mode.setTitle(selectedItems + " " + getString(R.string.selected));
 				}
@@ -233,6 +257,27 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 //				return true;
 //			}
 //		}); 	
+    }
+    
+    private void exportAsCsv(long listId) {
+    	try {
+			Importer.exportAsCSV(this, listId);
+		} catch (IOException e) {
+			//TODO: add error popup
+			Log.v("flashcards", "exportAsCsv failed");
+		}
+    }
+    
+    private boolean beenRestored = false;
+    
+    private boolean hasBeenRestored() {
+    	return beenRestored;
+    }
+    
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    	super.onRestoreInstanceState(savedInstanceState);
+		beenRestored = true;
     }
     
     @Override
@@ -284,18 +329,14 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     			//TEMP, do through fragments instead
     			showDialog(DIALOG_MAKE_NEW);
     			break;
-    		case R.id.menu_import_csv:
-    			
+    		case R.id.menu_import_csv:			
      		    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
     	        intent.setType("file/*");
     	        startActivityForResult(intent, PICK_CSV);
-    			
-    			//TEMP
-    	//		String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
-    	//		String filepath = dir + File.separator + "test.txt";
-    			
-    	//	    importCSV(filepath);
     		    break;
+    		case R.id.menu_csv_info:
+    			showDialog(DIALOG_CSV_INFO);
+    			break;
     	}
         return false;
     }
@@ -351,7 +392,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	private void importCSV(String listName, String filename) {
 		
 		try {
-			List<Card> listOfCards = Importer.importCards(filename);
+			List<Card> listOfCards = Importer.importCards(filename, downSampler);
 			CardList cardList = new CardList(listName);
 			cardList.setNumberOfCards(listOfCards.size());
 			
@@ -362,6 +403,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 			cardListsAdapter.notifyDataSetChanged();
 			Toast.makeText(this, "List \"" + listName + "\" added", Toast.LENGTH_SHORT).show();
 		} catch (IOException e) {
+			e.printStackTrace();
 			showDialog(DIALOG_INVALID_CSV);
 		}
 		
@@ -441,7 +483,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
                         	String text = textView.getText().toString();
                         	if (!text.equals("")) {
                         		cardLists.add(new CardList(text));
-                        		cardListsAdapter.notifyDataSetChanged();
+                        		cardListsAdapter.notifyDataSetChanged(); //
                         	}
                         	textView.setText("");
                         }
@@ -534,6 +576,12 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     			AlertDialog.Builder builder = new AlertDialog.Builder(this);
     			builder.setTitle(title)
     				   .setMessage(text)
+    				   .setNegativeButton("?", new DialogInterface.OnClickListener() {
+						@Override
+							public void onClick(DialogInterface dialog, int which) {
+								showDialog(DIALOG_CSV_INFO);
+							}				   
+    				    })
     				   .setNeutralButton(dismiss, new DialogInterface.OnClickListener() {
     	                public void onClick(DialogInterface dialog, int whichButton) {
     	                	
@@ -549,6 +597,26 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     		}
     		default:
     			return null;
+    		case DIALOG_CSV_INFO: {
+       			String title = getString(R.string.csv_info_title);
+    			String text = getString(R.string.csv_info_text);
+       			String dismiss = getString(R.string.cancel);
+    			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    			builder.setTitle(title)
+    				   .setMessage(text)
+    				   .setNeutralButton(dismiss, new DialogInterface.OnClickListener() {
+    	                public void onClick(DialogInterface dialog, int whichButton) {
+    	                	
+    	                }
+    	            });
+    			
+    			Dialog dialog = builder.create();
+    			
+    	        if (title.equals("")) {
+    	        	dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	        }
+    			return dialog;
+    		}
     	}
     }
     

@@ -41,6 +41,14 @@ public class CardContent implements Parcelable {
 		return string;
 	}
 	
+	public String getUriOrString() {
+		if (isBitmap) {
+			return bitmapUri.toString();
+		} else {
+			return string;
+		}
+	}
+	
 	public boolean isBitmap() {
 		return isBitmap;
 	}

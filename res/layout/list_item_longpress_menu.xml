@@ -7,4 +7,8 @@
     <item android:id="@+id/rename_item"
           android:title="@string/rename" 
           android:showAsAction="never"/>
+    <item android:id="@+id/export_as_csv"
+          android:title="@string/export_as_csv" 
+          android:showAsAction="never"
+          android:enabled="false"/>
 </menu>

@@ -12,7 +12,7 @@ public class CardList {
 		this.id = id;
 		this.numberOfCards = numberOfCards;
 	}
-	
+	//
 	public CardList(long id, String name) {
 		this(id, name, 0); 
 	}
