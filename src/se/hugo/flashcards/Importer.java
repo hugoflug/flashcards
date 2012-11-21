@@ -25,6 +25,8 @@ public class Importer {
 		return cardList;
 	}
 	
+	//REMEMBER: TFile.listFiles
+	
 	public static List<Card> importCards(String filename, BitmapDownsampler sampler) throws IOException {
 		Log.d("flashcards", "filename: " + filename);
 		
