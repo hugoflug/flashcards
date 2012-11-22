@@ -108,7 +108,16 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 
     	cardList = new ArrayList<Card>();
         cardAdapter = new CardPagerAdapter(this, cardList);
-    	loadCards = new LoadCardsTask(this, listId, downSampler) {
+        
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean autoShuffle = prefs.getBoolean(SettingsActivity.AUTO_SHUFFLE, false);
+        
+        //TODO: should not be set until all cards loaded
+        if (autoShuffle) {
+        	cardsListChanged = true;
+        }
+        
+    	loadCards = new LoadCardsTask(this, listId, downSampler, autoShuffle) {
     		private boolean answerImageSet = false;
     		
     		@Override
@@ -148,12 +157,6 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
         }
         
         setResult(SherlockActivity.RESULT_OK, result);
-        
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean autoShuffle = prefs.getBoolean(SettingsActivity.AUTO_SHUFFLE, false);
-        if (autoShuffle) {
-        	shuffleCards(); //will work???
-        }
     }
     
 	@Override
