@@ -1,5 +1,9 @@
 package se.hugo.flashcards;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,6 +14,7 @@ import com.actionbarsherlock.app.ActionBar;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 
 public class Util {
@@ -33,8 +38,27 @@ public class Util {
 	}
 	
 	public static boolean isImageFile(String filename) {
-		Pattern p = Pattern.compile("\\.(png|PNG|bmp|BMP|gif|GIF|jpg|JPG|jpeg|JPEG)$");
+		Pattern p = Pattern.compile("\\.(png|bmp|gif|jpg|jpeg)$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 		Matcher m = p.matcher(filename); //
 		return m.find(); //false; //TEMP
+	}
+	
+	public static boolean isFile(String filename, String extension) {
+		Pattern p = Pattern.compile("\\." + extension + "$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+		Matcher m = p.matcher(filename); //
+		return m.find();		
+	}
+	
+	public static void saveBitmapToFile(Context context, Bitmap bmp, String filename) throws FileNotFoundException {
+		FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+		bmp.compress(Bitmap.CompressFormat.PNG, 90, fos);
+	}
+	
+	public static LinkedList<Integer> ascendingList(int length) {
+		LinkedList<Integer> list = new LinkedList<Integer>();
+		for (int i = 0; i < length; i++) {
+			list.add(i);
+		}
+		return list;
 	}
 }
