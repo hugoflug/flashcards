@@ -13,6 +13,7 @@ import java.util.List;
 import se.hugo.flashcards.R;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -20,6 +21,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
@@ -146,6 +148,12 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
         }
         
         setResult(SherlockActivity.RESULT_OK, result);
+        
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean autoShuffle = prefs.getBoolean(SettingsActivity.AUTO_SHUFFLE, false);
+        if (autoShuffle) {
+        	shuffleCards(); //will work???
+        }
     }
     
 	@Override
