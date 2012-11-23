@@ -15,7 +15,8 @@
         android:hardwareAccelerated="true">
         <activity
             android:name=".FlashcardsActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:theme="@style/Theme.Sherlock" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,8 +31,12 @@
 		        <data android:host="*" />
             </intent-filter>
         </activity>
-        <activity android:name=".CardsListActivity" />
-        <activity android:name=".NewCardActivity" />
+        <activity android:name=".CardsListActivity"
+                  android:theme="@style/Theme.Sherlock" />
+        <activity android:name=".NewCardActivity"
+                  android:theme="@style/Theme.Sherlock" />
+        <activity android:name=".SettingsActivity"
+                  android:theme="@style/Theme.Sherlock" />
     </application>
 
 </manifest>
