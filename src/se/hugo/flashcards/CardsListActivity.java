@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -69,8 +70,6 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
-     
-        setTheme(R.style.Theme_Sherlock);
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
         	requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -157,6 +156,14 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
         }
         
         setResult(SherlockActivity.RESULT_OK, result);
+    }
+    
+    private void exportAsCsv(long listId) {
+    	try {
+			Util.exportAsCsv(this, downSampler, listId);
+		} catch (IOException e) {
+			Toast.makeText(this, "Export failed", Toast.LENGTH_SHORT).show();
+		}
     }
     
 	@Override
@@ -278,6 +285,9 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     		case R.id.delete_list: {
     			DialogFragment dialogFragment = ConfirmDialogFragment.newInstance("", getString(R.string.list_will_be_deleted), getString(R.string.delete), getString(R.string.cancel));
     	        dialogFragment.show(getSupportFragmentManager(), "delete_list");
+    		}
+    		case R.id.export_as_csv: {
+    			exportAsCsv(listId);
     		}
     		break;
     	}
