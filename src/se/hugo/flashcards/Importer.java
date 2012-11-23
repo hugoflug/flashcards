@@ -24,7 +24,6 @@ import au.com.bytecode.opencsv.CSVReader;
 public class Importer {
 	
 	public static List<Card> importCards(Context context, String filename, BitmapDownsampler sampler) throws IOException {
-		Log.v("flashcards", "asdos");
 		if (Util.isFile(filename, "zip")) {
 			return importCardsFromZip(context, new ZipFile(filename), sampler);
 		} else {
@@ -33,7 +32,6 @@ public class Importer {
 	}
 	
 	public static List<Card> importCardsFromZip(Context context, ZipFile file, BitmapDownsampler sampler) throws IOException {
-		Log.v("flashcards", "asdas");
 		Enumeration<? extends ZipEntry> e = file.entries();
 		
 		while (e.hasMoreElements()) {
