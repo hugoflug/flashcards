@@ -73,8 +73,10 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	
 	public static final String CARD_LIST_NAME = "card_list_name";
 	public static final String CARD_LIST_ID = "card_list_id";
+	
+	public static final String SAVE_TO_DISK = "se.hugo.flashcards.SaveToDisk";
 
-	private List<CardList> cardLists;
+	private ArrayList<CardList> cardLists;
 	private CardsListListAdapter cardListsAdapter;
 	private InfoSaver infoSaver;
 	private int itemToRename = 0;
@@ -104,16 +106,12 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         cardListsAdapter = new CardsListListAdapter(this, cardLists);
         setListAdapter(cardListsAdapter);
         
-        Intent intent = getIntent();
-        String action = intent.getAction();
+        Intent intent = getIntent();     
+        String srcPath = intent.getStringExtra(SAVE_TO_DISK);
         
-//	    if (!hasBeenRestored()) {
-//	        if (action == "android.intent.action.VIEW" ||
-//	            action == "android.intent.action.EDIT" ||
-//	            action == "android.intent.action.PICK") {
-//	            	handleImportCSVIntent(intent);
-//	        }
-//	    }
+        if (srcPath != null) {
+        	Toast.makeText(this, getString(R.string.list_saved) + " " + srcPath, Toast.LENGTH_SHORT).show();
+        }
         
         //
         //3.0+ ONLY code!!!
@@ -122,6 +120,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 	        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL); //_MODAL
 	        listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 	        	private int selectedItems = 0;
+	        	private int listsWithZeroSelected = 0;
 	        	private android.view.MenuItem renameItem = null;
 	        	private android.view.MenuItem exportItem = null;
 	        	
@@ -222,6 +221,21 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 						renameItem.setVisible(true);
 						exportItem.setVisible(true);
 					}
+					
+					if (cardLists.get(pos).getNumberOfCards() == 0) {
+						if (checked == true) {
+							listsWithZeroSelected++;
+						} else {
+							listsWithZeroSelected--;
+						}
+					}
+					
+					if (listsWithZeroSelected == 0 && selectedItems == 1) {
+						exportItem.setVisible(true);
+					} else {
+						exportItem.setVisible(false);
+					}
+					
 					mode.setTitle(selectedItems + " " + getString(R.string.selected));
 				}
 	        });	
@@ -267,8 +281,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	try {
 			Util.exportAsCsv(this, downSampler, listId);
 		} catch (IOException e) {
-			//TODO: add error popup
-			Log.v("flashcards", "exportAsCsv failed");
+			Toast.makeText(this, getString(R.string.export_failed), Toast.LENGTH_SHORT).show();
 		} finally {
     		if (modeToFinish != null) {
     			modeToFinish.finish();
@@ -276,30 +289,9 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 		}
     }
     
-//    private void exportAsCsv(long listId) {
-//    	try {
-//			File outFile = Importer.exportAsCSV(this, listId, downSampler);
-//			Intent i = new Intent();
-//			i.setAction(Intent.ACTION_SEND);
-//			i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(outFile));
-//			i.setType("application/zip");
-//			startActivity(Intent.createChooser(i, getResources().getText(R.string.send_to)));
-//		} catch (IOException e) {
-//			//TODO: add error popup
-//			Log.v("flashcards", "exportAsCsv failed");
-//		}
-//    }
-    
-    private boolean beenRestored = false;
-    
-    private boolean hasBeenRestored() {
-    	return beenRestored;
-    }
-    
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
     	super.onRestoreInstanceState(savedInstanceState);
-		beenRestored = true;
     }
     
     @Override
@@ -334,6 +326,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
     	return false;
     }
     
+    //TODO: remove this method
     private void removeCardList(int nr) {
     	infoSaver.removeCardList(cardListsAdapter.getItem(nr).getID());
     	cardLists.remove(cardListsAdapter.getItem(nr));
@@ -701,19 +694,63 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 			}
 		}
 	}
-
+	
+	private void removeMarkedCardLists() {
+		int removed = 0;
+        for (int i = 0; i < itemsToRemove.size(); i++) {
+        	int key = itemsToRemove.keyAt(i);
+        	if (itemsToRemove.get(key)) {
+        		cardLists.remove(cardListsAdapter.getItem(key - removed));
+            	removed++;
+        	}
+        }	
+        cardListsAdapter.notifyDataSetChanged();
+	}
+	
+	//infoSaver.removeCardList(cardListsAdapter.getItem(nr).getID());
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onConfirmed(String tag) {
 		if (tag.equals("confirm_delete")) {       
-            int removed = 0;
-            for (int i = 0; i <  itemsToRemove.size(); i++) {
-            	int key = itemsToRemove.keyAt(i);
-            	if (itemsToRemove.get(key)) {
-                	removeCardList(key - removed);
-                	removed++;
-            	}
-            }
+            
+			final ArrayList<CardList> remCardLists = (ArrayList<CardList>)cardLists.clone();
+			
+            removeMarkedCardLists();
+            
+			final SparseBooleanArray removeItems = itemsToRemove.clone();
+			
+            new Thread(new Runnable() {
+				@Override
+				public void run() {
+					int removed = 0;
+		            for (int i = 0; i <  removeItems.size(); i++) {
+		            	int key = removeItems.keyAt(i);
+		            	if (removeItems.get(key)) {
+		            		infoSaver.removeCardList(remCardLists.get(key - removed).getID());
+		                	removed++;
+		            	}
+		            }
+				}   	
+            }).start();
+
             modeToFinish.finish();
 		}
 	}
+	
+//	@Override
+//	public void onConfirmed(String tag) {
+//		if (tag.equals("confirm_delete")) {       
+//            int removed = 0;
+//            
+//            for (int i = 0; i <  itemsToRemove.size(); i++) {
+//            	int key = itemsToRemove.keyAt(i);
+//            	if (itemsToRemove.get(key)) {
+//                	removeCardList(key - removed);
+//                	removed++;
+//            	}
+//            }
+//            modeToFinish.finish();
+//		}
+//	}
 }
