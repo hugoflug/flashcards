@@ -37,8 +37,34 @@
     <string name="invalid_csv_text">Invalid CSV file</string>
     <string name="shuffle_cards">Shuffle cards</string>
     <string name="csv_info">About CSV format</string>
-    <string name="csv_info_text">Correct CSV file format is:\n\nquestion,answer\nquestion.png,answer\nquestion,answer.jpg\n\nImages in the same folder can be referred to by filename.\n\nZip files containing a single CSV file and multiple image files are also accepted.</string>
+    <string name="csv_info_text">Correct CSV file format is:\n\nquestion,answer\nquestion.png,answer\nquestion,answer.jpg\nquestion.bmp,answer.png\n\nImages in the same folder can be referred to by filename.\n\nZip files containing a single CSV file and multiple image files are also accepted.</string>
     <string name="csv_info_title">About CSV format</string>
     <string name="no_such_activity_title"></string>
     <string name="no_such_activity_text">There is no app installed for picking files.</string>
+    <string name="auto_shuffle">Automatic shuffling</string>
+    <string name="auto_shuffle_summary">Shuffle the cards every time a list is opened</string>
+    <string name="settings">Settings</string>
+    <string name="font_size">Text size</string>
+    <string name="about_text">Learn by Heart is developed by Hugo Sandelius. 
+Feedback can be e-mailed to <a href="mailto:hugo.sandelius@gmail.com?Subject=Learn by Heart feedback">hugo.sandelius@gmail.com</a>.\nThe following open-source libraries were used: \n\n
+&#8226; <a href="http://actionbarsherlock.com/">ActionBarSherlock</a> <br/> \n
+<a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a> \n\n
+&#8226; <a href="http://opencsv.sourceforge.net/">OpenCSV</a> <br/> \n
+<a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a> \n\n
+&#8226; Folder icon by <a href="http://www.awicons.com/">AWicons</a>.
+</string>
+
+    <string name="about_title">About</string>
+    <string name="send_to">Send to</string>
+    <string name="export_list_as_csv">Export list as CSV file</string>
+    <string name="save_to_disk">Save to disk</string>
+	<string name="list_saved">List saved to</string>
+	<string name="export_failed">Export failed</string>
+    <string name="send_zip_to">Send Zip file to</string>
+    <string name="send_csv_to">Send CSV file to</string>
+    <string name="default_settings">Default</string>
+    <string name="save_folder_title">CSV save location</string>
+    <string name="save_folder_description">Where to save exported CSV files</string>
+    <string name="default_save_folder">/LearnByHeart/</string>
+    <string name="invalid_path">Invalid save path</string>
     </resources>
