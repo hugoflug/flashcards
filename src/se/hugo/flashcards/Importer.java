@@ -2,22 +2,31 @@ package se.hugo.flashcards;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -118,26 +127,123 @@ public class Importer {
 		return m.replaceAll("$1");
 	}
 	
-	public static void exportAsCSV(Context context, long listId) throws IOException {
+	public static File exportAsCSV(Context context, long listId, BitmapDownsampler sampler) throws IOException {
 		InfoSaver saver = InfoSaver.getInfoSaver(context);
-		List<Card> cards = saver.getCards(context, listId, null); //TODO: not null later?
+		List<Card> cards = saver.getCards(context, listId, sampler);
 		String name = saver.nameFromId(listId);
-		exportCards(name, cards);
+		return exportCards(context, name, cards);
 	}
 	
-	public static void exportCards(String name, List<Card> cards) {
-		StringBuilder csvBuilder = new StringBuilder();
-		
-		ArrayList<Uri> uris = new ArrayList<Uri>();
+	public static boolean hasBitmaps(List<Card> cards) {
 		for (Card card : cards) {
-			String question = card.getQuestion().getUriOrString();
-			String answer = card.getAnswer().getUriOrString();
-			csvBuilder.append(question + "," + answer + "\n");
+			if (card.getQuestion().isBitmap() || card.getAnswer().isBitmap()) {
+				return true;
+			}
 		}
+		return false;
+	}
+	
+	private static String escape(String s) {
+		if (s.contains(",")) {
+			return "\"" + s + "\"";
+		} else {
+			return s;
+		}
+	}
+	
+	private static String nameFile(String filename, String extension) {
+		int nr = 2;
+		String oFilename = filename;
+		while (new File(oFilename + "." + extension).exists()) {
+			oFilename = filename + " (" + nr + ")";
+			nr++;
+		}
+		return oFilename + "." + extension;
+	}
+	
+	public static File exportCards(Context context, String name, List<Card> cards) throws IOException {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String savePath = prefs.getString(SettingsActivity.SAVE_PATH, context.getString(R.string.default_save_folder));
 		
-		Log.v("flashcards", "csv_out: " + csvBuilder.toString()); //TEMP
-		
-		//TODO: save csv file
-		//if images, save images + csv file in same archive
+		if (hasBitmaps(cards)) {						
+			String filename = nameFile(Environment.getExternalStorageDirectory() + savePath + name, "zip");
+			
+			StringBuilder csvBuilder = new StringBuilder();
+			
+			File file = new File(filename);
+			file.getParentFile().mkdirs();
+			
+			FileOutputStream fos = new FileOutputStream(file);
+			ZipOutputStream zos = new ZipOutputStream(fos);
+
+			
+			Set<String> imageFiles = new HashSet<String>();
+			
+			for (Card card : cards) {
+				String qStr, aStr;
+				
+				CardContent question = card.getQuestion();
+				if (question.isBitmap()) {
+					Uri uri = question.getUri();
+					qStr = uri.getLastPathSegment();
+					
+					if (!imageFiles.contains(qStr)) {
+						zos.putNextEntry(new ZipEntry(qStr));
+						Bitmap bmp = question.getBitmap();
+						bmp.compress(Bitmap.CompressFormat.PNG, 90, zos);
+						zos.closeEntry();
+						imageFiles.add(qStr);
+					}
+					
+				} else {
+					qStr = escape(question.getString());
+				}
+				
+				CardContent answer = card.getAnswer();
+				if (answer.isBitmap()) {
+					Uri uri = answer.getUri();
+					aStr = uri.getLastPathSegment();
+					
+					if (!imageFiles.contains(aStr)) {
+						zos.putNextEntry(new ZipEntry(aStr));
+						Bitmap bmp = answer.getBitmap();
+						bmp.compress(Bitmap.CompressFormat.PNG, 90, zos);
+						zos.closeEntry();
+						imageFiles.add(aStr);
+					}
+				} else {
+					aStr = escape(answer.getString());
+				}
+				
+				csvBuilder.append(qStr + "," + aStr + "\n");
+			}
+			
+			byte[] bytes = csvBuilder.toString().getBytes("UTF-8");
+			
+			zos.putNextEntry(new ZipEntry(name + ".csv"));
+			zos.write(bytes, 0, bytes.length);
+			zos.closeEntry();
+			
+			zos.close();
+			fos.close(); //necessary?
+			
+			return new File(filename);
+		} else {		
+			String filename = nameFile(Environment.getExternalStorageDirectory() + savePath + name, "csv");
+			
+			File file = new File(filename);
+			file.getParentFile().mkdirs();
+			
+			FileOutputStream fos = new FileOutputStream(filename);
+			
+			OutputStreamWriter writer  = new OutputStreamWriter(fos);
+			for (Card card : cards) {
+				String question = escape(card.getQuestion().getString());
+				String answer = escape(card.getAnswer().getString());
+				writer.write(question + "," + answer + "\n");
+			}
+			writer.close();
+			return new File(filename);
+		}
 	}
 }
