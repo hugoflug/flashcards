@@ -14,6 +14,7 @@ import android.preference.PreferenceActivity;
 public class SettingsActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener  {
 	public static final String AUTO_SHUFFLE = "auto_shuffle";
 	public static final String FONT_SIZE = "font_size";
+	public static final String SAVE_PATH = "save_folder";
 	
 	private ListPreference fontSizePref;
 	
@@ -24,6 +25,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements OnSh
         ActionBar bar = getSupportActionBar();
         Util.customizeActionBar(getResources(), bar);     
         bar.setDisplayHomeAsUpEnabled(true);
+        bar.setTitle(R.string.settings);
         
         addPreferencesFromResource(R.xml.preferences);
         
@@ -53,10 +55,8 @@ public class SettingsActivity extends SherlockPreferenceActivity implements OnSh
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
-        
-        fontSizePref.setSummary(fontSizePref.getEntry());
-          
+        SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();      
+        fontSizePref.setSummary(fontSizePref.getEntry());          
         prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
