@@ -73,41 +73,9 @@ public class Util {
 		}
 		return list;
 	}
-
-	public static void exportAsCsv(Activity activity, BitmapDownsampler downSampler, long listId) throws IOException {
-		File outFile = Importer.exportAsCSV(activity, listId, downSampler);
-		boolean isZip = outFile.getName().matches(".*\\.zip$"); 
-		
-		Intent i = new Intent();
-		i.setAction(Intent.ACTION_SEND);
-		i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(outFile));
-		
-		int nameRes;
-		
-		if (isZip) {
-			i.setType("application/zip");
-			nameRes = R.string.send_zip_to;
-		} else {
-			i.setType("text/csv");
-			nameRes = R.string.send_csv_to;
-		}
-		
-        PackageManager manager = activity.getPackageManager();
-        ResolveInfo info = manager.resolveActivity(i, 0);
-        
-		Intent saveIntent = new Intent(activity, FlashcardsActivity.class);
-		saveIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		saveIntent.putExtra(FlashcardsActivity.SAVE_TO_DISK, outFile.getAbsolutePath());
-        
-        if (info == null) {
-        	activity.startActivity(saveIntent);
-        } else {	
-			Intent chooserIntent = Intent.createChooser(i, activity.getResources().getText(nameRes));
-
-			LabeledIntent labeledIntent = new LabeledIntent(saveIntent, "se.hugo.flashcards", R.string.save_to_disk, R.drawable.folder);		
-			chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Parcelable[] {labeledIntent});		
-			activity.startActivity(chooserIntent);
-        }
+	
+	public static File getStorageDirectory() {
+		return null;
 	}
 	
 	@SuppressWarnings("resource")
