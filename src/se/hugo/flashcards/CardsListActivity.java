@@ -62,6 +62,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	private boolean hasLoaded;
 	private MenuItem deleteCardMenuItem;
 	private MenuItem editCardMenuItem;
+	private MenuItem exportMenuItem;
+	private MenuItem shuffleMenuItem;
 	private ActionBar actionBar;
 	private int loadedCurrentItem;
 	private boolean cardsListChanged;
@@ -113,7 +115,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
         
         //TODO: should not be set until all cards loaded
         if (autoShuffle) {
-        	cardsListChanged = true;
+ //       	cardsListChanged = true;
         }
         
     	loadCards = new LoadCardsTask(this, listId, downSampler, autoShuffle) {
@@ -157,14 +159,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
         
         setResult(SherlockActivity.RESULT_OK, result);
     }
-    
-    private void exportAsCsv(long listId) {
-    	try {
-			Util.exportAsCsv(this, downSampler, listId);
-		} catch (IOException e) {
-			Toast.makeText(this, "Export failed", Toast.LENGTH_SHORT).show();
-		}
-    }
+
     
 	@Override
 	public void onSaveInstanceState (Bundle outState) {
@@ -202,12 +197,14 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     private void onEmptyList() {
 		deleteCardMenuItem.setVisible(false);
 		editCardMenuItem.setVisible(false);
+		shuffleMenuItem.setVisible(false);
     }
     
     private void onNonEmptyList() {
     	if (editCardMenuItem != null) {
 			deleteCardMenuItem.setVisible(true);
 			editCardMenuItem.setVisible(true);
+			shuffleMenuItem.setVisible(true);
     	}
     }
     
@@ -238,7 +235,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
         
         deleteCardMenuItem = menu.findItem(R.id.menu_delete_card);
         editCardMenuItem = menu.findItem(R.id.menu_edit_card);
-		
+		shuffleMenuItem = menu.findItem(R.id.menu_shuffle_cards);
 		
 		if (cardList.size() != 0) {
 			onNonEmptyList();
@@ -286,13 +283,22 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     			DialogFragment dialogFragment = ConfirmDialogFragment.newInstance("", getString(R.string.list_will_be_deleted), getString(R.string.delete), getString(R.string.cancel));
     	        dialogFragment.show(getSupportFragmentManager(), "delete_list");
     		}
-    		case R.id.export_as_csv: {
-    			exportAsCsv(listId);
-    		}
     		break;
     	}
     	return true;
     }
+	
+	private void fixCardContent(CardContent content) throws IOException {
+		if (content.isBitmap()) {
+			Uri uri = content.getUri();
+			if (uri.getScheme() == "media") {			
+				File srcFile = new File(Util.getMediaPath(this, uri));
+				File destFile = Util.getInternalStorage(this, srcFile.getName());
+				Util.copyFile(srcFile, destFile);
+				content.setBitmapUri(Uri.fromFile(destFile));
+			}
+		}
+	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) { 
@@ -303,12 +309,14 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 		    		CardContent question = intent.getParcelableExtra(NewCardActivity.QUESTION_EXTRA);
 		    		CardContent answer = intent.getParcelableExtra(NewCardActivity.ANSWER_EXTRA);
 					try {
+			    		fixCardContent(question);
+			    		fixCardContent(answer);
 						question.reloadBitmap(downSampler);
-			    		answer.reloadBitmap(downSampler);
+				    	answer.reloadBitmap(downSampler);
 					} catch (IOException e) {
-						Log.v("flashcards", "Couldn't load image.");
+						Log.v("flashcards", "Copying file to internal storage failed: ", e);
 					}
-
+					
 					changeAmountOfCards(cardList.size() + 1);
 					
 					if (!hasLoaded) {
@@ -328,6 +336,8 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 		    		CardContent question = intent.getParcelableExtra(NewCardActivity.QUESTION_EXTRA);
 		    		CardContent answer = intent.getParcelableExtra(NewCardActivity.ANSWER_EXTRA);
 					try {
+			    		fixCardContent(question);
+			    		fixCardContent(answer);
 						question.reloadBitmap(downSampler);
 			    		answer.reloadBitmap(downSampler);
 					} catch (IOException e) {
@@ -355,7 +365,12 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	protected void onPause() {
 		super.onPause();
 		if (cardsListChanged) {
-			infoSaver.saveCards(listId, cardList);
+//           new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+					infoSaver.saveCards(listId, cardList);
+//				}
+//            }).start();
 		}
 	}
 
@@ -367,7 +382,6 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	} 
 
 	@Override
-	
 	public void onConfirmed(String tag) {
 		if (tag.equals("delete_card")) {
 			removeCard(currentPosition);
