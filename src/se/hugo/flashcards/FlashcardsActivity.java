@@ -548,16 +548,20 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
 		}
 	}
 	
-	private void removeId(long id) {
+	private void removeId(final long id) {
 		Iterator<CardList> it = cardLists.iterator();
 		while (it.hasNext()) {
 			CardList cl = it.next();
 			if (cl.getID() == id) {
 				it.remove();
-				infoSaver.removeCardList(id);
-				cardListsAdapter.notifyDataSetChanged();
+	            new Thread(new Runnable() {
+					@Override
+					public void run() {
+						infoSaver.removeCardList(id);					}
+	            }).start();
 			}
 		}
+		cardListsAdapter.notifyDataSetChanged();
 	}
 	
 	private void renameId(long id, String newName) {
@@ -840,6 +844,7 @@ public class FlashcardsActivity extends SherlockListActivity implements OnTextMa
         }	
         cardListsAdapter.notifyDataSetChanged();
 	}
+	
 	
 	//infoSaver.removeCardList(cardListsAdapter.getItem(nr).getID());
 	
