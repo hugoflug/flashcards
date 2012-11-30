@@ -64,10 +64,13 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 	private MenuItem editCardMenuItem;
 	private MenuItem exportMenuItem;
 	private MenuItem shuffleMenuItem;
+	private MenuItem makeNewMenuItem;
 	private ActionBar actionBar;
 	private int loadedCurrentItem;
 	private boolean cardsListChanged;
 	private Intent result;
+	private boolean optionsMenuCreated = false;
+	private boolean enableMenuItems = false;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +118,7 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
         
         //TODO: should not be set until all cards loaded
         if (autoShuffle) {
- //       	cardsListChanged = true;
+   //     	cardsListChanged = true; //should be commented away, TEMP uncommented
         }
         
     	loadCards = new LoadCardsTask(this, listId, downSampler, autoShuffle) {
@@ -129,7 +132,12 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     				answerView.setCardContent(values[0].getAnswer());
     				answerImageSet = true;
     			}
-    		}    
+    			
+    		}   
+			@Override
+			protected void onPostExecute(Void v) {
+				doAfterLoads();
+			}
     	};
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
@@ -230,12 +238,23 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+    	optionsMenuCreated  = true;
+    	
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.layout.cardslist_actionbar_menu, menu);
         
         deleteCardMenuItem = menu.findItem(R.id.menu_delete_card);
         editCardMenuItem = menu.findItem(R.id.menu_edit_card);
 		shuffleMenuItem = menu.findItem(R.id.menu_shuffle_cards);
+		makeNewMenuItem = menu.findItem(R.id.menu_make_new);
+		
+		
+		if (enableMenuItems) {
+	        deleteCardMenuItem.setEnabled(true);
+	        editCardMenuItem.setEnabled(true);
+			shuffleMenuItem.setEnabled(true);
+			makeNewMenuItem.setEnabled(true);
+		}
 		
 		if (cardList.size() != 0) {
 			onNonEmptyList();
@@ -361,16 +380,32 @@ public class CardsListActivity extends SherlockFragmentActivity implements Write
 		}
 	}
 	
+	private void doAfterLoads() {
+		if (optionsMenuCreated) {		
+	        deleteCardMenuItem.setEnabled(true);
+	        editCardMenuItem.setEnabled(true);
+			shuffleMenuItem.setEnabled(true);
+			makeNewMenuItem.setEnabled(true);
+		} else {
+			enableMenuItems  = true;
+		}
+	}
+	
+	boolean isSaving = false;
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (cardsListChanged) {
-//           new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-					infoSaver.saveCards(listId, cardList);
-//				}
-//            }).start();
+		if (cardsListChanged && !isSaving) {
+           new Thread(new Runnable() {
+				@Override
+				public void run() {
+					isSaving = true;
+					InfoSaver is = InfoSaver.getInfoSaver(CardsListActivity.this);
+					is.saveCards(listId, cardList);
+					isSaving = false;
+				}
+            }).start();
 		}
 	}
 
